@@ -1,0 +1,11 @@
+.content{
+    padding: 15px;
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+}
+.heading{
+    font-size: 22px;
+    margin: 20px;
+    color: rgb(65, 65, 65);
+}
