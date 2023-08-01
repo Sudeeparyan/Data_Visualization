@@ -1,1 +1,1 @@
-export const send_csv_file_Excel = "/send-csv-Excel"
+export const send_csv_file_Excel = "/api/v1/upload-csv"
