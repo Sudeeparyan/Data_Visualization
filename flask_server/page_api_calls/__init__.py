@@ -10,7 +10,7 @@ def Create_app() -> Flask:
         Flask object
     """
     app = Flask(__name__, static_folder='../dist/assets') #initializing the flask app
-    cors = CORS(app)
+    
     app.config['CORS_HEADERS'] = 'Content-Type'   
     
     
