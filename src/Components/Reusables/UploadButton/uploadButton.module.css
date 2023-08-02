@@ -4,5 +4,5 @@
     font-size: 15px
 }
 .uploadButton:hover{
-    color: white;
+    background-color: rgb(255, 255, 255);
 }
