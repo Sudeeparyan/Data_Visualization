@@ -10,14 +10,14 @@ app = Create_app() #initializing the flask app
 @cross_origin()
 def index_page():
     """Rendering the first page of the web page"""
-    with open("../dist/index.html", "r", encoding='utf-8') as file_pointer:
-        return file_pointer.read()
+    # with open("../dist/index.html", "r", encoding='utf-8') as file_pointer:
+    return 'hello'
     
 
 if __name__ == '__main__':
     
     """Running the server in the port 3000"""
     
-    app.run(port=3000, debug=True)
+    app.run(port=3000,host= '172.16.1.222', debug=True)
     
     

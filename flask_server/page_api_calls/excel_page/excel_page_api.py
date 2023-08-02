@@ -19,12 +19,13 @@ def isvalid_csv(csv_path: str) -> bool:
     Returns:
         bool: _description_
     """
-    user_file = dd.read_csv(csv_path)
+    user_file = dd.read_csv(csv_path).compute()
     file_columns = user_file.columns
-    
+
     for column in file_columns:
-        if  not column:
-            return False
+        if  user_file[column].isnull().all() or user_file[column].eq('').all():
+            return False  
+    
     
     return True
 
@@ -47,12 +48,11 @@ def upload_csv():
         actual_csv = pd.DataFrame(pd.read_csv(csv_path))
         csv_columns = [column for column in actual_csv.columns]
         df = actual_csv.to_dict(orient='records')
-        
-
-        return jsonify({"columns": csv_columns,"content": df})
+        return jsonify({"error":None, "columns": csv_columns,"table_data": df})
     
     else:
         
+        os.remove(csv_path)
         return jsonify({"error": "The file uploaded is a invalid csv"})
         
         
