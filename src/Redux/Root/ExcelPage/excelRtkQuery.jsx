@@ -1,31 +1,43 @@
-import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-import {BASE_URL} from '../../../Networks/baseUrl'
-import {send_csv_file_Excel} from "../../../Networks/endPoints"
-import {storeExcelCsv} from './excelSlice'
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { BASE_URL } from "../../../Networks/baseUrl";
+import { endpointsApi } from "../../../Networks/endPoints";
+import { storeExcelCsv, storeExcelid } from "./excelSlice";
 
 export const sendExcelCsv = createApi({
-    reducerPath : "SendCsvApi",
-    baseQuery :fetchBaseQuery({
-        baseUrl : BASE_URL
+  reducerPath: "SendCsvApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: BASE_URL,
+  }),
+  endpoints: (builder) => ({
+    sendExcelCSV: builder.mutation({
+      query: (formData) => ({
+        url: endpointsApi.send_csv_file_Excel,
+        method: "POST",
+        body: formData,
+      }),
+      async onQueryStarted(res, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          dispatch(storeExcelid(data));
+        } catch (err) {
+          console.log("error... ", err);
+        }
+      },
     }),
-    endpoints : (builder)=>({
-        sendExcelCSV : builder.mutation({
-            query : (formData)=>({
-                url: send_csv_file_Excel,
-                method : 'POST',
-                body : formData
-            }),
-              async onQueryStarted(res, { dispatch, queryFulfilled }) {
-                try {
-                  const { data } = await queryFulfilled;
-                  dispatch(storeExcelCsv(data))
-                  console.log(data);
-                } catch (err) {
-                  console.log("error... ", err);
-                }
-              },
-        })
-    })
-})
+    getExcel: builder.query({
+      query: (id) => endpointsApi.get_Excel_csv + `${id}`,
+      async onQueryStarted(res, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          dispatch(storeExcelCsv(data));
+        } catch (err) {
+          console.log("error... ", err);
+        }
+      },
+    }),
+  }),
+});
 
-export const {useSendExcelCSVMutation} = sendExcelCsv
+export const { useSendExcelCSVMutation, useGetExcelQuery } = sendExcelCsv;
