@@ -1,6 +1,7 @@
 import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {BASE_URL} from '../../../Networks/baseUrl'
 import {send_csv_file_Excel} from "../../../Networks/endPoints"
+import {storeExcelCsv} from './excelSlice'
 
 export const sendExcelCsv = createApi({
     reducerPath : "SendCsvApi",
@@ -17,6 +18,7 @@ export const sendExcelCsv = createApi({
               async onQueryStarted(res, { dispatch, queryFulfilled }) {
                 try {
                   const { data } = await queryFulfilled;
+                  dispatch(storeExcelCsv(data))
                   console.log(data);
                 } catch (err) {
                   console.log("error... ", err);
