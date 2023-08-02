@@ -1,14 +1,18 @@
 import React,{useState} from 'react'
 import styles from './Excel.module.css'
-import ButtonComponent from '../../Reusables/Button/Button';
+import { useSelector } from 'react-redux';
 import UploadButton from '../../Reusables/UploadButton/upploadButton';
-import {useSendExcelCSVMutation} from '../../../Redux/Services/sendExcelCsv'
+import {useSendExcelCSVMutation} from '../../../Redux/Root/ExcelPage/excelRtkQuery'
 import { Progress } from 'antd';
+// import { ExcelSelector } from '../../../Redux/Selectors/selectors';
 
 const Excel = () => {
       const [sendExcelCSV,sendCsv] = useSendExcelCSVMutation() || {} 
       const [percent,setPercent] = useState(0)
       const [loading,setLoading]= useState(false)
+      // const tableData = useSelector(ExcelSelector.ExcelData)
+      // const tableColumn = useSelector(ExcelSelector.Excelcolumn)
+      // console.log(tableData,tableColumn);
 
     const incrementState =()=>{
         setPercent(prev=>prev+25)
@@ -24,7 +28,7 @@ const Excel = () => {
     formData.append('file',file)
     setTimeout(()=>{
         const response =  sendExcelCSV(formData);
-        onSuccess(setPercent(100))
+        onSuccess(setPercent(100))  
         clearInterval(intervalId)
         setLoading(false)
     },4500)
@@ -43,9 +47,6 @@ const Excel = () => {
     <UploadButton handleCustomRequest={handleCustomRequest} />
       { loading && <Progress percent={percent}  />}
       {sendCsv.isError && <div>Error</div>}
-   </div>
-   <div>
-    <ButtonComponent/>
    </div>
     </div>
     </div>
