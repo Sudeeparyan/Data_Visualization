@@ -2,7 +2,9 @@ import {createSlice} from '@reduxjs/toolkit'
 
  const initialState = {
     ExcelCsv:[],
-    ExcelColumns:[]
+    ExcelColumns:[],
+    ProjectId:0,
+    Error : ""
 }
 
 const ExcelSlice = createSlice({
@@ -11,11 +13,17 @@ const ExcelSlice = createSlice({
     reducers:{
     storeExcelCsv:(state,action)=>{
         console.log(action);
-        state.ExcelCsv = action.payload.table_data
+        state.ExcelCsv = action.payload.tableContent
         state.ExcelColumns = action.payload.columns
+        state.Error = action.payload.error
+    },
+    storeExcelid : (state,action)=>{
+        console.log(action);
+        state.ProjectId = action.payload.projectId
+        state.Error = action.payload.error
     }
   }
 })
 
-export const {storeExcelCsv} = ExcelSlice.actions
+export const {storeExcelCsv,storeExcelid} = ExcelSlice.actions
 export default ExcelSlice.reducer
