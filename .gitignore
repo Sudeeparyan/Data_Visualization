@@ -8,7 +8,7 @@ node_modules/
 dist/
 .dv_venv/
 __pycache__/
-
+storage/
 # Compiled Java class files
 *.class
 
