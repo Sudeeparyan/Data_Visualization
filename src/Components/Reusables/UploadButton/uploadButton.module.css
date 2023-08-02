@@ -3,3 +3,6 @@
     color: white;
     font-size: 15px
 }
+.uploadButton:hover{
+    color: white;
+}

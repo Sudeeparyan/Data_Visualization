@@ -1,6 +1,6 @@
 import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-import {BASE_URL} from '../../Networks/baseUrl'
-import {send_csv_file_Excel} from "../../Networks/endPoints"
+import {BASE_URL} from '../../../Networks/baseUrl'
+import {send_csv_file_Excel} from "../../../Networks/endPoints"
 
 export const sendExcelCsv = createApi({
     reducerPath : "SendCsvApi",
