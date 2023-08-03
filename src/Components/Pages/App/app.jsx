@@ -12,6 +12,7 @@ const App = () => {
         <Routes>
           <Route path="/Excel" element={<ExcelPage />} />
           <Route path="/Excel/:id" element={<Project />} />
+          {/* <Route path="*" element={<ExcelPage />} /> */}
         </Routes>
       </BrowserRouter>
     </div>
