@@ -31,7 +31,7 @@ const Excel = () => {
       //sending GET Request based on condition
       if (res.data.fileStatus === "success") await getExcel(res.data.projectId);
     } catch (error) {
-      onError(message.error("Error", error));
+      onError(message.error("Error Uploading File"));
     }
   };
 
