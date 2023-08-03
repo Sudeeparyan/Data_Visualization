@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../../Networks/baseUrl";
 import { endpointsApi } from "../../Networks/endPoints";
-import { storeExcelCsv, storeExcelid } from "./excelSlice";
+import { rootActions } from "../Root/RootActions/rootActions";
 
 export const sendExcelCsv = createApi({
   reducerPath: "SendCsvApi",
@@ -19,7 +19,7 @@ export const sendExcelCsv = createApi({
         try {
           const { data } = await queryFulfilled;
           console.log("id", data);
-          dispatch(storeExcelid(data));
+          dispatch(rootActions.excelActions.storeExcelid(data));
         } catch (err) {
           console.log("error... ", err);
         }
@@ -31,7 +31,7 @@ export const sendExcelCsv = createApi({
         try {
           const { data } = await queryFulfilled;
           console.log(data);
-          dispatch(storeExcelCsv(data));
+          dispatch(rootActions.excelActions.storeExcelCsv(data));
         } catch (err) {
           console.log("error... ", err);
         }

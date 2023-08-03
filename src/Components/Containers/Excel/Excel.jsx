@@ -3,23 +3,21 @@ import styles from "./Excel.module.css";
 import { useNavigate } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 import UploadButton from "../../Reusables/UploadButton/upploadButton";
-import {
-  useSendExcelCSVMutation,
-  useLazyGetExcelQuery,
-} from "../../../Redux/ExcelPage/excelRtkQuery";
+import { rootSelector } from "../../../Redux/Root/RootSelector/rootSelector";
+import { rootQuery } from "../../../Redux/Root/RootQuery/rootQuery";
 import { message } from "antd";
-import { ExcelSelector } from "../../../Redux/ExcelPage/excelSelector";
 import { useSelector } from "react-redux";
 
 const Excel = () => {
   //useSelector to get a specific Excel page data
-  const Excel = useSelector(ExcelSelector.ExcelData);
+  const Excel = useSelector(rootSelector.ExcelSelector.ExcelData);
   const navigate = useNavigate();
 
   //POST Req RTK Query to send the uploaded csv
-  const [sendExcelCSV] = useSendExcelCSVMutation() || {};
+  const [sendExcelCSV] = rootQuery.excelPage.useSendExcelCSVMutation() || {};
   //GET Req to get the project from Backend
-  const [getExcel, resultsExcel] = useLazyGetExcelQuery() || {};
+  const [getExcel, resultsExcel] =
+    rootQuery.excelPage.useLazyGetExcelQuery() || {};
 
   //This Function is Trgiggered when a csv is selected by the user
   const handleCustomRequest = async ({ file, onError }) => {
