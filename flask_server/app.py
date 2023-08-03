@@ -3,20 +3,24 @@
 from page_api_calls import Create_app
 from flask_cors import cross_origin, CORS
 from flask_migrate import Migrate
-from model import db
+from model import db,Users
+import os
+
 
 app = Create_app() #initializing the flask app
 cors = CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqllite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqllite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
-migrate = Migrate(app,db)
 
 
 with app.app_context():
     db.create_all()
-    
+    new_user = Users(user_name='Giri', email='hello@123', password='pass')
+    db.session.add(new_user)
+    db.session.commit()
+
 @app.route("/")
 @cross_origin()
 def index_page():
