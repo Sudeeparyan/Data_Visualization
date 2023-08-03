@@ -1,43 +1,39 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./Excel.module.css";
 import { useNavigate } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
 import UploadButton from "../../Reusables/UploadButton/upploadButton";
 import {
   useSendExcelCSVMutation,
-  useGetExcelQuery,
-} from "../../../Redux/Root/ExcelPage/excelRtkQuery";
+  useLazyGetExcelQuery,
+} from "../../../Redux/ExcelPage/excelRtkQuery";
 import { message } from "antd";
-import ExcelTable from "./table";
-import { ExcelSelector } from "../../../Redux/Selectors/selectors";
+import { ExcelSelector } from "../../../Redux/ExcelPage/excelSelector";
 import { useSelector } from "react-redux";
 
 const Excel = () => {
   const Excel = useSelector(ExcelSelector.ExcelData);
-  console.log(Excel);
-  const navigate = useNavigate();
-  const [sendExcelCSV, sendCsv] = useSendExcelCSVMutation() || {};
-  const { data, error, isLoading, isSuccess, refetch } =
-    useGetExcelQuery(Excel.ProjectId) || {};
 
-  const handleCustomRequest = ({ file, onError, onSuccess }) => {
+  const navigate = useNavigate();
+  const [sendExcelCSV] = useSendExcelCSVMutation() || {};
+  const [getExcel, resultsExcel] = useLazyGetExcelQuery() || {};
+
+  const handleCustomRequest = async ({ file, onError }) => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const response = sendExcelCSV(formData, {
-        onSuccess: () => {
-          refetch();
-        },
-      });
-      onSuccess(message.success("File Uploaded!"));
+      const res = await sendExcelCSV(formData);
+      if (res.data.fileStatus === "success") await getExcel(res.data.projectId);
     } catch (error) {
       onError(message.error("Error"));
     }
   };
 
-  if (error) console.log(error);
-  if (data) navigate(`/Excel/${Excel.ProjectId}`);
+  if (sendExcelCSV.isError) message.error("Error Uploading File!");
 
+  if (resultsExcel.data) {
+    navigate(`/Excel/${Excel.ProjectId}`);
+  }
   return (
     <div>
       <div className={styles.heading}>
@@ -52,8 +48,8 @@ const Excel = () => {
             icon={<UploadOutlined />}
           />
           <br></br>
-          {sendCsv.isLoading && <h4>Uploading Please Wait...</h4>}
-          {sendCsv.isError && message.error("Error uploading the file")}
+          {sendExcelCSV.isLoading && <h4>Loading Please Wait...</h4>}
+          {sendExcelCSV.isError && <h4>Error</h4>}
         </div>
       </div>
     </div>

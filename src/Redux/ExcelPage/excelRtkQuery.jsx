@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BASE_URL } from "../../../Networks/baseUrl";
-import { endpointsApi } from "../../../Networks/endPoints";
+import { BASE_URL } from "../../Networks/baseUrl";
+import { endpointsApi } from "../../Networks/endPoints";
 import { storeExcelCsv, storeExcelid } from "./excelSlice";
 
 export const sendExcelCsv = createApi({
@@ -18,7 +18,7 @@ export const sendExcelCsv = createApi({
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
+          console.log("id", data);
           dispatch(storeExcelid(data));
         } catch (err) {
           console.log("error... ", err);
@@ -40,4 +40,4 @@ export const sendExcelCsv = createApi({
   }),
 });
 
-export const { useSendExcelCSVMutation, useGetExcelQuery } = sendExcelCsv;
+export const { useSendExcelCSVMutation, useLazyGetExcelQuery } = sendExcelCsv;
