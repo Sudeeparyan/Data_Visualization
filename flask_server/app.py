@@ -53,4 +53,4 @@ def render_static_file(name):
 
 if __name__ == '__main__':
     # Running the server at port 3000
-    app.run(port=3000 ,host = '172.16.1.222',debug=True)
+    app.run(port=3000 ,debug=True)
