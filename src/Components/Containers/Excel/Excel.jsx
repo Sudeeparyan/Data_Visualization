@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Excel.module.css";
 import { useNavigate } from "react-router-dom";
 import { UploadOutlined } from "@ant-design/icons";
@@ -17,9 +17,11 @@ import ButtonComponent from "../../Reusables/Button/Button";
  */
 
 const Excel = () => {
-  //useSelector to get a specific Excel page data
-  const Excel = useSelector(rootSelector.ExcelSelector.ExcelData);
   const navigate = useNavigate();
+  const Excel = useSelector(rootSelector.ExcelSelector.ExcelData);
+
+  //Making the upload button diable and enable
+  const [disable, setDisable] = useState(false);
 
   //POST Req RTK Query to send the uploaded csv
   const [sendExcelCSV, resultCsv] =
@@ -39,6 +41,7 @@ const Excel = () => {
    */
   const handleCustomRequest = async ({ file, onError }) => {
     try {
+      setDisable((prev) => !prev);
       const formData = new FormData();
       formData.append("file", file);
       //sending POST Request
@@ -46,6 +49,7 @@ const Excel = () => {
       //sending GET Request based on condition
       if (res.data.fileStatus === "success") await getExcel(res.data.projectId);
     } catch (error) {
+      setDisable((prev) => !prev);
       onError(message.error("Error Uploading File"));
     }
   };
@@ -64,12 +68,15 @@ const Excel = () => {
         <div>
           <UploadButton
             handleCustomRequest={handleCustomRequest}
-            buttonData={"Click to Upload"}
+            buttonData={"New Project"}
             accept={".csv"}
+            work={disable}
             icon={<UploadOutlined />}
           />
           <br></br>
-          {resultCsv.isLoading && <h4>Uploading Please Wait...</h4>}
+          {resultCsv.isLoading && (
+            <h4 className={styles.upload}>Uploading Please Wait...</h4>
+          )}
         </div>
       </div>
     </div>

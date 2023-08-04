@@ -8,6 +8,7 @@ import Table from "../../Reusables/Table/table";
  */
 
 const ExcelTable = () => {
+  //useSelector to get a specific Excel page data
   const Excel = useSelector(ExcelSelector.ExcelData);
   return (
     <div>

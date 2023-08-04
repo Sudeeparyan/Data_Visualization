@@ -19,13 +19,11 @@ const ExcelSlice = createSlice({
   initialState,
   reducers: {
     storeExcelCsv: (state, action) => {
-      console.log(action);
       state.ExcelCsv = action.payload.tableContent;
       state.ExcelColumns = action.payload.columns;
       state.Error = action.payload.error;
     },
     storeExcelid: (state, action) => {
-      console.log(action);
       state.ProjectId = action.payload.projectId;
       state.Error = action.payload.error;
     },

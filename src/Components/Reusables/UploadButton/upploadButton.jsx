@@ -9,7 +9,12 @@ import { Button, Upload } from "antd";
 const UploadButton = (props) => {
   return (
     <div>
-      <Upload accept={props.accept} customRequest={props.handleCustomRequest}>
+      <Upload
+        maxCount={1}
+        disabled={props.work}
+        accept={props.accept}
+        customRequest={props.handleCustomRequest}
+      >
         <Button
           className={styles.uploadButton}
           icon={props.icon ? props.icon : null}

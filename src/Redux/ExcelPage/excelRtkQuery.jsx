@@ -25,7 +25,6 @@ export const sendExcelCsv = createApi({
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log("id", data);
           dispatch(rootActions.excelActions.storeExcelid(data));
         } catch (err) {
           console.log("error... ", err);
