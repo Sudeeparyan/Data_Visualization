@@ -1,3 +1,10 @@
+/**
+ * Excel Slice
+ *
+ * This file creates a Redux slice named "excel" to manage Excel-related data in the Redux store.
+ * The slice includes the initial state, actions, and a reducer function to update the state based on dispatched actions.
+ */
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {

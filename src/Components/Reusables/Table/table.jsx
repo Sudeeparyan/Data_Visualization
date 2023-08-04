@@ -1,7 +1,11 @@
 import React from "react";
 import { SheetComponent } from "@antv/s2-react";
 import "@antv/s2-react/dist/style.min.css";
-
+/**
+ * A reusable Table component to display tabular data.
+ * @param {Array} data - An array of objects representing the table rows and columns.
+ * @returns {JSX.Element} - The rendered Table element.
+ */
 const Table = (props) => {
   const dataCfg = {
     fields: {

@@ -8,18 +8,34 @@ import { rootQuery } from "../../../Redux/Root/RootQuery/rootQuery";
 import { message } from "antd";
 import { useSelector } from "react-redux";
 
+/**
+ * Excel Component
+ *
+ * The Excel component is a React functional component that represents the Excel page for uploading and processing CSV files.
+ * @returns {JSX.Element} The rendered Excel element.
+ */
+
 const Excel = () => {
   //useSelector to get a specific Excel page data
   const Excel = useSelector(rootSelector.ExcelSelector.ExcelData);
   const navigate = useNavigate();
 
   //POST Req RTK Query to send the uploaded csv
-  const [sendExcelCSV] = rootQuery.excelPage.useSendExcelCSVMutation() || {};
+  const [sendExcelCSV, resultCsv] =
+    rootQuery.excelPage.useSendExcelCSVMutation() || {};
   //GET Req to get the project from Backend
   const [getExcel, resultsExcel] =
     rootQuery.excelPage.useLazyGetExcelQuery() || {};
 
-  //This Function is Trgiggered when a csv is selected by the user
+  /**
+   * handleCustomRequest
+   *
+   * This function is triggered when a CSV file is selected by the user for upload.
+   * It sends a POST request to upload the CSV file and a subsequent GET request
+   * based on the condition to fetch the project data from the backend.
+   *
+   * @param {Object} options - Options object containing the uploaded file and error handling.
+   */
   const handleCustomRequest = async ({ file, onError }) => {
     try {
       const formData = new FormData();
@@ -33,10 +49,6 @@ const Excel = () => {
     }
   };
 
-  //Error Handling
-  if (sendExcelCSV.isError) message.error("Error Uploading File!");
-
-  if (resultsExcel.data) console.log(resultsExcel.data);
   //Redirecting the user to another Route when GET Req is Success
   if (resultsExcel.data) {
     navigate(`/Excel/${Excel.ProjectId}`);
@@ -56,8 +68,7 @@ const Excel = () => {
             icon={<UploadOutlined />}
           />
           <br></br>
-          {sendExcelCSV.isLoading && <h4>Loading Please Wait...</h4>}
-          {sendExcelCSV.isError && <h4>Error</h4>}
+          {resultCsv.isLoading && <h4>Uploading Please Wait...</h4>}
         </div>
       </div>
     </div>

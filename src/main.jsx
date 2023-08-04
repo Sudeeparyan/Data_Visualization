@@ -1,3 +1,10 @@
+/**
+ * React Application Entry Point
+ *
+ * This file is the entry point of the React application. It renders the main App component wrapped inside a Redux Provider
+ * and mounts it to the root element of the HTML document.
+ */
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 
