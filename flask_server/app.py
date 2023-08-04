@@ -5,7 +5,7 @@ import os
 
 # flask modules
 from flask_cors import cross_origin, CORS
-from flask import send_from_directory, jsonify
+from flask import send_from_directory, jsonify,render_template
 
 # application modules
 from page_api_calls import create_app
@@ -34,13 +34,16 @@ with app.app_context():
     db.session.add(new_user)
     db.session.commit()
 
-file_pointer = open("../dist/index.html", "r", encoding="utf-8")
 
-@app.route("/")
+
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
 @cross_origin()
 @handle_errors
-def render_index_page():
-    """Rendering the first page of the web page"""
+def index(path):
+    
+    file_pointer = open("../dist/index.html", "r", encoding="utf-8")
     
     return file_pointer.read()
 
@@ -54,6 +57,7 @@ def render_static_file(name):
     return send_from_directory(
         app.static_folder, name, as_attachment=True
     )
+
     
 @app.errorhandler(404)
 def handle_unknown_routes(error):
@@ -64,5 +68,5 @@ def handle_unknown_routes(error):
 
 if __name__ == '__main__':
     # Running the server at port 3000
-    app.run(port=3000 ,debug=True)
+    app.run(port=8000,debug=True)
   
