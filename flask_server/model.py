@@ -1,5 +1,6 @@
 """Creating database for device-vision """
 
+#flask modules
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -23,7 +24,7 @@ class Users(db.Model):
     child_project = db.relationship('Projects', back_populates='parent_users', lazy=True)
 
 class Projects(db.Model):
-    
+
     """
     Represents a project in the database.
 
@@ -33,7 +34,7 @@ class Projects(db.Model):
         user_id (int): The user ID of the owner of the project (foreign key to Users table).
         
     """
-        
+
     __tablename__ = 'projects'
     project_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     project_name = db.Column(db.String(50))

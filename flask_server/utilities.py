@@ -1,8 +1,10 @@
 """Reuseable functions for this project"""
+# python modules
 from functools import wraps
+#flask modules
 from flask import jsonify
 
-def error_handling_decorator(func):
+def handle_errors(func):
     """ Args:
         func (function): The function to be decorated.
 
@@ -12,8 +14,8 @@ def error_handling_decorator(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except Exception as e:
-            error_message = str(e)
+        except Exception as error:
+            error_message = str(error)
             return jsonify({"error": error_message})
 
     return wrapper

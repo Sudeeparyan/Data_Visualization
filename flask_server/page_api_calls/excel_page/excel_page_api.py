@@ -1,18 +1,24 @@
 """This file creates api call for excelpage"""
 
+# python modules
+import datetime
+import os
+
+# third party modules
 from flask import Blueprint, request, jsonify
 import dask.dataframe as dd
 import pandas as pd
-import datetime
-import os
-from model import Projects, InputFiles, db, Users, Projects
-from utilities import error_handling_decorator
 
+# application modules
+from model import Projects, InputFiles, db, Users, Projects
+from utilities import handle_errors
+
+# creating the blueprint for excel_page
 excel_page = Blueprint("excel_page_api", __name__)
 
 
 @excel_page.route("/api/v1/upload-csv", methods=["POST"])
-@error_handling_decorator
+@handle_errors
 def upload_csv():
     
     """ 
@@ -23,10 +29,10 @@ def upload_csv():
        It returns a JSON response for status of file uploaded
     """
 
-    last_user = Users.query.order_by(Users.user_id.desc()).first()
+    current_user = Users.query.order_by(Users.user_id.desc()).first()
 
     # Create a new project associated with the newly created user
-    new_project = Projects(project_name="device-vision", user_id=last_user.user_id)
+    new_project = Projects(project_name="device-vision", user_id=current_user.user_id)
     db.session.add(new_project)
     db.session.commit()
 
@@ -44,10 +50,10 @@ def upload_csv():
     actual_csv = pd.DataFrame(pd.read_csv(current_csv_path))
     actual_csv.to_csv(current_csv_path, index=False)
 
-    new_csv_file = InputFiles(
+    input_file = InputFiles(
         file_path=current_csv_path, project_id=new_project.project_id
     )
-    db.session.add(new_csv_file)
+    db.session.add(input_file)
     db.session.commit()
 
     return jsonify(
@@ -56,8 +62,8 @@ def upload_csv():
 
 
 @excel_page.route("/api/v1/get-csv/<id>", methods=["GET"])
-@error_handling_decorator
-def sending_csv(id):
+@handle_errors
+def send_csv(id):
     """This api is for sending the csv file content 
 
     Args:
@@ -66,12 +72,14 @@ def sending_csv(id):
     Returns:
         _Json response with csv file content or error message
     """
-    exists_or_not = Projects.query.filter_by(project_id=id).first()
+    project_id = Projects.query.filter_by(project_id=id).first()
 
-    if exists_or_not:
-        csv_table_entry = InputFiles.query.filter_by(project_id=id).first()
-        actual_csv = pd.DataFrame(pd.read_csv(csv_table_entry.file_path))
+    if project_id:
+
+        input_file = InputFiles.query.filter_by(project_id=id).first()
+        actual_csv = pd.DataFrame(pd.read_csv(input_file.file_path))
         df = actual_csv.to_dict(orient="records")
+
         return jsonify(
             {
                 "error": None,

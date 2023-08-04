@@ -1,32 +1,21 @@
+"""Creates flask app instance"""
 
+# flask modules
 from flask import Flask
-from flask_cors import CORS, cross_origin
+# application modules
 from .excel_page.excel_page_api import excel_page
 
-def Create_app() -> Flask:
-    
-    """This function creates the flask app for the server
+
+def create_app():
+    """
+    This function creates the flask app for the server
+
     Returns:
         Flask object
     """
-    app = Flask(__name__, static_folder='../dist/assets') #initializing the flask app
-    
-    app.config['CORS_HEADERS'] = 'Content-Type'   
-    
-    
+    # initializing the flask app
+    app = Flask(__name__)  
+    app.config['CORS_HEADERS'] = 'Content-Type'
     app.register_blueprint(excel_page)
-    
-    
-    
+
     return app
-
-
-
-
-
-
-    
-
-
-
-
