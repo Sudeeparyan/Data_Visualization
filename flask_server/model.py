@@ -3,6 +3,7 @@
 #flask modules
 from flask_sqlalchemy import SQLAlchemy
 
+#initializing the db
 db = SQLAlchemy()
 
 class Users(db.Model):

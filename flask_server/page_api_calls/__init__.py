@@ -14,8 +14,7 @@ def create_app():
         Flask object
     """
     # initializing the flask app
-    app = Flask(__name__)  
-    app.config['CORS_HEADERS'] = 'Content-Type'
+    app = Flask(__name__)
     app.register_blueprint(excel_page)
 
     return app

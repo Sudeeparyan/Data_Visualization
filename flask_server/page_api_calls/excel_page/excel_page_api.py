@@ -20,7 +20,6 @@ excel_page = Blueprint("excel_page_api", __name__)
 @excel_page.route("/api/v1/upload-csv", methods=["POST"])
 @handle_errors
 def upload_csv():
-    
     """ 
     This function creates an API call
        for uploading csv to the storage
@@ -42,6 +41,7 @@ def upload_csv():
         + str(datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
         + ".csv"
     )
+    os.makedirs('storage\\media_files\\actual_csv_files',exist_ok=True)
     current_csv_path = os.path.join(
         os.getcwd(), "storage\\media_files\\actual_csv_files", file_name
     )
@@ -61,22 +61,23 @@ def upload_csv():
     )
 
 
-@excel_page.route("/api/v1/get-csv/<id>", methods=["GET"])
+@excel_page.route("/api/v1/get-csv/<project_id>", methods=["GET"])
 @handle_errors
-def send_csv(id):
+def send_csv(project_id):
     """This api is for sending the csv file content 
 
     Args:
-        id (_type_): The project id for the uploaded csv file
+        project_id (int): The project id for the uploaded csv file
 
     Returns:
         _Json response with csv file content or error message
     """
-    project_id = Projects.query.filter_by(project_id=id).first()
+   
+    project = Projects.query.filter_by(project_id=project_id).first()
+   
+    if project:
 
-    if project_id:
-
-        input_file = InputFiles.query.filter_by(project_id=id).first()
+        input_file = InputFiles.query.filter_by(project_id=project.project_id).first()
         actual_csv = pd.DataFrame(pd.read_csv(input_file.file_path))
         df = actual_csv.to_dict(orient="records")
 
@@ -90,3 +91,39 @@ def send_csv(id):
 
     else:
         return jsonify({"error": "Invalid projectID"})
+
+
+@excel_page.route("/api/v1/delete-projects", methods=["DELETE"])
+@handle_errors
+def delete_projects():
+    """This API is for deleting projects and their associated CSV files
+
+    The project_ids to be deleted should be provided in the request body as a list.
+
+    Returns:
+        _Json response with success message or error message
+    """
+    data = request.get_json()
+    project_ids = data.get("project_ids")
+
+    if not project_ids:
+        return jsonify({"error": "No project_ids provided in the request body."})
+
+
+    for project_id in project_ids:
+        project = Projects.query.filter_by(project_id=project_id).first()
+        if project:
+           
+            input_file = InputFiles.query.filter_by(project_id=project.project_id).first()
+            if input_file:
+               
+                db.session.delete(input_file)
+
+            # Delete the project
+            db.session.delete(project)
+        
+
+
+    db.session.commit()
+    return jsonify({"error":None, "message": "deleted successfully"})
+
