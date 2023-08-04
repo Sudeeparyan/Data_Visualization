@@ -15,10 +15,9 @@ const App = () => {
       <Navbar />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/Excel" element={<ExcelPage />} />
+          <Route path="/" element={<ExcelPage />} />
           <Route path="/Excel/:id" element={<Project />} />
-          {/* <Route path="*" element={<ExcelPage />} /> */}
+          <Route path="*" element={<ExcelPage />} />
         </Routes>
       </BrowserRouter>
     </div>
