@@ -5,10 +5,10 @@
     cursor: pointer;
     height: 30px;
     border: rgba(0, 173, 253, 0.753);
-    width: 70px;
+    width: 135px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border-radius: 3px;
 }
-.viewButton:hover{
-    color: black
+.viewButton:hover {
+    background-color: rgb(255, 255, 255);
 }

@@ -1,5 +1,7 @@
 import React from "react";
 import styles from "./Button.module.css";
+import { Button } from "antd";
+import { useNavigate } from "react-router-dom";
 /**
  * A reusable button component.
  * @param {string} text - The text to display inside the button.
@@ -7,10 +9,16 @@ import styles from "./Button.module.css";
  * @returns {JSX.Element} - The rendered button element.
  */
 
-const ButtonComponent = () => {
+const ButtonComponent = (props) => {
+  const navigate = useNavigate();
+  const buttonAction = () => {
+    navigate(`/${props.action}`);
+  };
   return (
     <div>
-      <button className={styles.viewButton}>Preview</button>
+      <Button className={styles.viewButton} onClick={buttonAction}>
+        {props.content}
+      </Button>
     </div>
   );
 };
