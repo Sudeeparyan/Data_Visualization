@@ -5,7 +5,7 @@ import os
 
 # flask modules
 from flask_cors import cross_origin, CORS
-from flask import send_from_directory
+from flask import send_from_directory, jsonify
 
 # application modules
 from page_api_calls import create_app
@@ -55,7 +55,12 @@ def render_static_file(name):
         app.static_folder, name, as_attachment=True
     )
     
-
+@app.errorhandler(404)
+def handle_unknown_routes(error):
+    """Function for handling unknown routes"""
+    response = jsonify({'error': 'The requested URL was not found on this server.'})
+    
+    return response
 
 if __name__ == '__main__':
     # Running the server at port 3000
