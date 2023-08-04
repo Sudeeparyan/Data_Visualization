@@ -43,9 +43,8 @@ with app.app_context():
 @handle_errors
 def index(path):
     
-    file_pointer = open("../dist/index.html", "r", encoding="utf-8")
-    
-    return file_pointer.read()
+    with open("../dist/index.html", "r", encoding="utf-8") as file_pointer:
+         return file_pointer.read()
 
 
 
