@@ -10,7 +10,7 @@ const UploadButton = (props) => {
   return (
     <div>
       <Upload
-        maxCount={1}
+        maxCount={props.acceptCount}
         disabled={props.work}
         accept={props.accept}
         customRequest={props.handleCustomRequest}
