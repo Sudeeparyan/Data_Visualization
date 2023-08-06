@@ -5,7 +5,7 @@
  * The ExcelSelector is imported from the 'excelSelector' in the 'ExcelPage' directory, and it provides a selector to extract Excel data from the state.
  */
 
-import { ExcelSelector } from "../../ExcelPage/excelSelector";
+import { ExcelSelector } from "../DashboardPage/dashboardSelector";
 
 export const rootSelector = {
   ExcelSelector: ExcelSelector,

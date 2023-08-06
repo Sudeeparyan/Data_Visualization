@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import ExcelTable from "../Excel/table";
+import ExcelTable from "../Dashboard/table";
 import { useLocation } from "react-router-dom";
-import { useLazyGetExcelQuery } from "../../../Redux/ExcelPage/excelRtkQuery";
+import { useLazyGetExcelQuery } from "../../../Redux/DashboardPage/dashboardRtkQuery";
 import { message } from "antd";
 
 /**

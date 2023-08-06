@@ -5,7 +5,7 @@
  * These actions can be dispatched to update the Redux store with Excel data.
  */
 
-import { storeExcelCsv, storeExcelid } from "../../ExcelPage/excelSlice";
+import { storeExcelCsv, storeExcelid } from "../DashboardPage/dashboardSlice";
 
 export const rootActions = {
   excelActions: {

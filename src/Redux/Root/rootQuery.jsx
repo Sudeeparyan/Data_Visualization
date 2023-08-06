@@ -9,7 +9,7 @@
 import {
   useLazyGetExcelQuery,
   useSendExcelCSVMutation,
-} from "../../ExcelPage/excelRtkQuery";
+} from "../DashboardPage/dashboardRtkQuery";
 
 export const rootQuery = {
   excelPage: {
