@@ -8,9 +8,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 .vite
 >>>>>>> 6ce11e1 (.vite\deps_Ignored)
+=======
+>>>>>>> 5c20681 (.vite_ignore)
 node_modules
 dist
 .vite
