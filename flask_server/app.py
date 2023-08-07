@@ -5,7 +5,7 @@ import os
 
 # flask modules
 from flask_cors import cross_origin, CORS
-from flask import send_from_directory, jsonify,render_template
+from flask import send_from_directory, jsonify
 
 # application modules
 from page_api_calls import create_app
