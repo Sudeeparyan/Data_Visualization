@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 const Excel = () => {
   const navigate = useNavigate();
   const Excel = useSelector(rootSelector.ExcelSelector.ExcelData);
+  console.log(Excel);
 
   //Making the upload button diable and enable
   const [disable, setDisable] = useState(false);
