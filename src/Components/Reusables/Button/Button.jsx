@@ -1,7 +1,3 @@
-import React from "react";
-import styles from "./Button.module.css";
-import { Button } from "antd";
-import { useNavigate } from "react-router-dom";
 /**
  * A reusable button component.
  * @param {string} text - The text to display inside the button.
@@ -9,16 +5,17 @@ import { useNavigate } from "react-router-dom";
  * @returns {JSX.Element} - The rendered button element.
  */
 
-const ButtonComponent = (props) => {
-  const navigate = useNavigate();
-  const buttonAction = () => {
-    navigate(`/${props.action}`);
-  };
+//React Imports
+import React from "react";
+//Styles Imports
+import styles from "./Button.module.css";
+//Imports from antD
+import { Button } from "antd";
+
+const ButtonComponent = ({ content }) => {
   return (
     <div>
-      <Button className={styles.viewButton} onClick={buttonAction}>
-        {props.content}
-      </Button>
+      <Button className={styles.viewButton}>{content}</Button>
     </div>
   );
 };
