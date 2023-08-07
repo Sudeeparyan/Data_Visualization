@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { ExcelSelector } from "../../../Redux/DashboardPage/dashboardSelector";
+import { rootSelector } from "../../../Redux/Root/rootSelector";
 import Table from "../../Reusables/Table/table";
 /**
  * ExcelTable Componentthat displays tabular data fetched from the Redux store. It uses the `Table` component to render the data in a table format.
@@ -9,7 +9,7 @@ import Table from "../../Reusables/Table/table";
 
 const ExcelTable = () => {
   //useSelector to get a specific Excel page data
-  const Excel = useSelector(ExcelSelector.ExcelData);
+  const Excel = useSelector(rootSelector.ExcelSelector.ExcelData);
   return (
     <div>
       <Table columns={Excel.ExcelColumns} tableData={Excel.ExcelCsv} />
