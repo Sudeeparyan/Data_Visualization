@@ -1,13 +1,3 @@
-import React, { useState } from "react";
-import styles from "./Dashboard.module.css";
-import { useNavigate } from "react-router-dom";
-import { UploadOutlined } from "@ant-design/icons";
-import UploadButton from "../../Reusables/UploadButton/upploadButton";
-import { rootSelector } from "../../../Redux/Root/rootSelector";
-import { rootQuery } from "../../../Redux/Root/rootQuery";
-import { message } from "antd";
-import { useSelector } from "react-redux";
-
 /**
  * Excel Component
  *
@@ -15,11 +5,24 @@ import { useSelector } from "react-redux";
  * @returns {JSX.Element} The rendered Excel element.
  */
 
-const Excel = () => {
-  const navigate = useNavigate();
-  const Excel = useSelector(rootSelector.ExcelSelector.ExcelData);
-  console.log(Excel);
+// React Imports
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+//Styles
+import styles from "./Dashboard.module.css";
+// Imports from antD and antV
+import { UploadOutlined } from "@ant-design/icons";
+import { message } from "antd";
+//ReUsables
+import UploadButton from "../../Reusables/UploadButton/upploadButton";
+//Redux
+import { rootSelector } from "../../../Redux/Root/rootSelector";
+import { rootQuery } from "../../../Redux/Root/rootQuery";
 
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const projectId = useSelector(rootSelector.Project.projectData.projectId);
   //Making the upload button diable and enable
   const [disable, setDisable] = useState(false);
 
@@ -60,7 +63,7 @@ const Excel = () => {
 
   //Redirecting the user to another Route when GET Req is Success
   if (resultsExcel.data) {
-    navigate(`/Excel/${Excel.ProjectId}`);
+    navigate(`/Excel/${projectId}`);
   }
 
   return (
@@ -88,4 +91,4 @@ const Excel = () => {
   );
 };
 
-export default Excel;
+export default Dashboard;

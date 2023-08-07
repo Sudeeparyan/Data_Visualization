@@ -27,7 +27,7 @@ export const sendExcelCsv = createApi({
           const { data } = await queryFulfilled;
           dispatch(rootActions.excelActions.storeExcelid(data));
         } catch (err) {
-          console.log("error... ", err);
+          alert("Error:", err);
         }
       },
     }),
@@ -37,10 +37,9 @@ export const sendExcelCsv = createApi({
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           dispatch(rootActions.excelActions.storeExcelCsv(data));
         } catch (err) {
-          console.log("error... ", err);
+          alert("Error:", err);
         }
       },
     }),

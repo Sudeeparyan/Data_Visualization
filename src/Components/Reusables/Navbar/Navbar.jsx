@@ -1,9 +1,13 @@
-import React from "react";
-import styles from "./Navbar.module.css";
 /**
  * A reusable Navbar component.
  * @returns {JSX.Element} - The rendered Navbar element.
  */
+
+//React Imports
+import React from "react";
+//Styles Imports
+import styles from "./Navbar.module.css";
+
 const Navbar = () => {
   return (
     <div className={styles.navbar}>

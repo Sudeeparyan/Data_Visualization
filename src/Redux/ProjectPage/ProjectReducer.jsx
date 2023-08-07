@@ -11,7 +11,7 @@ const initialState = {
   ExcelCsv: [],
   ExcelColumns: [],
   ProjectId: 0,
-  Error: "",
+  Error: null,
 };
 
 const ExcelSlice = createSlice({
