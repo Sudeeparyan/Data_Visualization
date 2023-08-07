@@ -1,10 +1,11 @@
 """Creating database for device-vision """
 
-#flask modules
+# flask modules
 from flask_sqlalchemy import SQLAlchemy
 
-#initializing the db
+# initializing the db
 db = SQLAlchemy()
+
 
 class Users(db.Model):
     """
@@ -21,8 +22,10 @@ class Users(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_name = db.Column(db.String(50))
     email = db.Column(db.String(50))
+    
     password = db.Column(db.String(50))
     child_project = db.relationship('Projects', back_populates='parent_users', lazy=True)
+
 
 class Projects(db.Model):
 
@@ -40,8 +43,10 @@ class Projects(db.Model):
     project_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     project_name = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    
     parent_users = db.relationship('Users', back_populates='child_project')
     child_input_file = db.relationship('InputFiles', back_populates='parent_projects', lazy=True)
+
 
 class InputFiles(db.Model):
     
@@ -60,10 +65,12 @@ class InputFiles(db.Model):
     input_file_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.project_id'))
     parent_projects = db.relationship('Projects', back_populates='child_input_file')
+    
     file_path = db.Column(db.String(50))
-    for_training =db.Column(db.Boolean)
+    for_training = db.Column(db.Boolean)
     child_results = db.relationship("Results", back_populates='parent_input_files', lazy=True) 
     child_trained_model = db.relationship("TrainedModels", back_populates='parent_input_files')
+ 
       
 class TrainedModels(db.Model):
     
@@ -82,9 +89,8 @@ class TrainedModels(db.Model):
     __tablename__ = 'trained_models'
     trained_model_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     trained_model_path = db.Column(db.String(50))
-   
-   
     file_path = db.Column(db.String, db.ForeignKey('input_files.file_path'))
+    
     parent_input_files = db.relationship('InputFiles', back_populates='child_trained_model', lazy=True)
     x_coordinate_alias = db.Column(db.String(50))
     y_coordinate_alias = db.Column(db.String(50))
@@ -106,14 +112,14 @@ class Results(db.Model):
     """
     __tablename__ = 'results'
     result_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    
     trained_model_id = db.Column(db.Integer, db.ForeignKey('trained_models.trained_model_id'))
     parent_trained_model = db.relationship('TrainedModels', back_populates='child_results')
+    
     input_file_id = db.Column(db.Integer, db.ForeignKey('input_files.input_file_id'))
     parent_input_files = db.relationship('InputFiles', back_populates='child_results')
-
     x_coordinate = db.Column(db.String(50))
     y_coordinate = db.Column(db.String(50))
+    
     result_json_path = db.Column(db.String(50))
    
     

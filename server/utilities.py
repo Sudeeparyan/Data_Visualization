@@ -2,8 +2,9 @@
 # python modules
 from functools import wraps
 
-#flask modules
+# flask modules
 from flask import jsonify
+
 
 def handle_errors(func):
     """ Args:

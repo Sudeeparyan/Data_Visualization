@@ -6,7 +6,6 @@ import os
 
 # third party modules
 import dask.dataframe as dd
-import pandas as pd
 from flask import Blueprint, request, jsonify
 
 # application modules
@@ -51,6 +50,7 @@ def upload_csv():
         df_dask = (dd.read_csv(current_csv_path))
         df_pandas = df_dask.compute()
         df_pandas.fillna("", inplace=True)
+        
         df_dask = dd.from_pandas(df_pandas, npartitions=1)
         df_dask.to_csv(current_csv_path, index=False, single_file = True)
 
@@ -63,7 +63,7 @@ def upload_csv():
         return jsonify({"error": None, "projectId": new_project.project_id})
 
     except Exception as error:
-        return jsonify({"error": "file not saved in the storage"})
+        return jsonify({"error": error})
 
 
 @excel_page.route("/api/v1/get-csv/<project_id>", methods=["GET"])
@@ -98,7 +98,7 @@ def send_csv(project_id):
             )
 
         except Exception as error:
-            return jsonify({{"error": "file not found folder"}})
+            return jsonify({{"error": error}})
 
     else:
         return jsonify({"error": "Invalid projectID"})

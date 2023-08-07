@@ -15,7 +15,7 @@ def create_app():
     """
     # initializing the flask app
     app = Flask(__name__)
+    # registering the blueprint in the app
     app.register_blueprint(excel_page)
     
-
     return app
