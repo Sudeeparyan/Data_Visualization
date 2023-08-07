@@ -20,21 +20,18 @@ const Table = (props) => {
       hoverHighlight: true,
       selectedCellsSpotlight: true,
     },
-    tooltip: {
-      showTooltip: true,
-    },
   };
 
   return (
     <div>
       <SheetComponent
-        sheetType="editable"
+        sheetType="table"
         dataCfg={dataCfg}
         options={s2Options}
         themeCfg={{ name: "colorful" }}
         adaptive={{
           width: true,
-          height: false,
+          height: true,
         }}
       />
     </div>
