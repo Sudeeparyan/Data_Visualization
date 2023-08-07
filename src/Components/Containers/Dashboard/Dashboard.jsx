@@ -47,7 +47,10 @@ const Excel = () => {
       const res = await sendExcelCSV(formData);
       //sending GET Request based on condition
       if (res.data.error === null) await getExcel(res.data.projectId);
-      else message.error("Error Uploading File");
+      else {
+        setDisable((prev) => !prev);
+        onError(message.error("Error Uploading File"));
+      }
     } catch (error) {
       setDisable((prev) => !prev);
       onError(message.error("Error Uploading File"));
