@@ -28,7 +28,6 @@ class Users(db.Model):
 
 
 class Projects(db.Model):
-
     """
     Represents a project in the database.
 
@@ -49,7 +48,6 @@ class Projects(db.Model):
 
 
 class InputFiles(db.Model):
-    
     """
     Represents an input file in the database.
 
@@ -73,8 +71,6 @@ class InputFiles(db.Model):
  
       
 class TrainedModels(db.Model):
-    
-    
     """
     Represents a trained model in the database.
 
@@ -96,9 +92,8 @@ class TrainedModels(db.Model):
     y_coordinate_alias = db.Column(db.String(50))
     child_results = db.relationship("Results", back_populates='parent_trained_model', lazy=True)
     
-
-class Results(db.Model):
     
+class Results(db.Model):
     """
     Represents a result in the database.
 
@@ -121,5 +116,3 @@ class Results(db.Model):
     y_coordinate = db.Column(db.String(50))
     
     result_json_path = db.Column(db.String(50))
-   
-    

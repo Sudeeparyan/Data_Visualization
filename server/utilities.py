@@ -12,6 +12,7 @@ def handle_errors(func):
 
     Returns:
         function: The decorated function with exception handling."""
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:

@@ -1,5 +1,10 @@
-"""Device vision backend server"""
+"""Device vision
 
+   This is a web application built with Flask and
+   serves a React frontend from the 'dist' directory"""
+
+
+# Flask application code starts here
 # python modules
 import os
 
@@ -9,7 +14,7 @@ from flask import send_from_directory, jsonify
 
 # application modules
 from page_api_calls import create_app
-from model import db, Users
+from models import db, Users
 from utilities import handle_errors
 
 # initializing the flask app
@@ -27,9 +32,10 @@ def initialize_db():
     os.makedirs('storage\\database\\', exist_ok=True)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
         os.path.join(os.getcwd(), 'storage\\database\\db.sqllite3')
+
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
-    
+
     with app.app_context():
         db.create_all()
         new_user = Users()
@@ -47,6 +53,7 @@ with open("../dist/index.html", "r", encoding="utf-8") as file_pointer:
 @handle_errors
 def index(path):
     """rendering the index page of the application"""
+
     return file_pointer
 
 
@@ -54,6 +61,7 @@ def index(path):
 @handle_errors
 def render_static_file(name):
     """Rendering  static files for the webpage"""
+
     return send_from_directory(
         app.static_folder, name, as_attachment=True
     )
@@ -62,6 +70,7 @@ def render_static_file(name):
 @app.errorhandler(404)
 def handle_unknown_routes(error):
     """Function for handling unknown routes"""
+
     response = jsonify({'error': 'The requested URL was not found on this server.'})
     return response
 
@@ -69,5 +78,7 @@ def handle_unknown_routes(error):
 if __name__ == '__main__':
     # setting up for db connectivity
     initialize_db()
-    # Running the server at port 3000
+
+    # Running the server at port 8000
     app.run(port=8000, debug=True)
+ 

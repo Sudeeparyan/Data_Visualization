@@ -2,6 +2,7 @@
 
 # flask modules
 from flask import Flask
+
 # application modules
 from .excel_page.excel_page_api import excel_page
 
@@ -15,6 +16,7 @@ def create_app():
     """
     # initializing the flask app
     app = Flask(__name__)
+
     # registering the blueprint in the app
     app.register_blueprint(excel_page)
     

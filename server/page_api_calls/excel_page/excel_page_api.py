@@ -9,7 +9,7 @@ import dask.dataframe as dd
 from flask import Blueprint, request, jsonify
 
 # application modules
-from model import Projects, InputFiles, db, Users, Projects
+from models import db, InputFiles, Users, Projects
 from utilities import handle_errors
 
 # creating the blueprint for excel_page
@@ -20,17 +20,18 @@ excel_page = Blueprint("excel_page_api", __name__)
 @handle_errors
 def upload_csv():
     """
-    This function creates an API call
+    This function handles the API call
        for uploading csv to the storage
 
     Returns:
-       It returns a JSON response for status of file uploaded
+       It returns a JSON response with the status of file uploaded
     """
 
     current_user = Users.query.order_by(Users.user_id.desc()).first()
 
     # Create a new project associated with the newly created user
-    new_project = Projects(project_name="device-vision", user_id=current_user.user_id)
+    new_project = Projects(project_name="device-vision",
+                           user_id=current_user.user_id)
     db.session.add(new_project)
     db.session.commit()
 
@@ -41,29 +42,32 @@ def upload_csv():
         + str(datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
         + ".csv"
     )
+
     os.makedirs("storage\\media_files\\actual_csv_files", exist_ok=True)
     current_csv_path = os.path.join(
         os.getcwd(), "storage\\media_files\\actual_csv_files", file_name
     )
+
     try:
         csv_file.save(current_csv_path)
-        df_dask = (dd.read_csv(current_csv_path))
+        df_dask = dd.read_csv(current_csv_path)
         df_pandas = df_dask.compute()
         df_pandas.fillna("", inplace=True)
-        
+
         df_dask = dd.from_pandas(df_pandas, npartitions=1)
-        df_dask.to_csv(current_csv_path, index=False, single_file = True)
+        df_dask.to_csv(current_csv_path, index=False, single_file=True)
 
         input_file = InputFiles(
             file_path=current_csv_path, project_id=new_project.project_id
         )
+
         db.session.add(input_file)
         db.session.commit()
 
         return jsonify({"error": None, "projectId": new_project.project_id})
 
-    except Exception as error:
-        return jsonify({"error": error})
+    except Exception:
+        return jsonify({"error": "file can't be read"})
 
 
 @excel_page.route("/api/v1/get-csv/<project_id>", methods=["GET"])
@@ -81,10 +85,11 @@ def send_csv(project_id):
     project = Projects.query.filter_by(project_id=project_id).first()
 
     if project:
-        input_file = InputFiles.query.filter_by(project_id=project.project_id).first()
+        input_file = InputFiles.query.filter_by(
+            project_id=project.project_id).first()
 
         try:
-            actual_csv = dd.read_csv(input_file.file_path) 
+            actual_csv = dd.read_csv(input_file.file_path)
             actual_csv = actual_csv.compute()
             actual_csv.fillna("", inplace=True)
             df = actual_csv.to_dict(orient="records")
@@ -93,12 +98,12 @@ def send_csv(project_id):
                 {
                     "error": None,
                     "tableContent": df,
-                    "columns": [column for column in actual_csv.columns],
+                    "columns":  [column for column in actual_csv.columns],
                 }
             )
 
-        except Exception as error:
-            return jsonify({{"error": error}})
+        except Exception:
+            return jsonify({"error": "file can't be read"})
 
     else:
         return jsonify({"error": "Invalid projectID"})
@@ -126,6 +131,7 @@ def delete_projects():
             input_file = InputFiles.query.filter_by(
                 project_id=project.project_id
             ).first()
+
             if input_file:
                 db.session.delete(input_file)
 
