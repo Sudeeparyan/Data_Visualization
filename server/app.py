@@ -30,12 +30,14 @@ app.static_folder = static_folder_path
 def initialize_db():
     """Setting up sqllite3 connectivity"""
     os.makedirs('storage\\database\\', exist_ok=True)
+    
+    # setting the file path for sqllite3
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
         os.path.join(os.getcwd(), 'storage\\database\\db.sqllite3')
-
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
-
+    
+    # creating the db within flask context
     with app.app_context():
         db.create_all()
         new_user = Users()

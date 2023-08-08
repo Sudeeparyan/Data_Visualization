@@ -12,4 +12,4 @@ dist/
 .dv_venv/
 __pycache__/
 storage/
-
+.vscode/

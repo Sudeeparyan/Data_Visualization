@@ -92,13 +92,14 @@ def send_csv(project_id):
             actual_csv = dd.read_csv(input_file.file_path)
             actual_csv = actual_csv.compute()
             actual_csv.fillna("", inplace=True)
-            df = actual_csv.to_dict(orient="records")
+            column_list = [column for column in (actual_csv.columns)]
+            actual_csv = actual_csv.to_dict(orient="records")
 
             return jsonify(
                 {
                     "error": None,
-                    "tableContent": df,
-                    "columns":  [column for column in actual_csv.columns],
+                    "tableContent": actual_csv,
+                    "columns":  column_list,
                 }
             )
 
@@ -109,34 +110,33 @@ def send_csv(project_id):
         return jsonify({"error": "Invalid projectID"})
 
 
-@excel_page.route("/api/v1/delete-projects", methods=["DELETE"])
+@excel_page.route("/api/v1/delete-project", methods=["DELETE"])
 @handle_errors
-def delete_projects():
-    """This API is for deleting projects and their associated CSV files
-
-    The project_ids to be deleted should be provided in the request body as a list.
+def delete_project():
+    """
+    This API is for deleting projects and their associated CSV files
+    The project_id to be deleted should be provided in the request body as a array.
 
     Returns:
         _Json response with success message or error message
     """
     data = request.get_json()
-    project_ids = data.get("project_ids")
+    project_id = data.get("project_id")
 
-    if not project_ids:
-        return jsonify({"error": "No project_ids provided in the request body."})
+    if not project_id:
+        return jsonify({"error": "No project_id provided in the request body."})
 
-    for project_id in project_ids:
-        project = Projects.query.filter_by(project_id=project_id).first()
-        if project:
-            input_file = InputFiles.query.filter_by(
-                project_id=project.project_id
-            ).first()
+    project = Projects.query.filter_by(project_id=project_id).first()
+    if project:
+        input_file = InputFiles.query.filter_by(
+            project_id=project.project_id
+        ).first()
 
-            if input_file:
-                db.session.delete(input_file)
+        if input_file:
+            db.session.delete(input_file)
 
-            # Delete the project
-            db.session.delete(project)
+        # Delete the project
+        db.session.delete(project)
 
     db.session.commit()
     return jsonify({"error": None})
