@@ -13,10 +13,10 @@ from models import db, InputFiles, Users, Projects
 from utilities import handle_errors
 
 # creating the blueprint for excel_page
-excel_page = Blueprint("excel_page_api", __name__)
+project_page = Blueprint("project", __name__)
 
 
-@excel_page.route("/api/v1/upload-csv", methods=["POST"])
+@project_page.route("/api/v1/upload-csv", methods=["POST"])
 @handle_errors
 def upload_csv():
     """
@@ -70,7 +70,7 @@ def upload_csv():
         return jsonify({"error": "file can't be read"})
 
 
-@excel_page.route("/api/v1/get-csv/<project_id>", methods=["GET"])
+@project_page.route("/api/v1/get-csv/<project_id>", methods=["GET"])
 @handle_errors
 def send_csv(project_id):
     """This api is for sending the csv file content
@@ -103,14 +103,14 @@ def send_csv(project_id):
                 }
             )
 
-        except Exception:
-            return jsonify({"error": "file can't be read"})
+        except Exception as err:
+            return jsonify({"error": "file can't be read", "message":str(err)})
 
     else:
         return jsonify({"error": "Invalid projectID"})
 
 
-@excel_page.route("/api/v1/delete-project", methods=["DELETE"])
+@project_page.route("/api/v1/delete-project", methods=["DELETE"])
 @handle_errors
 def delete_project():
     """

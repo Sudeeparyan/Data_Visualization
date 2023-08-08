@@ -4,8 +4,7 @@
 from flask import Flask
 
 # application modules
-from .excel_page.excel_page_api import excel_page
-
+from .project.project import project_page
 
 def create_app():
     """
@@ -18,6 +17,6 @@ def create_app():
     app = Flask(__name__)
 
     # registering the blueprint in the app
-    app.register_blueprint(excel_page)
+    app.register_blueprint(project_page)
     
     return app
