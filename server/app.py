@@ -50,8 +50,12 @@ def initialize_db():
 @handle_errors
 def index(path):
     """rendering the index page of the application"""
-    with open("../dist/index.html", "r", encoding="utf-8") as file_pointer:
-         return file_pointer.read()
+    try:
+        with open("../dist/index.html", "r", encoding="utf-8") as file_pointer:
+            return file_pointer.read()
+        
+    except Exception as err:
+        return jsonify({"error":"file can't be opened","exact_message": str(err)})
 
 
 

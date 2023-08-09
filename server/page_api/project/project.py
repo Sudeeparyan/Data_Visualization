@@ -10,13 +10,13 @@ from flask import Blueprint, request, jsonify
 
 # application modules
 from models import db, InputFiles, Users, Projects
-from utilities import handle_errors
+from utilities import handle_errors, save_csv_files
 
 # creating the blueprint for excel_page
 project_page = Blueprint("project", __name__)
 
 
-@project_page.route("/api/v1/upload-csv", methods=["POST"])
+@project_page.route("/upload-csv", methods=["POST"])
 @handle_errors
 def upload_csv():
     """
@@ -49,7 +49,7 @@ def upload_csv():
     )
 
     try:
-        csv_file.save(current_csv_path)
+        save_csv_files(csv_file, current_csv_path)
         df_dask = dd.read_csv(current_csv_path)
         df_pandas = df_dask.compute()
         df_pandas.fillna("", inplace=True)
@@ -66,11 +66,11 @@ def upload_csv():
 
         return jsonify({"error": None, "projectId": new_project.project_id})
 
-    except Exception:
-        return jsonify({"error": "file can't be read"})
+    except Exception as err:
+        return jsonify({"error": "file can't be read", "exact_message": str(err)})
 
 
-@project_page.route("/api/v1/get-csv/<project_id>", methods=["GET"])
+@project_page.route("/get-csv/<project_id>", methods=["GET"])
 @handle_errors
 def send_csv(project_id):
     """This api is for sending the csv file content
@@ -104,13 +104,13 @@ def send_csv(project_id):
             )
 
         except Exception as err:
-            return jsonify({"error": "file can't be read", "message":str(err)})
+            return jsonify({"error": "file can't be read", "exact_message":str(err)})
 
     else:
         return jsonify({"error": "Invalid projectID"})
 
 
-@project_page.route("/api/v1/delete-project", methods=["DELETE"])
+@project_page.route("/delete-project", methods=["DELETE"])
 @handle_errors
 def delete_project():
     """
