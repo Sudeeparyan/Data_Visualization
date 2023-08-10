@@ -6,10 +6,14 @@
  */
 
 import { storeExcelCsv, storeExcelid } from "../ProjectPage/ProjectReducer";
+import { storeNotification } from "../Notification/notificationReducer";
 
 export const rootActions = {
   excelActions: {
     storeExcelCsv,
     storeExcelid,
+  },
+  notificationActions: {
+    storeNotification,
   },
 };

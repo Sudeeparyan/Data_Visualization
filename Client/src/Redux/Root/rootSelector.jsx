@@ -6,7 +6,9 @@
  */
 
 import { Projectselector } from "../ProjectPage/ProjectSelector";
+import { NotificationSelector } from "../Notification/notificationSelector";
 
 export const rootSelector = {
   Project: Projectselector,
+  Notification: NotificationSelector,
 };

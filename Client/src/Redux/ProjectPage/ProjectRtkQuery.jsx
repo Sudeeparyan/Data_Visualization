@@ -25,7 +25,15 @@ export const sendExcelCsv = createApi({
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(rootActions.excelActions.storeExcelid(data));
+          if (data.error === null) {
+            dispatch(rootActions.excelActions.storeExcelid(data));
+          } else
+            dispatch(
+              rootActions.notificationActions.storeNotification({
+                type: "error",
+                message: data.error,
+              })
+            );
         } catch (err) {
           alert("Error:", err);
         }
@@ -37,7 +45,21 @@ export const sendExcelCsv = createApi({
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(rootActions.excelActions.storeExcelCsv(data));
+          if (data.error === null) {
+            dispatch(rootActions.excelActions.storeExcelCsv(data));
+            dispatch(
+              rootActions.notificationActions.storeNotification({
+                type: "success",
+                message: "File Loaded Successfully",
+              })
+            );
+          } else
+            dispatch(
+              rootActions.notificationActions.storeNotification({
+                type: "error",
+                message: data.error,
+              })
+            );
         } catch (err) {
           alert("Error:", err);
         }

@@ -1,0 +1,15 @@
+.mainBox{
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.table{
+    width: 85%;
+    height: 100%;
+    justify-self: center
+}
+.sideBox{
+    width: 15%;
+    margin-left: 50px;
+}

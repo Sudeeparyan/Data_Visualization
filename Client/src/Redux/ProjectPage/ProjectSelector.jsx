@@ -17,6 +17,5 @@ export const Projectselector = {
       (project) => project.ExcelColumns
     ),
     tableData: createSelector([ProjectState], (project) => project.ExcelCsv),
-    error: createSelector([ProjectState], (project) => project.Error),
   },
 };

@@ -12,18 +12,21 @@ import DashboardPage from "../Dashboard_page/dashboardPage";
 import Project from "../Project/project";
 //Imports form Reusables
 import Navbar from "../../Components/Reusables/Navbar/Navbar";
+import { Notification } from "../../Components/Reusables/Notification/Notification";
 
 const App = () => {
   return (
     <div>
-      <Navbar />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/Excel/:id" element={<Project />} />
-          <Route path="*" element={<DashboardPage />} />
-        </Routes>
-      </BrowserRouter>
+      <Notification>
+        <Navbar />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/Excel/:id" element={<Project />} />
+            <Route path="*" element={<DashboardPage />} />
+          </Routes>
+        </BrowserRouter>
+      </Notification>
     </div>
   );
 };
