@@ -63,7 +63,7 @@ const Dashboard = () => {
 
   //Redirecting the user to another Route when GET Req is Success
   if (resultsExcel.data) {
-    navigate(`/Excel/${projectId}`);
+    navigate(`/Project/${projectId}`);
   }
 
   return (

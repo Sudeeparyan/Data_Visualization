@@ -12,6 +12,8 @@ import { useLocation } from "react-router-dom";
 
 //Imports from Reusables
 import Table from "../../Components/Reusables/Table/table";
+import Dropdown from "../../Components/Reusables/Dropdown/dropdown";
+
 //Styles Import
 import styles from "./project.module.css";
 //Redux Imports
@@ -34,6 +36,25 @@ const Project = () => {
     getExcel(path);
   }, []);
 
+  const models = [
+    {
+      value: "Model-1",
+      label: "Model-1",
+    },
+    {
+      value: "Model-2",
+      label: "Model-2",
+    },
+    {
+      value: "Model-3",
+      label: "Model-3",
+    },
+  ];
+
+  const handleDropdown = (data) => {
+    console.log(data);
+  };
+
   return (
     <div className={styles.mainBox}>
       {getData.isFetching && <h3>Preparing Preview please wait...</h3>}
@@ -44,7 +65,18 @@ const Project = () => {
       </div>
       {tableData.length > 0 && (
         <div className={styles.sideBox}>
-          <h3>DropDown</h3>
+          <div className={styles.sideHeading}>
+            <div>Select a Model to Test the Dataset</div>
+          </div>
+          <div className={styles.line}></div>
+          <div className={styles.dropdown}>
+            <Dropdown
+              defaultValue={"Select a Model"}
+              options={models}
+              width={128}
+              onchange={handleDropdown}
+            />
+          </div>
         </div>
       )}
     </div>

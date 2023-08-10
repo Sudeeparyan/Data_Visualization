@@ -15,7 +15,7 @@ const Table = ({ columns, tableData }) => {
   };
   const s2Options = {
     width: 400,
-    height: 650,
+    height: 600,
     interaction: {
       hoverHighlight: true,
       selectedCellsSpotlight: true,
