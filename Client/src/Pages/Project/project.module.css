@@ -46,7 +46,7 @@
 }
 .loader{
     display: flex;
-    width: 230px;
+    width: 200px;
     justify-content: space-evenly;
 }
 .fetching{

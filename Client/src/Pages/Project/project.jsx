@@ -9,6 +9,7 @@
 //React Imports
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { debounce } from "lodash";
 
 //Imports from Reusables
 import Table from "../../Components/Reusables/Table/table";
@@ -41,18 +42,20 @@ const Project = () => {
     const path = location.pathname.split("/")[2];
     getExcel({ projectId: path, pageNo: pageNo });
     dispatch(rootActions.excelActions.storeExcelid({ projectId: path }));
-  }, [id]);
+  }, []);
 
-  console.log(getData.isLoading);
   const handleScroll = (event) => {
     const sheetInstance = sheetRef.current;
     if (
       event.scrollY === sheetInstance.facet.vScrollBar.scrollTargetMaxOffset
     ) {
-      if (pageNo !== null) getExcel({ projectId: id, pageNo: pageNo });
-      else setEnd(!end);
+      if (pageNo !== null) {
+        getExcel({ projectId: id, pageNo: pageNo });
+      } else setEnd(!end);
     }
   };
+
+  const debouncedHandleScroll = debounce(handleScroll, 300);
 
   return (
     <div>
@@ -62,7 +65,7 @@ const Project = () => {
             <div>
               <Loader />
             </div>
-            <h3>Preparing your Preview...</h3>
+            <h4>Preparing your Preview...</h4>
           </div>
         )}
       </div>
@@ -71,20 +74,20 @@ const Project = () => {
           <Table
             columns={columns}
             tableData={tableData}
-            onscroll={handleScroll}
+            onscroll={debouncedHandleScroll}
             sheetRef={sheetRef}
           />
         </div>
       </div>
       <div className={styles.fetching}>
-        {getData.isFetching && (
+        {getData.isFetching && getData.data ? (
           <div className={styles.fetch}>
             <div>
               <Loader />
             </div>
             <h3>Loading...</h3>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

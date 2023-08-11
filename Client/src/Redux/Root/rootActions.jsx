@@ -5,13 +5,18 @@
  * These actions can be dispatched to update the Redux store with Excel data.
  */
 
-import { storeExcelCsv, storeExcelid } from "../ProjectPage/ProjectReducer";
+import {
+  storeExcelCsv,
+  storeExcelid,
+  storePgno,
+} from "../ProjectPage/ProjectReducer";
 import { storeNotification } from "../Notification/notificationReducer";
 
 export const rootActions = {
   excelActions: {
     storeExcelCsv,
     storeExcelid,
+    storePgno,
   },
   notificationActions: {
     storeNotification,

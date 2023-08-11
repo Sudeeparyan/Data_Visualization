@@ -19,16 +19,18 @@ const ExcelSlice = createSlice({
   initialState,
   reducers: {
     storeExcelCsv: (state, action) => {
+      if (action.payload.delete) state.ExcelCsv = [];
       state.ExcelCsv = [...state.ExcelCsv, ...action.payload.tableContent];
       state.ExcelColumns = action.payload.columns;
-      state.pgNo = action.payload.nextPage;
+    },
+    storePgno: (state, action) => {
+      state.pgNo = action.payload;
     },
     storeExcelid: (state, action) => {
-      console.log(action);
       state.ProjectId = action.payload.projectId;
     },
   },
 });
 
-export const { storeExcelCsv, storeExcelid } = ExcelSlice.actions;
+export const { storeExcelCsv, storeExcelid, storePgno } = ExcelSlice.actions;
 export default ExcelSlice.reducer;

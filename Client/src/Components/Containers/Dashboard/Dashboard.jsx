@@ -6,8 +6,8 @@
  */
 
 // React Imports
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 //Styles
 import styles from "./Dashboard.module.css";
@@ -18,11 +18,14 @@ import UploadButton from "../../Reusables/UploadButton/upploadButton";
 //Redux
 import { rootSelector } from "../../../Redux/Root/rootSelector";
 import { rootQuery } from "../../../Redux/Root/rootQuery";
+import { rootActions } from "../../../Redux/Root/rootActions";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const projectId = useSelector(rootSelector.Project.projectData.projectId);
   const pgno = useSelector(rootSelector.Project.projectData.pageNo);
+
   //Making the upload button diable and enable
   const [disable, setDisable] = useState(false);
 
@@ -49,6 +52,7 @@ const Dashboard = () => {
       formData.append("file", file);
       //sending POST Request
       const res = await sendExcelCSV(formData);
+
       //sending GET Request based on condition
       if (res.data.error === null)
         await getExcel({ projectId: res.data.projectId, pageNo: pgno });
@@ -61,6 +65,17 @@ const Dashboard = () => {
       onError();
     }
   };
+
+  useEffect(() => {
+    dispatch(
+      rootActions.excelActions.storeExcelCsv({
+        tableContent: [],
+        columns: [],
+        delete: true,
+      }),
+      dispatch(rootActions.excelActions.storePgno(1))
+    );
+  }, []);
 
   //Redirecting the user to another Route when GET Req is Success
   if (resultsExcel.data) {
