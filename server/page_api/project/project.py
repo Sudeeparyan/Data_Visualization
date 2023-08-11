@@ -43,9 +43,9 @@ def upload_csv():
         + ".csv"
     )
 
-    os.makedirs("storage\\media_files\\actual_csv_files", exist_ok=True)
+    os.makedirs(f"storage\\media_files\\project_csv\\{new_project.project_id}", exist_ok=True)
     current_csv_path = os.path.join(
-        os.getcwd(), "storage\\media_files\\actual_csv_files", file_name
+        os.getcwd(), f"storage\\media_files\\project_csv\\{new_project.project_id}", file_name
     )
 
     try:
@@ -67,6 +67,7 @@ def upload_csv():
         return jsonify({"error": None, "projectId": new_project.project_id})
 
     except Exception as err:
+       
         return jsonify({"error": "file can't be read", "exact_message": str(err)})
 
 
@@ -89,23 +90,35 @@ def send_csv(project_id):
             project_id=project.project_id).first()
 
         try:
-            actual_csv = dd.read_csv(input_file.file_path)
-            actual_csv = actual_csv.compute()
-            actual_csv.fillna("", inplace=True)
-            column_list = [column for column in (actual_csv.columns)]
-            actual_csv = actual_csv.to_dict(orient="records")
+           
+            chunk_size = 1000  # Define the chunk size as per your requirement
+            actual_csv = dd.read_csv(input_file.file_path, blocksize=None)  # Read the whole file
 
-            return jsonify(
-                {
-                    "error": None,
-                    "tableContent": actual_csv,
-                    "columns":  column_list,
-                }
-            )
+            page = int(request.args.get('page', 1))  # Get the requested page number
+            start_idx = (page - 1) * chunk_size
+
+            # Read the requested chunk using Dask
+            chunk = actual_csv.compute().iloc[start_idx : start_idx + chunk_size]
+            chunk.fillna("", inplace=True)
+            column_list = [column for column in chunk.columns]
+            chunk_records = chunk.to_dict(orient="records")
+
+            if len(chunk_records) <= chunk_size:
+                next_page = None  # No more data to send
+            else:
+                next_page = page + 1  # Include the next page number
+
+            return jsonify({
+                "error": None,
+                "tableContent": chunk_records,
+                "columns": column_list,
+                "nextPage": next_page
+            })
 
         except Exception as err:
-            return jsonify({"error": "file can't be read", "exact_message":str(err)})
+            return jsonify({"error": "File can't be read", "exact_message": str(err)})
 
+            
     else:
         return jsonify({"error": "Invalid projectID"})
 
@@ -133,10 +146,11 @@ def delete_project():
         ).first()
 
         if input_file:
-            db.session.delete(input_file)
+            input_file.status = False
 
         # Delete the project
-        db.session.delete(project)
+        project.status = False
 
     db.session.commit()
     return jsonify({"error": None})
+
