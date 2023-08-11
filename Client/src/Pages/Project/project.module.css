@@ -1,5 +1,4 @@
 .mainBox{
-    padding: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,4 +38,29 @@
 }
 .dropdown{
     margin-top: 20px;
+}
+.loading{
+    height: 20px;
+    margin: 5px;
+    margin-left: 20px;
+}
+.loader{
+    display: flex;
+    width: 230px;
+    justify-content: space-evenly;
+}
+.fetching{
+    display: flex;
+    justify-content: end;
+    width: 75%;
+    align-items: center;
+    height: 30px;
+}
+.fetch{
+    display: flex;
+        width: 110px;
+        justify-content: space-evenly;
+}
+.fetching,.loader h3{
+    color: #0079FF;
 }

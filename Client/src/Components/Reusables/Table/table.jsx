@@ -1,4 +1,4 @@
-import React, { useRef, findDOMNode } from "react";
+import React from "react";
 import { SheetComponent } from "@antv/s2-react";
 import "@antv/s2-react/dist/style.min.css";
 /**
@@ -6,7 +6,7 @@ import "@antv/s2-react/dist/style.min.css";
  * @param {Array} data - An array of objects representing the table rows and columns.
  * @returns {JSX.Element} - The rendered Table element.
  */
-const Table = ({ columns, tableData }) => {
+const Table = ({ columns, tableData, onscroll, sheetRef }) => {
   const dataCfg = {
     fields: {
       columns: columns,
@@ -14,16 +14,8 @@ const Table = ({ columns, tableData }) => {
     data: tableData,
   };
 
-  const sheetRef = useRef();
-
-  const handleScroll = (event) => {
-    const sheetInstance = sheetRef.current;
-    if (event.scrollY === sheetInstance.facet.vScrollBar.scrollTargetMaxOffset)
-      console.log("END");
-  };
-
   const s2Options = {
-    width: 400,
+    width: 1000,
     height: 600,
     interaction: {
       hoverHighlight: true,
@@ -39,11 +31,7 @@ const Table = ({ columns, tableData }) => {
         ref={sheetRef}
         options={s2Options}
         themeCfg={{ name: "colorful" }}
-        adaptive={{
-          width: true,
-          height: true,
-        }}
-        onScroll={handleScroll}
+        onScroll={onscroll}
       />
     </div>
   );

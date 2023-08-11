@@ -7,24 +7,31 @@
  */
 
 //React Imports
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 //Imports from Reusables
 import Table from "../../Components/Reusables/Table/table";
-
+import Loader from "../../Components/Reusables/Spinner/loader";
 //Styles Import
 import styles from "./project.module.css";
 //Redux Imports
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useLazyGetExcelQuery } from "../../Redux/ProjectPage/ProjectRtkQuery";
 import { rootSelector } from "../../Redux/Root/rootSelector";
+import { rootActions } from "../../Redux/Root/rootActions";
 
 const Project = () => {
   const columns = useSelector(rootSelector.Project.projectData.tableColumns);
   const tableData = useSelector(rootSelector.Project.projectData.tableData);
+  const pageNo = useSelector(rootSelector.Project.projectData.pageNo);
+  const id = useSelector(rootSelector.Project.projectData.projectId);
+  const dispatch = useDispatch();
   const location = useLocation();
   const [getExcel, getData] = useLazyGetExcelQuery() || {};
+  const sheetRef = useRef();
+  const [end, setEnd] = useState(false);
+
   /**
    * useEffect Hook
    * This hook is used to fetch Excel data based on the current path when the component mounts.
@@ -32,15 +39,51 @@ const Project = () => {
 
   useEffect(() => {
     const path = location.pathname.split("/")[2];
-    getExcel(path);
-  }, []);
+    getExcel({ projectId: path, pageNo: pageNo });
+    dispatch(rootActions.excelActions.storeExcelid({ projectId: path }));
+  }, [id]);
+
+  console.log(getData.isLoading);
+  const handleScroll = (event) => {
+    const sheetInstance = sheetRef.current;
+    if (
+      event.scrollY === sheetInstance.facet.vScrollBar.scrollTargetMaxOffset
+    ) {
+      if (pageNo !== null) getExcel({ projectId: id, pageNo: pageNo });
+      else setEnd(!end);
+    }
+  };
 
   return (
-    <div className={styles.mainBox}>
-      {getData.isFetching && <h3>Preparing Preview please wait...</h3>}
-      <div className={styles.table}>
-        {tableData.length > 0 && (
-          <Table columns={columns} tableData={tableData} />
+    <div>
+      <div className={styles.loading}>
+        {getData.isLoading && (
+          <div className={styles.loader}>
+            <div>
+              <Loader />
+            </div>
+            <h3>Preparing your Preview...</h3>
+          </div>
+        )}
+      </div>
+      <div className={styles.mainBox}>
+        <div className={styles.table}>
+          <Table
+            columns={columns}
+            tableData={tableData}
+            onscroll={handleScroll}
+            sheetRef={sheetRef}
+          />
+        </div>
+      </div>
+      <div className={styles.fetching}>
+        {getData.isFetching && (
+          <div className={styles.fetch}>
+            <div>
+              <Loader />
+            </div>
+            <h3>Loading...</h3>
+          </div>
         )}
       </div>
     </div>

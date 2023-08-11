@@ -22,6 +22,7 @@ import { rootQuery } from "../../../Redux/Root/rootQuery";
 const Dashboard = () => {
   const navigate = useNavigate();
   const projectId = useSelector(rootSelector.Project.projectData.projectId);
+  const pgno = useSelector(rootSelector.Project.projectData.pageNo);
   //Making the upload button diable and enable
   const [disable, setDisable] = useState(false);
 
@@ -49,7 +50,8 @@ const Dashboard = () => {
       //sending POST Request
       const res = await sendExcelCSV(formData);
       //sending GET Request based on condition
-      if (res.data.error === null) await getExcel(res.data.projectId);
+      if (res.data.error === null)
+        await getExcel({ projectId: res.data.projectId, pageNo: pgno });
       else {
         setDisable((prev) => !prev);
         onError();

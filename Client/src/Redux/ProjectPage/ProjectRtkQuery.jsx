@@ -25,6 +25,7 @@ export const sendExcelCsv = createApi({
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          console.log(data);
           if (data.error === null) {
             dispatch(rootActions.excelActions.storeExcelid(data));
           } else
@@ -41,10 +42,12 @@ export const sendExcelCsv = createApi({
     }),
     // Query for receiving Excel CSV data from the server based on an 'id'
     getExcel: builder.query({
-      query: (id) => endpointsApi.get_Excel_csv + `${id}`,
+      query: ({ projectId, pageNo }) =>
+        endpointsApi.get_Excel_csv + `${projectId}?page=${pageNo}`,
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          console.log(data);
           if (data.error === null) {
             dispatch(rootActions.excelActions.storeExcelCsv(data));
             dispatch(
