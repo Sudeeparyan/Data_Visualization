@@ -155,10 +155,5 @@ def delete_project():
     db.session.commit()
     return jsonify({"error": None})
 
-
-# @project_page.route("/fetch-results", methods = ['GET'])
-# @handle_errors
-# def fetch_results():
-    
     
     
