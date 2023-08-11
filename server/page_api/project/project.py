@@ -102,8 +102,9 @@ def send_csv(project_id):
             chunk.fillna("", inplace=True)
             column_list = [column for column in chunk.columns]
             chunk_records = chunk.to_dict(orient="records")
-
-            if len(chunk_records) <= chunk_size:
+            existing_index = actual_csv.index.compute()
+            
+            if (page)*chunk_size not in existing_index:
                 next_page = None  # No more data to send
             else:
                 next_page = page + 1  # Include the next page number
@@ -154,3 +155,10 @@ def delete_project():
     db.session.commit()
     return jsonify({"error": None})
 
+
+# @project_page.route("/fetch-results", methods = ['GET'])
+# @handle_errors
+# def fetch_results():
+    
+    
+    

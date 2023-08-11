@@ -25,9 +25,11 @@ dist-ssr
 *.local
 
 #Backend
+machine_learning/
 .dv_venv/
 __pycache__/
 storage/
 .vscode/
 Dockerfile
 dockerignore
+
