@@ -1,5 +1,5 @@
 import { notification } from "antd";
-import React, { createContext, useContext, useEffect } from "react";
+import React, { createContext, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { rootActions } from "../../../Redux/Root/rootActions";
 import { rootSelector } from "../../../Redux/Root/rootSelector";
@@ -15,7 +15,6 @@ export const Notification = ({ children }) => {
   const notifyMessage = useSelector(
     rootSelector.Notification.Notification.message
   );
-  console.log(notifyMessage, notifyType);
   const handleClose = () => {
     dispatch(
       rootActions.notificationActions.storeNotification({

@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 // Imports from antD and antV
 import { UploadOutlined } from "@ant-design/icons";
-import { message } from "antd";
 //ReUsables
 import UploadButton from "../../Reusables/UploadButton/upploadButton";
 //Redux
@@ -53,11 +52,11 @@ const Dashboard = () => {
       if (res.data.error === null) await getExcel(res.data.projectId);
       else {
         setDisable((prev) => !prev);
-        onError(message.error("Error Uploading File"));
+        onError();
       }
     } catch (error) {
       setDisable((prev) => !prev);
-      onError(message.error("Error Uploading File"));
+      onError();
     }
   };
 
