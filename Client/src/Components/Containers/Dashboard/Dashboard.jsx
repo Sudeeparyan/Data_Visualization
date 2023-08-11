@@ -12,7 +12,9 @@ import { useNavigate } from "react-router-dom";
 //Styles
 import styles from "./Dashboard.module.css";
 // Imports from antD and antV
-import { UploadOutlined } from "@ant-design/icons";
+import { FileAddTwoTone } from "@ant-design/icons";
+import { Badge, Card, Space } from "antd";
+
 //ReUsables
 import UploadButton from "../../Reusables/UploadButton/upploadButton";
 //Redux
@@ -84,24 +86,35 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className={styles.heading}>
-        Upload / Drag and drop the Actual Dataset for Testing
-      </div>
+      <div className={styles.heading}></div>
       <div className={styles.content}>
-        <div>
-          <UploadButton
-            handleCustomRequest={handleCustomRequest}
-            buttonData={"New Project"}
-            accept={".csv"}
-            work={disable}
-            acceptCount={1}
-            icon={<UploadOutlined />}
-          />
-          <br></br>
-          {resultCsv.isLoading && (
-            <h4 className={styles.upload}>Uploading Please Wait...</h4>
-          )}
-        </div>
+        <Badge.Ribbon text="Device Vision" color="pink">
+          <Card
+            title="Click / Drag and drop the Actual Dataset for Testing"
+            style={{ width: "500px", fontSize: "17px" }}
+          >
+            <div style={{ height: "150px" }}>
+              <UploadButton
+                handleCustomRequest={handleCustomRequest}
+                buttonData={"New Project"}
+                accept={".csv"}
+                work={disable}
+                acceptCount={1}
+                icon={
+                  <FileAddTwoTone
+                    style={{
+                      fontSize: "30px",
+                    }}
+                  />
+                }
+              />
+              <br></br>
+              {resultCsv.isLoading && (
+                <h4 className={styles.upload}>Uploading Please Wait...</h4>
+              )}
+            </div>
+          </Card>
+        </Badge.Ribbon>
       </div>
     </div>
   );

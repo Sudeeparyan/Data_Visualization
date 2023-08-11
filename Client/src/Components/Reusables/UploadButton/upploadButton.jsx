@@ -23,6 +23,14 @@ const UploadButton = (props) => {
         <Button
           className={styles.uploadButton}
           icon={props.icon ? props.icon : null}
+          style={{
+            height: "70px",
+            backgroundColor: "white",
+            color: "black",
+            fontSize: "17px",
+            fontWeight: "bold",
+            boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+          }}
         >
           {props.buttonData}
         </Button>

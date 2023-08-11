@@ -46,15 +46,17 @@ export const sendExcelCsv = createApi({
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
+          console.log(data);
           if (data.error === null) {
             dispatch(rootActions.excelActions.storeExcelCsv(data));
             dispatch(rootActions.excelActions.storePgno(data.nextPage));
-            dispatch(
-              rootActions.notificationActions.storeNotification({
-                type: "success",
-                message: "File Loaded Successfully",
-              })
-            );
+            if (data.nextPage === 2 || data.nextPage === null)
+              dispatch(
+                rootActions.notificationActions.storeNotification({
+                  type: "success",
+                  message: "File Loaded Successfully",
+                })
+              );
           } else
             dispatch(
               rootActions.notificationActions.storeNotification({
