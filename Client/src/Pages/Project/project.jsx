@@ -7,7 +7,7 @@
  */
 
 //React Imports
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { debounce } from "lodash";
 
@@ -31,7 +31,6 @@ const Project = () => {
   const location = useLocation();
   const [getExcel, getData] = useLazyGetExcelQuery() || {};
   const sheetRef = useRef();
-  const [end, setEnd] = useState(false);
 
   /**
    * useEffect Hook
@@ -51,7 +50,7 @@ const Project = () => {
     ) {
       if (pageNo !== null) {
         getExcel({ projectId: id, pageNo: pageNo });
-      } else setEnd(!end);
+      }
     }
   };
 
@@ -69,16 +68,18 @@ const Project = () => {
           </div>
         )}
       </div>
-      <div className={styles.mainBox}>
-        <div className={styles.table}>
-          <Table
-            columns={columns}
-            tableData={tableData}
-            onscroll={debouncedHandleScroll}
-            sheetRef={sheetRef}
-          />
+      {getData.data && (
+        <div className={styles.mainBox}>
+          <div className={styles.table}>
+            <Table
+              columns={columns}
+              tableData={tableData}
+              onscroll={debouncedHandleScroll}
+              sheetRef={sheetRef}
+            />
+          </div>
         </div>
-      </div>
+      )}
       <div className={styles.fetching}>
         {getData.isFetching && getData.data ? (
           <div className={styles.fetch}>

@@ -35,7 +35,12 @@ export const sendExcelCsv = createApi({
               })
             );
         } catch (err) {
-          alert("Error:", err);
+          dispatch(
+            rootActions.notificationActions.storeNotification({
+              type: "error",
+              message: err.error.error,
+            })
+          );
         }
       },
     }),
@@ -46,7 +51,6 @@ export const sendExcelCsv = createApi({
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           if (data.error === null) {
             dispatch(rootActions.excelActions.storeExcelCsv(data));
             dispatch(rootActions.excelActions.storePgno(data.nextPage));
@@ -65,7 +69,13 @@ export const sendExcelCsv = createApi({
               })
             );
         } catch (err) {
-          alert("Error:", err);
+          console.log(err);
+          dispatch(
+            rootActions.notificationActions.storeNotification({
+              type: "error",
+              message: err.error.error,
+            })
+          );
         }
       },
     }),

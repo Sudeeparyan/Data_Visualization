@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 // Imports from antD and antV
 import { FileAddTwoTone } from "@ant-design/icons";
-import { Badge, Card, Space } from "antd";
+import { Badge, Card, Tooltip } from "antd";
 
 //ReUsables
 import UploadButton from "../../Reusables/UploadButton/upploadButton";
@@ -37,7 +37,6 @@ const Dashboard = () => {
   //GET Req to get the project from Backend
   const [getExcel, resultsExcel] =
     rootQuery.excelPage.useLazyGetExcelQuery() || {};
-
   /**
    * handleCustomRequest
    *
@@ -93,26 +92,41 @@ const Dashboard = () => {
             title="Click / Drag and drop the Actual Dataset for Testing"
             style={{ width: "500px", fontSize: "17px" }}
           >
-            <div style={{ height: "150px" }}>
-              <UploadButton
-                handleCustomRequest={handleCustomRequest}
-                buttonData={"New Project"}
-                accept={".csv"}
-                work={disable}
-                acceptCount={1}
-                icon={
-                  <FileAddTwoTone
-                    style={{
-                      fontSize: "30px",
-                    }}
+            <div style={{ width: "150px", height: "150px" }}>
+              <Tooltip
+                title="Drag and Drop here"
+                placement="rightTop"
+                color="cyan"
+                key="cyan"
+              >
+                <div style={{ height: "150px" }}>
+                  <UploadButton
+                    handleCustomRequest={handleCustomRequest}
+                    buttonData={"New Project"}
+                    accept={".csv"}
+                    work={disable}
+                    acceptCount={1}
+                    icon={
+                      <FileAddTwoTone
+                        style={{
+                          fontSize: "30px",
+                        }}
+                      />
+                    }
                   />
-                }
-              />
-              <br></br>
-              {resultCsv.isLoading && (
-                <h4 className={styles.upload}>Uploading Please Wait...</h4>
-              )}
+
+                  <br></br>
+                </div>
+              </Tooltip>
             </div>
+            {resultCsv.isLoading && (
+              <h4 className={styles.upload}>Uploading Please Wait...</h4>
+            )}
+            {resultsExcel.status === "pending" && (
+              <h4 className={styles.upload}>
+                File uploaded! Fetching project...
+              </h4>
+            )}
           </Card>
         </Badge.Ribbon>
       </div>
