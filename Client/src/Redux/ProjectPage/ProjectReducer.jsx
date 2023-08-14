@@ -13,6 +13,7 @@ const initialState = {
   ProjectId: 0,
   pgNo: 1,
   Graph: [],
+  graphColumn: [],
 };
 
 const ExcelSlice = createSlice({
@@ -32,6 +33,7 @@ const ExcelSlice = createSlice({
     },
     storeGraph: (state, action) => {
       state.Graph = action.payload.graphData;
+      state.graphColumn = action.payload.columns;
     },
   },
 });

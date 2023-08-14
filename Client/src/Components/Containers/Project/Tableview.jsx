@@ -23,13 +23,18 @@ const Tableview = ({ getData }) => {
   const pageNo = useSelector(rootSelector.Project.projectData.pageNo);
   const id = useSelector(rootSelector.Project.projectData.projectId);
   const graphData = useSelector(rootSelector.Project.projectData.graphData);
+  const graphColumns = useSelector(
+    rootSelector.Project.projectData.graphcolumns
+  );
+  console.log(graphColumns);
   const [getExcel, getTableData] = useLazyGetExcelQuery() || {};
   const [getGraph, graphResults] = useLazyGetGraphQuery() || {};
   const sheetRef = useRef();
   const handleScroll = (event) => {
     const sheetInstance = sheetRef.current;
     if (
-      event.scrollY === sheetInstance.facet.vScrollBar.scrollTargetMaxOffset
+      event.scrollY === sheetInstance.facet.vScrollBar.scrollTargetMaxOffset ||
+      0
     ) {
       if (pageNo !== null) {
         getExcel({ projectId: id, pageNo: pageNo });
@@ -73,31 +78,45 @@ const Tableview = ({ getData }) => {
               style={{
                 width: "90%",
                 marginTop: "10px",
+                height: "45%",
                 backgroundColor: "#fff",
                 padding: "5px",
               }}
             >
-              <LineChart
-                data={graphData}
-                line1={"best_fit_X"}
-                line2={"best_fit_Y"}
-                error={false}
-              />
+              {graphResults.isSuccess && (
+                <LineChart
+                  data={graphData}
+                  columns={graphColumns}
+                  line1={"best_fit_X"}
+                  line2={"best_fit_Y"}
+                  error={false}
+                />
+              )}
+              {graphResults.isLoading || graphResults.isFetching ? (
+                <h4>Loading..</h4>
+              ) : null}
             </div>
             <div
               style={{
                 width: "90%",
+                height: "45%",
                 marginTop: "10px",
                 backgroundColor: "#fff",
                 padding: "5px",
               }}
             >
-              <LineChart
-                data={graphData}
-                line1={"error_X"}
-                line2={"error_Y"}
-                error={true}
-              />
+              {graphResults.isSuccess && (
+                <LineChart
+                  data={graphData}
+                  columns={[]}
+                  line1={"error_X"}
+                  line2={"error_Y"}
+                  error={true}
+                />
+              )}
+              {graphResults.isLoading || graphResults.isFetching ? (
+                <h4>Loading..</h4>
+              ) : null}
             </div>
           </div>
         </div>

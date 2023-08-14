@@ -19,5 +19,9 @@ export const Projectselector = {
     tableData: createSelector([ProjectState], (project) => project.ExcelCsv),
     pageNo: createSelector([ProjectState], (project) => project.pgNo),
     graphData: createSelector([ProjectState], (project) => project.Graph),
+    graphcolumns: createSelector(
+      [ProjectState],
+      (project) => project.graphColumn
+    ),
   },
 };

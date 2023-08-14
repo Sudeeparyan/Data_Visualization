@@ -228,36 +228,80 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Brush,
 } from "recharts";
-const Linechart = ({ data, line1, line2, error }) => {
+const Linechart = ({ data, line1, line2, error, columns }) => {
   return (
     // <div>
     <ResponsiveContainer width="90%" height="90%">
-      <div>
-        <LineChart
-          width={450}
-          height={270}
-          data={data}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey={line2} />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line
-            dataKey={line1}
-            type="monotone"
-            stroke={!error ? "#8884d8" : "red"}
-            activeDot={{ r: 8 }}
-          />
-        </LineChart>
-      </div>
+      {!error ? (
+        <div>
+          <LineChart
+            width={450}
+            height={270}
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <Brush height={10}></Brush>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey={line1} />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line
+              dataKey={line2}
+              type="monotone"
+              stroke={"#8884d8"}
+              name="BestFit Line"
+              activeDot={{ r: 8 }}
+            />
+            <XAxis dataKey={columns[0]} />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line
+              dataKey={columns[1]}
+              type="monotone"
+              stroke={"orange"}
+              activeDot={{ r: 8 }}
+              name="Actual Data"
+            />
+          </LineChart>
+        </div>
+      ) : (
+        <div>
+          <LineChart
+            width={450}
+            height={270}
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <Brush height={10} />
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey={line1} />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line
+              dataKey={line2}
+              type="monotone"
+              stroke={"red"}
+              name="Error"
+              activeDot={{ r: 8 }}
+            />
+          </LineChart>
+        </div>
+      )}
     </ResponsiveContainer>
     // </div>
   );

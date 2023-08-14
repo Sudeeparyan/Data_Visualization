@@ -95,6 +95,7 @@ export const sendExcelCsv = createApi({
               })
             );
         } catch (err) {
+          console.log(err);
           dispatch(
             rootActions.notificationActions.storeNotification({
               type: "error",
