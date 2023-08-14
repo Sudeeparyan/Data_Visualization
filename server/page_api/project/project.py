@@ -6,10 +6,13 @@ import os
 
 # third party modules
 import dask.dataframe as dd
+import numpy as np
 from flask import Blueprint, request, jsonify
 
 # application modules
 from models import db, InputFiles, Users, Projects
+from prediction_from_model import prediction_using_trained_model
+# from prediction_from_model import prediction_using_trained_model
 from utilities import handle_errors, save_csv_files
 
 # creating the blueprint for excel_page
@@ -50,7 +53,7 @@ def upload_csv():
 
     try:
         save_csv_files(csv_file, current_csv_path)
-        df_dask = dd.read_csv(current_csv_path)
+        df_dask = dd.read_csv(current_csv_path, low_memory=False, dtype={'Signal_Mode': 'object'})
         df_pandas = df_dask.compute()
         df_pandas.fillna("", inplace=True)
 
@@ -68,7 +71,7 @@ def upload_csv():
 
     except Exception as err:
        
-        return jsonify({"error": "file can't be read", "exact_message": str(err)})
+        return jsonify({"error": "File uploaded is in incorrect format", "exact_message": str(err)})
 
 
 @project_page.route("/get-csv/<project_id>", methods=["GET"])
@@ -92,7 +95,7 @@ def send_csv(project_id):
         try:
            
             chunk_size = 1000  # Define the chunk size as per your requirement
-            actual_csv = dd.read_csv(input_file.file_path, blocksize=None)  # Read the whole file
+            actual_csv = dd.read_csv(input_file.file_path, blocksize=None, low_memory=False, dtype={'Signal_Mode': 'object'})  # Read the whole file
 
             page = int(request.args.get('page', 1))  # Get the requested page number
             start_idx = (page - 1) * chunk_size
@@ -100,6 +103,7 @@ def send_csv(project_id):
             # Read the requested chunk using Dask
             chunk = actual_csv.compute().iloc[start_idx : start_idx + chunk_size]
             chunk.fillna("", inplace=True)
+            chunk.replace([np.inf, -np.inf], "", inplace=True)
             column_list = [column for column in chunk.columns]
             chunk_records = chunk.to_dict(orient="records")
             existing_index = actual_csv.index.compute()
@@ -117,7 +121,7 @@ def send_csv(project_id):
             })
 
         except Exception as err:
-            return jsonify({"error": "File can't be read", "exact_message": str(err)})
+            return jsonify({"error": "File uploaded is in incorrect format", "exact_message": str(err)})
 
             
     else:
@@ -155,5 +159,29 @@ def delete_project():
     db.session.commit()
     return jsonify({"error": None})
 
+
+@project_page.route("/get-results/<project_id>", methods=['GET'])
+def get_results(project_id):
+    """ Using ML trained model to fetch graph data
+    """
+    project = Projects.query.filter_by(project_id=project_id).first()
+
+    if project:
+        input_file = InputFiles.query.filter_by(
+            project_id=project.project_id).first()
+        
+        actual_csv = dd.read_csv(input_file.file_path).compute()
+        file_path = prediction_using_trained_model("trained_models//best_model.pkl", input_file.file_path, project_id)
+        df = dd.read_csv(file_path,blocksize=None, low_memory=False, dtype={'Signal_Mode': 'object'})
+        df = df.compute()
+        df = df.to_dict(orient='records')
+        
+        return jsonify({"error":None,"graphData": df, "columns": [actual_csv.columns[0],actual_csv.columns[1]]})
+    
+    else:
+        return jsonify({"error": "Invalid projectID"})
+        
+    
+    
     
     

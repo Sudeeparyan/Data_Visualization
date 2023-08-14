@@ -17,6 +17,7 @@ from page_api import create_app
 from models import db, Users
 from utilities import handle_errors
 
+
 # initializing the flask app
 app = create_app()
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -80,7 +81,6 @@ def handle_unknown_routes(error):
 if __name__ == '__main__':
     # setting up for db connectivity
     initialize_db()
-
     # Running the server at port 8000
-    app.run(host="0.0.0.0",port=8000, debug=True)
+    app.run(host='0.0.0.0',port=8000, debug=True)
  
