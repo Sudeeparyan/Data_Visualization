@@ -68,7 +68,7 @@ const Project = () => {
           </div>
         )}
       </div>
-      {getData.data && (
+      {getData.isSuccess && (
         <div className={styles.mainBox}>
           <div className={styles.table}>
             <Table

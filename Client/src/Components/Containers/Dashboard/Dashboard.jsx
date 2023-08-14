@@ -55,9 +55,9 @@ const Dashboard = () => {
       const res = await sendExcelCSV(formData);
 
       //sending GET Request based on condition
-      if (res.data.error === null)
+      if (res.data.error === null) {
         await getExcel({ projectId: res.data.projectId, pageNo: pgno });
-      else {
+      } else {
         setDisable((prev) => !prev);
         onError();
       }
@@ -123,9 +123,7 @@ const Dashboard = () => {
               <h4 className={styles.upload}>Uploading Please Wait...</h4>
             )}
             {resultsExcel.status === "pending" && (
-              <h4 className={styles.upload}>
-                File uploaded! Fetching project...
-              </h4>
+              <h4 className={styles.upload}>Creating a project...</h4>
             )}
           </Card>
         </Badge.Ribbon>
