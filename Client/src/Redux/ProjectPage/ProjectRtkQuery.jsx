@@ -79,7 +79,36 @@ export const sendExcelCsv = createApi({
         }
       },
     }),
+    getGraph: builder.query({
+      query: ({ projectId }) => endpointsApi.get_graph_data + `${projectId}`,
+      async onQueryStarted(res, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          console.log(data);
+          if (data.error === null) {
+            dispatch(rootActions.excelActions.storeGraph(data));
+          } else
+            dispatch(
+              rootActions.notificationActions.storeNotification({
+                type: "error",
+                message: data.error,
+              })
+            );
+        } catch (err) {
+          dispatch(
+            rootActions.notificationActions.storeNotification({
+              type: "error",
+              message: err.error.error,
+            })
+          );
+        }
+      },
+    }),
   }),
 });
 
-export const { useSendExcelCSVMutation, useLazyGetExcelQuery } = sendExcelCsv;
+export const {
+  useSendExcelCSVMutation,
+  useLazyGetExcelQuery,
+  useLazyGetGraphQuery,
+} = sendExcelCsv;

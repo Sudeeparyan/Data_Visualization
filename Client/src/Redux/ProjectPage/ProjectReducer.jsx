@@ -12,6 +12,7 @@ const initialState = {
   ExcelColumns: [],
   ProjectId: 0,
   pgNo: 1,
+  Graph: [],
 };
 
 const ExcelSlice = createSlice({
@@ -29,8 +30,12 @@ const ExcelSlice = createSlice({
     storeExcelid: (state, action) => {
       state.ProjectId = action.payload.projectId;
     },
+    storeGraph: (state, action) => {
+      state.Graph = action.payload.graphData;
+    },
   },
 });
 
-export const { storeExcelCsv, storeExcelid, storePgno } = ExcelSlice.actions;
+export const { storeExcelCsv, storeExcelid, storePgno, storeGraph } =
+  ExcelSlice.actions;
 export default ExcelSlice.reducer;

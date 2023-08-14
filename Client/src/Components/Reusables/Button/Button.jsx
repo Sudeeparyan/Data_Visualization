@@ -12,10 +12,12 @@ import styles from "./Button.module.css";
 //Imports from antD
 import { Button } from "antd";
 
-const ButtonComponent = ({ content }) => {
+const ButtonComponent = ({ content, onclick }) => {
   return (
     <div>
-      <Button className={styles.viewButton}>{content}</Button>
+      <Button className={styles.viewButton} onClick={onclick}>
+        {content}
+      </Button>
     </div>
   );
 };

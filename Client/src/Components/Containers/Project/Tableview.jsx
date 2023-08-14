@@ -8,7 +8,10 @@ import Table from "../../Reusables/Table/table";
 import styles from "./project.module.css";
 //Redux Imports
 import { useSelector } from "react-redux";
-import { useLazyGetExcelQuery } from "../../../Redux/ProjectPage/ProjectRtkQuery";
+import {
+  useLazyGetExcelQuery,
+  useLazyGetGraphQuery,
+} from "../../../Redux/ProjectPage/ProjectRtkQuery";
 import { rootSelector } from "../../../Redux/Root/rootSelector";
 import Loaders from "./loaders";
 import ButtonComponent from "../../Reusables/Button/Button";
@@ -19,9 +22,10 @@ const Tableview = ({ getData }) => {
   const tableData = useSelector(rootSelector.Project.projectData.tableData);
   const pageNo = useSelector(rootSelector.Project.projectData.pageNo);
   const id = useSelector(rootSelector.Project.projectData.projectId);
+  const graphData = useSelector(rootSelector.Project.projectData.graphData);
   const [getExcel, getTableData] = useLazyGetExcelQuery() || {};
+  const [getGraph, graphResults] = useLazyGetGraphQuery() || {};
   const sheetRef = useRef();
-  console.log(getTableData);
   const handleScroll = (event) => {
     const sheetInstance = sheetRef.current;
     if (
@@ -34,6 +38,10 @@ const Tableview = ({ getData }) => {
   };
   const debouncedHandleScroll = debounce(handleScroll, 300);
 
+  const genarateGraph = () => {
+    getGraph({ projectId: id });
+  };
+  console.log(graphResults);
   return (
     <div>
       <div className={styles.loading}>
@@ -56,12 +64,41 @@ const Tableview = ({ getData }) => {
           </div>
           <div className={styles.sidebar}>
             <div>
-              <ButtonComponent content={"Generate Graph"} />
+              <ButtonComponent
+                content={"Generate Graph"}
+                onclick={genarateGraph}
+              />
             </div>
-            <div style={{ width: "100%" }}>
-              <LineChart />
+            <div
+              style={{
+                width: "90%",
+                marginTop: "10px",
+                backgroundColor: "#fff",
+                padding: "5px",
+              }}
+            >
+              <LineChart
+                data={graphData}
+                line1={"best_fit_X"}
+                line2={"best_fit_Y"}
+                error={false}
+              />
             </div>
-            <div></div>
+            <div
+              style={{
+                width: "90%",
+                marginTop: "10px",
+                backgroundColor: "#fff",
+                padding: "5px",
+              }}
+            >
+              <LineChart
+                data={graphData}
+                line1={"error_X"}
+                line2={"error_Y"}
+                error={true}
+              />
+            </div>
           </div>
         </div>
       )}
