@@ -71,15 +71,7 @@ const Tableview = ({ getData }) => {
                 onclick={genarateGraph}
               />
             </div>
-            <div
-              style={{
-                width: "90%",
-                marginTop: "10px",
-                height: "44%",
-                backgroundColor: "#fff",
-                padding: "5px",
-              }}
-            >
+            <div className={styles.chartBox}>
               <p>Actual Graph</p>
               {graphResults.isSuccess && (
                 <LineChart
@@ -94,15 +86,7 @@ const Tableview = ({ getData }) => {
                 <h4>Loading..</h4>
               ) : null}
             </div>
-            <div
-              style={{
-                width: "90%",
-                height: "44%",
-                marginTop: "10px",
-                backgroundColor: "#fff",
-                padding: "5px",
-              }}
-            >
+            <div className={styles.chartBox}>
               <p>Error Graph</p>
               {graphResults.isSuccess && (
                 <LineChart

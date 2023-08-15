@@ -9,6 +9,7 @@ const Loaders = ({ loadingText, style }) => {
         <div>
           <Loader />
         </div>
+        &nbsp;
         <h4>{loadingText}</h4>
       </div>
     </div>
