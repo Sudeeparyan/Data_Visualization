@@ -12,21 +12,18 @@ import {
   useLazyGetExcelQuery,
   useLazyGetGraphQuery,
 } from "../../../Redux/ProjectPage/ProjectRtkQuery";
-import { rootSelector } from "../../../Redux/Root/rootSelector";
+import { projectSelector } from "../../../Redux/Root/rootSelector";
 import Loaders from "./loaders";
 import ButtonComponent from "../../Reusables/Button/Button";
 import LineChart from "../../Reusables/Linechart/lineChart";
 
 const Tableview = ({ getData }) => {
-  const columns = useSelector(rootSelector.Project.projectData.tableColumns);
-  const tableData = useSelector(rootSelector.Project.projectData.tableData);
-  const pageNo = useSelector(rootSelector.Project.projectData.pageNo);
-  const id = useSelector(rootSelector.Project.projectData.projectId);
-  const graphData = useSelector(rootSelector.Project.projectData.graphData);
-  const graphColumns = useSelector(
-    rootSelector.Project.projectData.graphcolumns
-  );
-  console.log(graphColumns);
+  const columns = useSelector(projectSelector.tableColumns);
+  const tableData = useSelector(projectSelector.tableData);
+  const pageNo = useSelector(projectSelector.pageNo);
+  const id = useSelector(projectSelector.projectId);
+  const graphData = useSelector(projectSelector.graphData);
+  const graphColumns = useSelector(projectSelector.graphcolumns);
   const [getExcel, getTableData] = useLazyGetExcelQuery() || {};
   const [getGraph, graphResults] = useLazyGetGraphQuery() || {};
   const sheetRef = useRef();
@@ -78,11 +75,12 @@ const Tableview = ({ getData }) => {
               style={{
                 width: "90%",
                 marginTop: "10px",
-                height: "45%",
+                height: "44%",
                 backgroundColor: "#fff",
                 padding: "5px",
               }}
             >
+              <p>Actual Graph</p>
               {graphResults.isSuccess && (
                 <LineChart
                   data={graphData}
@@ -99,12 +97,13 @@ const Tableview = ({ getData }) => {
             <div
               style={{
                 width: "90%",
-                height: "45%",
+                height: "44%",
                 marginTop: "10px",
                 backgroundColor: "#fff",
                 padding: "5px",
               }}
             >
+              <p>Error Graph</p>
               {graphResults.isSuccess && (
                 <LineChart
                   data={graphData}
