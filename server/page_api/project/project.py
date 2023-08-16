@@ -8,16 +8,16 @@ import os
 import dask.dataframe as dd
 import numpy as np
 from flask import Blueprint, request, jsonify
+import matplotlib.pyplot as plt
 
 # application modules
-from models import db, InputFiles, Users, Projects
+from models import db, InputFiles, Users, Projects, TrainedModels, Results
 from prediction_from_model import prediction_using_trained_model
 # from prediction_from_model import prediction_using_trained_model
 from utilities import handle_errors, save_csv_files
 
 # creating the blueprint for excel_page
 project_page = Blueprint("project", __name__)
-
 
 @project_page.route("/upload-csv", methods=["POST"])
 @handle_errors
@@ -47,9 +47,7 @@ def upload_csv():
     )
 
     os.makedirs(f"storage\\media_files\\project_csv\\{new_project.project_id}", exist_ok=True)
-    current_csv_path = os.path.join(
-        os.getcwd(), f"storage\\media_files\\project_csv\\{new_project.project_id}", file_name
-    )
+    current_csv_path = f"storage\\media_files\\project_csv\\{new_project.project_id}\\"+ file_name
 
     try:
         save_csv_files(csv_file, current_csv_path)
@@ -159,29 +157,61 @@ def delete_project():
     db.session.commit()
     return jsonify({"error": None})
 
-
-@project_page.route("/get-results/<project_id>", methods=['GET'])
-def get_results(project_id):
-    """ Using ML trained model to fetch graph data
-    """
-    project = Projects.query.filter_by(project_id=project_id).first()
-
+@project_page.route("/test-data", methods=['POST'])
+@handle_errors
+def test_data():
+    """Creating a training model for testing the actual csv"""
+    
+    project_data = request.get_json()
+    project_ID = project_data.get('project_ID')
+    project = Projects.query.filter_by(project_id=project_ID).first()
+    
     if project:
         input_file = InputFiles.query.filter_by(
             project_id=project.project_id).first()
+        trained_model = TrainedModels(trained_model_path="trained_models\\best_model.pkl", file_path=input_file.file_path
+                                    )
+        db.session.add(trained_model)
+        db.session.commit()
+       
+        return jsonify({"error": None,"modelID": trained_model.trained_model_id})
         
-        actual_csv = dd.read_csv(input_file.file_path).compute()
-        file_path = prediction_using_trained_model("trained_models//best_model.pkl", input_file.file_path, project_id)
-        df = dd.read_csv(file_path,blocksize=None, low_memory=False, dtype={'Signal_Mode': 'object'})
-        df = df.compute()
-        df = df.to_dict(orient='records')
-        
-        return jsonify({"error":None,"graphData": df, "columns": [actual_csv.columns[0],actual_csv.columns[1]]})
+    else:
+        return jsonify({"error": "Invalid projectID"})
+
+@project_page.route("/get-results/<project_id>/<trained_model_id>", methods=['GET'])
+@handle_errors
+def get_results(project_id,trained_model_id):
+    """ Using ML trained model to fetch graph data
+    """
+    project = Projects.query.filter_by(project_id=project_id).first()
     
+    if project:
+        
+        input_file = InputFiles.query.filter_by(
+            project_id=project.project_id).first()
+        
+        trained_model = TrainedModels.query.filter_by(trained_model_id=trained_model_id).first()
+        try:
+            actual_csv = dd.read_csv(input_file.file_path).compute()
+            file_path = prediction_using_trained_model(trained_model.trained_model_path, input_file.file_path, project_id)
+            df = dd.read_csv(file_path,blocksize=None, low_memory=False, dtype={'Signal_Mode': 'object'})
+            df = df.compute()
+        
+            df = df.to_dict(orient='records')
+            new_result = Results(trained_model_id=trained_model.trained_model_id,input_file_id=input_file.input_file_id,result_csv_path=file_path)
+            db.session.add(new_result)
+            db.session.commit()
+        
+            return jsonify({"error":None,"graphData": df, "columns": [actual_csv.columns[0],actual_csv.columns[1]]})
+        
+        except Exception as err:
+            return jsonify({"error": "file uploaded can't be trained", "exact_error_message": str(err)})
+        
     else:
         return jsonify({"error": "Invalid projectID"})
         
-    
-    
-    
+        
+        
+        
     

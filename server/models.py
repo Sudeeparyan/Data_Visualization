@@ -65,11 +65,11 @@ class InputFiles(db.Model):
     parent_projects = db.relationship('Projects', back_populates='child_input_file')
     
     file_path = db.Column(db.String(50))
-    for_training = db.Column(db.Boolean, default=False, nullable=False)
+    for_training = db.Column(db.Boolean, default=False)
     child_results = db.relationship("Results", back_populates='parent_input_files', lazy=True) 
     child_trained_model = db.relationship("TrainedModels", back_populates='parent_input_files')
     
-    status = db.Column(db.Boolean, default=True, nullable=False)
+    status = db.Column(db.Boolean, default=True)
  
       
 class TrainedModels(db.Model):
@@ -117,4 +117,4 @@ class Results(db.Model):
     x_coordinate = db.Column(db.String(50))
     y_coordinate = db.Column(db.String(50))
     
-    result_json_path = db.Column(db.String(50))
+    result_csv_path = db.Column(db.String(50))
