@@ -1,33 +1,31 @@
 //React imports
 import React, { useRef } from "react";
 import { debounce } from "lodash";
-
+import { useNavigate } from "react-router-dom";
 //Imports from Reusables
 import Table from "../../Reusables/Table/table";
 //Import from Styles
 import styles from "./project.module.css";
 //Redux Imports
 import { useSelector } from "react-redux";
-import {
-  useLazyGetExcelQuery,
-  useLazyGetGraphQuery,
-} from "../../../Redux/ProjectPage/ProjectRtkQuery";
+import { rootQuery } from "../../../Redux/Root/rootQuery";
 import { projectSelector } from "../../../Redux/Root/rootSelector";
 import Loaders from "./loaders";
 import ButtonComponent from "../../Reusables/Button/Button";
-import LineChart from "../../Reusables/Linechart/lineChart";
 
 const Tableview = ({ getData }) => {
+  const navigate = useNavigate();
   const columns = useSelector(projectSelector.tableColumns);
   const tableData = useSelector(projectSelector.tableData);
+  const modelId = useSelector(projectSelector.modelId);
+  const projectId = useSelector(projectSelector.projectId);
   const pageNo = useSelector(projectSelector.pageNo);
   const id = useSelector(projectSelector.projectId);
-  const graphData = useSelector(projectSelector.graphData);
-  const graphColumns = useSelector(projectSelector.graphcolumns);
-  const [getExcel, getTableData] = useLazyGetExcelQuery() || {};
-  const [getGraph, graphResults] = useLazyGetGraphQuery() || {};
+  const [getExcel, getTableData] =
+    rootQuery.excelPage.useLazyGetExcelQuery() || {};
+  const [sendProject, getProject] =
+    rootQuery.excelPage.useGenerateGraphMutation() || {};
   const sheetRef = useRef();
-  console.log(columns);
   const handleScroll = (event) => {
     const sheetInstance = sheetRef.current;
     if (
@@ -41,21 +39,22 @@ const Tableview = ({ getData }) => {
     }
   };
   const debouncedHandleScroll = debounce(handleScroll, 300);
-
-  const genarateGraph = () => {
-    getGraph({ projectId: id });
+  const genarateGraph = async () => {
+    const res = await sendProject({ projectID: id });
+    console.log(res);
+    navigate(`/Project/${projectId}/${res.data.modelID}`);
   };
   return (
     <div>
       <div className={styles.loading}>
-        {getData.isFetching && tableData.length === 0 ? (
+        {getData.isFetching && (
           <Loaders
             loadingText={"Preparing your Preview..."}
             style={styles.loader}
           />
-        ) : null}
+        )}
       </div>
-      {tableData.length > 0 && (
+      {getData.isSuccess && tableData.length > 0 ? (
         <div className={styles.mainBox}>
           <div className={styles.table}>
             <Table
@@ -70,41 +69,12 @@ const Tableview = ({ getData }) => {
               <ButtonComponent
                 content={"Generate Graph"}
                 onclick={genarateGraph}
+                loading={getProject.isLoading || getProject.isFetching}
               />
-            </div>
-            <div className={styles.chartBox}>
-              <p>Actual Graph</p>
-              {graphResults.isSuccess && (
-                <LineChart
-                  data={graphData}
-                  columns={graphColumns}
-                  line1={"best_fit_X"}
-                  line2={"best_fit_Y"}
-                  error={false}
-                />
-              )}
-              {graphResults.isLoading || graphResults.isFetching ? (
-                <h4>Loading..</h4>
-              ) : null}
-            </div>
-            <div className={styles.chartBox}>
-              <p>Error Graph</p>
-              {graphResults.isSuccess && (
-                <LineChart
-                  data={graphData}
-                  columns={[]}
-                  line1={"error_X"}
-                  line2={"error_Y"}
-                  error={true}
-                />
-              )}
-              {graphResults.isLoading || graphResults.isFetching ? (
-                <h4>Loading..</h4>
-              ) : null}
             </div>
           </div>
         </div>
-      )}
+      ) : null}
       <div className={styles.fetching}>
         {getTableData.status === "pending" ? (
           <Loaders loadingText={"Loading..."} style={styles.fetch} />

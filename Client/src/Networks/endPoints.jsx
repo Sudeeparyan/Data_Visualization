@@ -8,4 +8,5 @@ export const endpointsApi = {
   send_csv_file_Excel: "/api/v2/project/upload-csv",
   get_Excel_csv: "/api/v2/project/get-csv/",
   get_graph_data: "/api/v2/project/get-results/",
+  create_model: "/api/v2/project/test-data",
 };

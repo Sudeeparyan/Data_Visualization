@@ -14,6 +14,7 @@ const initialState = {
   pgNo: 1,
   Graph: [],
   graphColumn: [],
+  Model_Id: 0,
 };
 
 const ExcelSlice = createSlice({
@@ -35,9 +36,17 @@ const ExcelSlice = createSlice({
       state.Graph = action.payload.graphData;
       state.graphColumn = action.payload.columns;
     },
+    storeModelid: (state, action) => {
+      state.Model_Id = action.payload.modelID;
+    },
   },
 });
 
-export const { storeExcelCsv, storeExcelid, storePgno, storeGraph } =
-  ExcelSlice.actions;
+export const {
+  storeExcelCsv,
+  storeExcelid,
+  storePgno,
+  storeGraph,
+  storeModelid,
+} = ExcelSlice.actions;
 export default ExcelSlice.reducer;

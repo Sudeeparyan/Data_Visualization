@@ -79,12 +79,41 @@ export const sendExcelCsv = createApi({
         }
       },
     }),
-    getGraph: builder.query({
-      query: ({ projectId }) => endpointsApi.get_graph_data + `${projectId}`,
+    generateGraph: builder.mutation({
+      query: (id) => ({
+        url: endpointsApi.create_model,
+        method: "POST",
+        body: id,
+      }),
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
+          if (data.error === null) {
+            console.log(data);
+            dispatch(rootActions.excelActions.storeModelid(data));
+          } else
+            dispatch(
+              rootActions.notificationActions.storeNotification({
+                type: "error",
+                message: data.error,
+              })
+            );
+        } catch (err) {
+          dispatch(
+            rootActions.notificationActions.storeNotification({
+              type: "error",
+              message: err.error.error,
+            })
+          );
+        }
+      },
+    }),
+    getGraphResult: builder.query({
+      query: ({ projectId, modelId }) =>
+        endpointsApi.get_graph_data + `${projectId}/${modelId}`,
+      async onQueryStarted(res, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
           if (data.error === null) {
             dispatch(rootActions.excelActions.storeGraph(data));
           } else
@@ -111,5 +140,6 @@ export const sendExcelCsv = createApi({
 export const {
   useSendExcelCSVMutation,
   useLazyGetExcelQuery,
-  useLazyGetGraphQuery,
+  useGenerateGraphMutation,
+  useLazyGetGraphResultQuery,
 } = sendExcelCsv;

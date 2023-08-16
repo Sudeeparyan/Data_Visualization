@@ -10,6 +10,7 @@ import {
   storeExcelid,
   storePgno,
   storeGraph,
+  storeModelid,
 } from "../ProjectPage/ProjectReducer";
 import { storeNotification } from "../Notification/notificationReducer";
 
@@ -19,6 +20,7 @@ export const rootActions = {
     storeExcelid,
     storePgno,
     storeGraph,
+    storeModelid,
   },
   notificationActions: {
     storeNotification,

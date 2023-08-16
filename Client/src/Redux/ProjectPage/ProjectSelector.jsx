@@ -30,3 +30,7 @@ export const graphcolumns = createSelector(
   [ProjectState],
   (project) => project.graphColumn
 );
+export const modelId = createSelector(
+  [ProjectState],
+  (project) => project.Model_Id
+);
