@@ -27,6 +27,7 @@ const Tableview = ({ getData }) => {
   const [getExcel, getTableData] = useLazyGetExcelQuery() || {};
   const [getGraph, graphResults] = useLazyGetGraphQuery() || {};
   const sheetRef = useRef();
+  console.log(columns);
   const handleScroll = (event) => {
     const sheetInstance = sheetRef.current;
     if (
@@ -34,6 +35,7 @@ const Tableview = ({ getData }) => {
       0
     ) {
       if (pageNo !== null) {
+        console.log("test");
         getExcel({ projectId: id, pageNo: pageNo });
       }
     }
@@ -43,18 +45,17 @@ const Tableview = ({ getData }) => {
   const genarateGraph = () => {
     getGraph({ projectId: id });
   };
-  console.log(graphResults);
   return (
     <div>
       <div className={styles.loading}>
-        {getData.isLoading && (
+        {getData.isFetching && tableData.length === 0 ? (
           <Loaders
             loadingText={"Preparing your Preview..."}
             style={styles.loader}
           />
-        )}
+        ) : null}
       </div>
-      {getData.isSuccess && (
+      {tableData.length > 0 && (
         <div className={styles.mainBox}>
           <div className={styles.table}>
             <Table

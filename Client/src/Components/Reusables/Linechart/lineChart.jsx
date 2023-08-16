@@ -35,10 +35,10 @@ const Linechart = ({ data, line1, line2, error, columns }) => {
             <Legend />
             <Line
               dataKey={line2}
-              type="monotone"
+              type="natural"
               stroke={"#00AD7C"}
               name="BestFit Line"
-              activeDot={{ r: 8 }}
+              activeDot={{ r: 5 }}
             />
             <XAxis dataKey={columns[0]} />
             <YAxis />
@@ -46,9 +46,9 @@ const Linechart = ({ data, line1, line2, error, columns }) => {
             <Legend />
             <Line
               dataKey={columns[1]}
-              type="monotone"
+              type="natural"
               stroke={"#C238B5"}
-              activeDot={{ r: 8 }}
+              activeDot={{ r: 5 }}
               name="Actual Data"
             />
           </LineChart>
@@ -74,10 +74,10 @@ const Linechart = ({ data, line1, line2, error, columns }) => {
             <Legend />
             <Line
               dataKey={line2}
-              type="monotone"
+              type="natural"
               stroke={"#F73859"}
               name="Error"
-              activeDot={{ r: 8 }}
+              activeDot={{ r: 5 }}
             />
           </LineChart>
         </div>

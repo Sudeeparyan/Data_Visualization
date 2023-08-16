@@ -53,7 +53,6 @@ const Dashboard = () => {
       formData.append("file", file);
       //sending POST Request
       const res = await sendExcelCSV(formData);
-
       //sending GET Request based on condition
       if (res.data.error === null) {
         await getExcel({ projectId: res.data.projectId, pageNo: pgno });
@@ -74,7 +73,10 @@ const Dashboard = () => {
         columns: [],
         delete: true,
       }),
-      dispatch(rootActions.excelActions.storePgno(1))
+      dispatch(rootActions.excelActions.storePgno(1)),
+      dispatch(
+        rootActions.excelActions.storeGraph({ graphData: [], columns: [] })
+      )
     );
   }, []);
 

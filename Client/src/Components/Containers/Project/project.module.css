@@ -42,6 +42,8 @@
     height: 20px;
     margin: 5px;
     margin-left: 20px;
+    display: flex;
+    justify-content: center;
 }
 .loader{
     display: flex;
@@ -51,7 +53,7 @@
 .fetching{
     display: flex;
     justify-content: end;
-    width: 66%;
+    max-width: 66%;
     align-items: center;
     height: 30px;
 }
