@@ -10,7 +10,14 @@ import {
   ResponsiveContainer,
   Brush,
 } from "recharts";
+// const data = [
+//   {
+//     "x" : 1,
+//     "y" : 1,
+//   }
+// ]
 const Linechart = ({ data, line1, line2, error, columns }) => {
+  console.log(columns, error);
   return (
     // <div>
     <ResponsiveContainer width="90%" height="90%">
@@ -27,9 +34,9 @@ const Linechart = ({ data, line1, line2, error, columns }) => {
               bottom: 5,
             }}
           >
-            <Brush height={10}></Brush>
+            <Brush height={10} startIndex={0} endIndex={30}></Brush>
             <CartesianGrid strokeDasharray="1 1" />
-            <XAxis dataKey={line1} />
+            <XAxis />
             <YAxis />
             <Tooltip />
             <Legend />
@@ -40,10 +47,10 @@ const Linechart = ({ data, line1, line2, error, columns }) => {
               name="BestFit Line"
               activeDot={{ r: 5 }}
             />
-            <XAxis dataKey={columns[0]} />
+            {/* <XAxis dataKey={columns[0]} />
             <YAxis />
             <Tooltip />
-            <Legend />
+            <Legend /> */}
             <Line
               dataKey={columns[1]}
               type="natural"
@@ -66,7 +73,7 @@ const Linechart = ({ data, line1, line2, error, columns }) => {
               bottom: 5,
             }}
           >
-            <Brush height={10} />
+            <Brush height={10} startIndex={0} endIndex={30} />
             <CartesianGrid strokeDasharray="1 1" />
             <XAxis dataKey={line1} />
             <YAxis />

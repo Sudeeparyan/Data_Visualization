@@ -13,6 +13,7 @@ import Project from "../Project/project";
 //Imports form Reusables
 import Navbar from "../../Components/Reusables/Navbar/Navbar";
 import { Notification } from "../../Components/Reusables/Notification/Notification";
+import GraphPage from "../Graph_page/graphPage";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/Project/:id" element={<Project />} />
+            <Route path="/Project/:id/:modelId" element={<GraphPage />} />
             <Route path="*" element={<DashboardPage />} />
           </Routes>
         </BrowserRouter>

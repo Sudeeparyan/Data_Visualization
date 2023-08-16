@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.1.4",
+    "@ant-design/plots": "^1.2.5",
     "@antv/s2": "^1.49.1",
     "@antv/s2-react": "^1.42.0",
     "@emotion/react": "^11.11.1",

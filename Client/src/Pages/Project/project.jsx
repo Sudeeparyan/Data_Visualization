@@ -18,7 +18,6 @@ import Tableview from "../../Components/Containers/Project/Tableview";
 
 const Project = () => {
   const pageNo = useSelector(projectSelector.pageNo);
-  const tableData = useSelector(projectSelector.tableData);
   const dispatch = useDispatch();
   const location = useLocation();
   const [getExcel, getData] = useLazyGetExcelQuery() || {};

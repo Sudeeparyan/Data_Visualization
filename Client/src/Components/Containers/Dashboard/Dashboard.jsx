@@ -7,7 +7,7 @@
 
 // React Imports
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 //Styles
 import styles from "./Dashboard.module.css";
@@ -18,15 +18,12 @@ import { Badge, Card, Tooltip } from "antd";
 //ReUsables
 import UploadButton from "../../Reusables/UploadButton/upploadButton";
 //Redux
-import { projectSelector } from "../../../Redux/Root/rootSelector";
 import { rootQuery } from "../../../Redux/Root/rootQuery";
 import { rootActions } from "../../../Redux/Root/rootActions";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const projectId = useSelector(projectSelector.projectId);
-  const pgno = useSelector(projectSelector.pageNo);
 
   //Making the upload button diable and enable
   const [disable, setDisable] = useState(false);
@@ -34,9 +31,6 @@ const Dashboard = () => {
   //POST Req RTK Query to send the uploaded csv
   const [sendExcelCSV, resultCsv] =
     rootQuery.excelPage.useSendExcelCSVMutation() || {};
-  //GET Req to get the project from Backend
-  const [getExcel, resultsExcel] =
-    rootQuery.excelPage.useLazyGetExcelQuery() || {};
   /**
    * handleCustomRequest
    *
@@ -55,7 +49,8 @@ const Dashboard = () => {
       const res = await sendExcelCSV(formData);
       //sending GET Request based on condition
       if (res.data.error === null) {
-        await getExcel({ projectId: res.data.projectId, pageNo: pgno });
+        navigate(`/Project/${res.data.projectId}`);
+        // await getExcel({ projectId: res.data.projectId, pageNo: pgno });
       } else {
         setDisable((prev) => !prev);
         onError();
@@ -79,11 +74,6 @@ const Dashboard = () => {
       )
     );
   }, []);
-
-  //Redirecting the user to another Route when GET Req is Success
-  if (resultsExcel.data) {
-    navigate(`/Project/${projectId}`);
-  }
 
   return (
     <div>
@@ -123,9 +113,6 @@ const Dashboard = () => {
             </div>
             {resultCsv.isLoading && (
               <h4 className={styles.upload}>Uploading Please Wait...</h4>
-            )}
-            {resultsExcel.status === "pending" && (
-              <h4 className={styles.upload}>Creating a project...</h4>
             )}
           </Card>
         </Badge.Ribbon>
