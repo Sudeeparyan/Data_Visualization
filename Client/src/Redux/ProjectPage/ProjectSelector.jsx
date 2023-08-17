@@ -22,13 +22,18 @@ export const tableData = createSelector(
   (project) => project.ExcelCsv
 );
 export const pageNo = createSelector([ProjectState], (project) => project.pgNo);
-export const graphData = createSelector(
+
+export const bestFit = createSelector(
   [ProjectState],
-  (project) => project.Graph
+  (project) => project.BestFit
 );
-export const graphcolumns = createSelector(
+export const actualData = createSelector(
   [ProjectState],
-  (project) => project.graphColumn
+  (project) => project.ActualData
+);
+export const errorData = createSelector(
+  [ProjectState],
+  (project) => project.ErrorData
 );
 export const modelId = createSelector(
   [ProjectState],

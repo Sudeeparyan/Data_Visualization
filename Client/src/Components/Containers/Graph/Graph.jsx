@@ -1,29 +1,79 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { rootQuery } from "../../../Redux/Root/rootQuery";
-import { projectSelector } from "../../../Redux/Root/rootSelector";
+import LineGraph from "../../Reusables/Linechart/lineGraph";
 
 const Graph = () => {
-  const modelId = useSelector(projectSelector.modelId);
-  console.log("yes");
-
   const [showGraph, getGraph] =
     rootQuery.excelPage.useLazyGetGraphResultQuery() || {};
-
   useEffect(() => {
-    const path = location.pathname.split("/")[2];
-    showGraph({ projectId: path, modelId: modelId });
+    const projectId = location.pathname.split("/")[2];
+    const modelId = location.pathname.split("/")[3];
+    showGraph({ projectId: projectId, modelId: modelId });
   }, []);
 
   return (
     <div>
-      <div style={{ height: "92vh", backgroundColor: "blue" }}>
-        <div>Actual Graph</div>
-        <div style={{ height: "100%", backgroundColor: "red" }}></div>
+      <div style={{ height: "100vh" }}>
+        <div
+          style={{
+            padding: "10px",
+            backgroundColor: "#E8E8E8",
+            fontSize: "18px",
+          }}
+        >
+          Actual Graph
+        </div>
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+          }}
+        >
+          {getGraph.isSuccess && getGraph.data.error === null ? (
+            <div style={{ width: "40%" }}>
+              <LineGraph
+                bestFit={getGraph.data.actualData}
+                actualData={getGraph.data.bestFitData}
+                errorData={[]}
+                error={false}
+              />
+            </div>
+          ) : (
+            <h3>Loading...</h3>
+          )}
+        </div>
       </div>
-      <div style={{ height: "92vh", backgroundColor: "grey" }}>
-        <div>Error Graph</div>
-        <div style={{ height: "100%", backgroundColor: "pink" }}></div>
+      <div style={{ height: "100vh" }}>
+        <div
+          style={{
+            padding: "10px",
+            backgroundColor: "#E8E8E8",
+            fontSize: "18px",
+          }}
+        >
+          Error Graph
+        </div>
+        <div
+          style={{
+            height: "100%",
+            display: "flex",
+            // justifyContent: "center",
+            // alignItems: "center",
+          }}
+        >
+          {getGraph.isSuccess && getGraph.data.error === null ? (
+            <div style={{ width: "40%" }}>
+              <LineGraph
+                bestFit={[]}
+                actualData={[]}
+                errorData={getGraph.data.errorData}
+                error={true}
+              />
+            </div>
+          ) : (
+            <h3>Loading...</h3>
+          )}
+        </div>
       </div>
     </div>
   );

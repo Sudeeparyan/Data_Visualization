@@ -12,12 +12,10 @@ import { useLocation } from "react-router-dom";
 //Redux Imports
 import { useSelector, useDispatch } from "react-redux";
 import { useLazyGetExcelQuery } from "../../Redux/ProjectPage/ProjectRtkQuery";
-import { projectSelector } from "../../Redux/Root/rootSelector";
 import { rootActions } from "../../Redux/Root/rootActions";
 import Tableview from "../../Components/Containers/Project/Tableview";
 
 const Project = () => {
-  const pageNo = useSelector(projectSelector.pageNo);
   const dispatch = useDispatch();
   const location = useLocation();
   const [getExcel, getData] = useLazyGetExcelQuery() || {};
@@ -29,7 +27,7 @@ const Project = () => {
 
   useEffect(() => {
     const path = location.pathname.split("/")[2];
-    getExcel({ projectId: path, pageNo: pageNo });
+    getExcel({ projectId: path, pageNo: 1 });
     dispatch(rootActions.excelActions.storeExcelid({ projectId: path }));
   }, []);
 

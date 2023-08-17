@@ -12,8 +12,9 @@ const initialState = {
   ExcelColumns: [],
   ProjectId: 0,
   pgNo: 1,
-  Graph: [],
-  graphColumn: [],
+  BestFit: [],
+  ActualData: [],
+  ErrorData: [],
   Model_Id: 0,
 };
 
@@ -33,8 +34,9 @@ const ExcelSlice = createSlice({
       state.ProjectId = action.payload.projectId;
     },
     storeGraph: (state, action) => {
-      state.Graph = action.payload.graphData;
-      state.graphColumn = action.payload.columns;
+      state.BestFit = action.payload.bestFitData;
+      state.ActualData = action.payload.actualData;
+      state.ErrorData = action.payload.errorData;
     },
     storeModelid: (state, action) => {
       state.Model_Id = action.payload.modelID;

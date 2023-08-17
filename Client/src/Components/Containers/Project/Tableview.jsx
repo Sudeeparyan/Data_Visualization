@@ -17,15 +17,17 @@ const Tableview = ({ getData }) => {
   const navigate = useNavigate();
   const columns = useSelector(projectSelector.tableColumns);
   const tableData = useSelector(projectSelector.tableData);
-  const modelId = useSelector(projectSelector.modelId);
   const projectId = useSelector(projectSelector.projectId);
   const pageNo = useSelector(projectSelector.pageNo);
   const id = useSelector(projectSelector.projectId);
+
   const [getExcel, getTableData] =
     rootQuery.excelPage.useLazyGetExcelQuery() || {};
   const [sendProject, getProject] =
     rootQuery.excelPage.useGenerateGraphMutation() || {};
+
   const sheetRef = useRef();
+
   const handleScroll = (event) => {
     const sheetInstance = sheetRef.current;
     if (
@@ -38,12 +40,14 @@ const Tableview = ({ getData }) => {
       }
     }
   };
+
   const debouncedHandleScroll = debounce(handleScroll, 300);
+
   const genarateGraph = async () => {
     const res = await sendProject({ projectID: id });
-    console.log(res);
     navigate(`/Project/${projectId}/${res.data.modelID}`);
   };
+
   return (
     <div>
       <div className={styles.loading}>

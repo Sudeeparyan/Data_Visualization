@@ -9,6 +9,7 @@ const NotificationContext = createContext(null);
 export const useNotification = () => useContext(NotificationContext);
 
 export const Notification = ({ children }) => {
+  console.log("yesssss");
   const [api, contextHolder] = notification.useNotification();
   const dispatch = useDispatch();
   const notifyType = useSelector(notificationSelector.type);
