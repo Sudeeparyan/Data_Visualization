@@ -3,7 +3,6 @@
    This is a web application built with Flask and
    serves a React frontend from the 'dist' directory"""
 
-
 # Flask application code starts here
 # python modules
 import os
@@ -82,5 +81,5 @@ if __name__ == '__main__':
     # setting up for db connectivity
     initialize_db()
     # Running the server at port 8000
-    app.run(host='0.0.0.0',port=8000, debug=True)
+    app.run(port=8000, debug=True)
  

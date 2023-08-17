@@ -8,12 +8,10 @@ import os
 import dask.dataframe as dd
 import numpy as np
 from flask import Blueprint, request, jsonify
-import matplotlib.pyplot as plt
 
 # application modules
 from models import db, InputFiles, Users, Projects, TrainedModels, Results
-from prediction_from_model import prediction_using_trained_model
-# from prediction_from_model import prediction_using_trained_model
+from ml.prediction_from_model import prediction_using_trained_model
 from utilities import handle_errors, save_csv_files
 
 # creating the blueprint for excel_page
@@ -163,13 +161,13 @@ def test_data():
     """Creating a training model for testing the actual csv"""
     
     project_data = request.get_json()
-    project_ID = project_data.get('project_ID')
+    project_ID = project_data.get('projectID')
     project = Projects.query.filter_by(project_id=project_ID).first()
     
     if project:
         input_file = InputFiles.query.filter_by(
             project_id=project.project_id).first()
-        trained_model = TrainedModels(trained_model_path="trained_models\\best_model.pkl", file_path=input_file.file_path
+        trained_model = TrainedModels(trained_model_path="ml\\trained_models\\best_model.pkl", file_path=input_file.file_path
                                     )
         db.session.add(trained_model)
         db.session.commit()
@@ -180,7 +178,6 @@ def test_data():
         return jsonify({"error": "Invalid projectID"})
 
 @project_page.route("/get-results/<project_id>/<trained_model_id>", methods=['GET'])
-@handle_errors
 def get_results(project_id,trained_model_id):
     """ Using ML trained model to fetch graph data
     """
@@ -190,8 +187,8 @@ def get_results(project_id,trained_model_id):
         
         input_file = InputFiles.query.filter_by(
             project_id=project.project_id).first()
-        
         trained_model = TrainedModels.query.filter_by(trained_model_id=trained_model_id).first()
+        
         try:
             actual_csv = dd.read_csv(input_file.file_path).compute()
             file_path = prediction_using_trained_model(trained_model.trained_model_path, input_file.file_path, project_id)
@@ -206,6 +203,7 @@ def get_results(project_id,trained_model_id):
             return jsonify({"error":None,"graphData": df, "columns": [actual_csv.columns[0],actual_csv.columns[1]]})
         
         except Exception as err:
+            
             return jsonify({"error": "file uploaded can't be trained", "exact_error_message": str(err)})
         
     else:
