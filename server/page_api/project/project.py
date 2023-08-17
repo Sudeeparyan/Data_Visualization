@@ -194,13 +194,39 @@ def get_results(project_id,trained_model_id):
             file_path = prediction_using_trained_model(trained_model.trained_model_path, input_file.file_path, project_id)
             df = dd.read_csv(file_path,blocksize=None, low_memory=False, dtype={'Signal_Mode': 'object'})
             df = df.compute()
+            # Select two columns and create a new DataFrame
+            best_fit_columns = ['best_fit_X', 'best_fit_Y']  # Replace with actual column names
+            best_fit_df = df[best_fit_columns]
+
+            # Rename columns in the new DataFrame
+            new_column_names = {'best_fit_X': 'x', 'best_fit_Y': 'y'}  # Replace with desired new names
+            best_fit_df.rename(columns=new_column_names, inplace=True) 
+            
+            
+            best_fit_df = best_fit_df.to_dict(orient='records')
+            
+            error_columns = ['error_X', 'error_Y']  # Replace with actual column names
+            error_df = df[error_columns]
+
+            # Rename columns in the new DataFrame
+            new_column_names = {'error_X': 'x', 'error_Y': 'y'}  # Replace with desired new names
+            error_df.rename(columns=new_column_names, inplace=True) 
+            
+            error_df = error_df.to_dict(orient='records') 
         
-            df = df.to_dict(orient='records')
+            actual_data_columns = [actual_csv.columns[0], actual_csv.columns[1]]  # Replace with actual column names
+            actual_data_df = df[actual_data_columns]
+
+            # Rename columns in the new DataFrame
+            new_column_names = {actual_csv.columns[0]: 'x', actual_csv.columns[1]: 'y'}  # Replace with desired new names
+            actual_data_df.rename(columns=new_column_names, inplace=True) 
+            
+            actual_data_df = actual_data_df.to_dict(orient='records')
             new_result = Results(trained_model_id=trained_model.trained_model_id,input_file_id=input_file.input_file_id,result_csv_path=file_path)
             db.session.add(new_result)
             db.session.commit()
         
-            return jsonify({"error":None,"graphData": df, "columns": [actual_csv.columns[0],actual_csv.columns[1]]})
+            return jsonify({"error":None,"bestFitData": best_fit_df, "actualData": actual_data_df,"errorData": error_df})
         
         except Exception as err:
             

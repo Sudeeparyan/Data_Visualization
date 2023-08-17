@@ -18,9 +18,6 @@ def prediction_using_trained_model(model_path: str, file_path: str, project_id: 
     try:
         actual_data = pd.read_csv(file_path)
         actual_data.dropna(inplace=True)
-        tem = sorted(actual_data[actual_data.columns[0]].to_list())
-        actual_data[actual_data.columns[0]] = tem
-        actual_data.reset_index(drop=True, inplace=True)
         X = actual_data[actual_data.columns[0]]
         y = actual_data[actual_data.columns[1]]
        
@@ -31,44 +28,36 @@ def prediction_using_trained_model(model_path: str, file_path: str, project_id: 
            
             # Generate points for the best fit polynomial curve
             x_line = np.linspace(X.min(), X.max(), y.shape[0]).reshape(-1, 1)
-            # x_line = X
+            
             if model_name == "Polynomial Regression":
                 poly = PolynomialFeatures(degree=best_degree)
                 x_line_poly = poly.fit_transform(x_line)
                 y_line = best_model.predict(x_line_poly)
             else:
-
                 y_line = best_model.predict(X)
 
             error = np.sqrt(np.square(y_line - y))
 
             # Save the best fit line coordinates in best_fit.csv
-             # Prepare DataFrames for concatenation
-             
-            li = sorted(x_line.flatten())
-            
-            result_csv = pd.DataFrame({'best_fit_X': li, 'best_fit_Y': y_line})
-            result_csv[actual_data.columns[0]] = X
-            result_csv[actual_data.columns[1]] = y
-            result_csv["error_X"] = li
-            result_csv["error_Y"] = error
-           
-           
+            # Prepare DataFrames for concatenation
+            result_csv = pd.DataFrame({'best_fit_X': x_line.flatten(), 'best_fit_Y': y_line})
+            actual_coordinates = pd.DataFrame({actual_data.columns[0]: X, actual_data.columns[1]: y})
+            error_csv = pd.DataFrame({'error_X': x_line.flatten(), 'error_Y': error})
 
             # Sort all DataFrames based on the same column
-            # print(error_csv)
-            # print(result_csv)
-            # actual_coordinates = actual_coordinates.sort_values(by=[actual_data.columns[0]])
+            result = pd.concat([result_csv, error_csv, actual_coordinates], axis = 1)
+            result = result.sort_values(by=[actual_data.columns[0]])
+           
             file_path = os.path.abspath(os.path.join(os.getcwd()))
             file_path = os.path.join(file_path, "storage","media_files","project_csv",str(project_id))
           
             time_stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-            result_csv.dropna(inplace=True)
+            result.dropna(inplace=True)
             # result = result.sort_values(by=[actual_data.columns[0]])
-            result_csv.to_csv(file_path+f"//{project_id}_{time_stamp}_result.csv", index=False)
+            result.to_csv(file_path+f"//{project_id}_{time_stamp}_result.csv", index=False)
             result_path = file_path+f"//{project_id}_{time_stamp}_result.csv"
             
-            
+
             return  result_path
         
     except Exception as err:
