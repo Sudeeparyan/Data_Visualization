@@ -23,6 +23,7 @@ const Tableview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
+
   const columns = useSelector(projectSelector.tableColumns);
   const tableData = useSelector(projectSelector.tableData);
   const projectId = useSelector(projectSelector.projectId);
@@ -35,7 +36,6 @@ const Tableview = () => {
     rootQuery.excelPage.useLazyGetExcelQuery() || {};
   const [sendProject, getProject] =
     rootQuery.excelPage.useGenerateGraphMutation() || {};
-
   const sheetRef = useRef();
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const Tableview = () => {
   const genarateGraph = async () => {
     // Generate a graph based on the selected project
     const res = await sendProject({ projectId: id });
-    navigate(`/Project/${projectId}/${res.data.modelId}`);
+    navigate(`/Project/projectId=/${projectId}/modelId=/${res.data.modelId}`);
   };
 
   return (

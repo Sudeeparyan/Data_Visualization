@@ -10,14 +10,14 @@ import {
   useLazyGetExcelQuery,
   useSendExcelCSVMutation,
   useGenerateGraphMutation,
-  useLazyGetGraphResultQuery,
+  useGetGraphResultMutation,
 } from "../ProjectPage/ProjectRtkQuery";
 
 export const rootQuery = {
   excelPage: {
     useLazyGetExcelQuery,
     useSendExcelCSVMutation,
-    useLazyGetGraphResultQuery,
+    useGetGraphResultMutation,
     useGenerateGraphMutation,
   },
 };

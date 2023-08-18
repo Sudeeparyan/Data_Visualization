@@ -30,10 +30,6 @@ const LineGraph = ({ bestFit, actualData, errorData, error, scatter }) => {
     },
   ];
 
-  const zoom = (e) => {
-    console.log(e);
-  };
-
   return (
     <div>
       {!error ? (
@@ -57,7 +53,6 @@ const LineGraph = ({ bestFit, actualData, errorData, error, scatter }) => {
             enableCrosshair={true}
             crosshairType="top-right"
             enableSlices="x"
-            onMouseMove={zoom}
             colors={["#5B70F3", "#F0A500"]}
             legends={[
               {

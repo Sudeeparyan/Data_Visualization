@@ -107,9 +107,15 @@ export const sendExcelCsv = createApi({
         }
       },
     }),
-    getGraphResult: builder.query({
-      query: ({ projectId, modelId }) =>
-        endpointsApi.get_graph_data + `${projectId}/${modelId}`,
+    // getGraphResult: builder.query({
+    //   query: ({ projectId, modelId }) =>
+    //     endpointsApi.get_graph_data + `${projectId}/${modelId}`,
+    getGraphResult: builder.mutation({
+      query: (resultKey) => ({
+        url: endpointsApi.get_graph_data,
+        method: "POST",
+        body: resultKey,
+      }),
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -140,5 +146,5 @@ export const {
   useSendExcelCSVMutation,
   useLazyGetExcelQuery,
   useGenerateGraphMutation,
-  useLazyGetGraphResultQuery,
+  useGetGraphResultMutation,
 } = sendExcelCsv;

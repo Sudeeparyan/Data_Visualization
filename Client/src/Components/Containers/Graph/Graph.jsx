@@ -15,14 +15,13 @@ import ButtonComponent from "../../Reusables/Button/Button";
  */
 const Graph = () => {
   const [showGraph, getGraph] =
-    rootQuery.excelPage.useLazyGetGraphResultQuery() || {};
-  console.log(getGraph);
+    rootQuery.excelPage.useGetGraphResultMutation() || {};
   const [scatter, setScatter] = useState(false);
   const [buttontext, setButtonText] = useState("scatter");
 
   useEffect(() => {
-    const projectId = location.pathname.split("/")[2];
-    const modelId = location.pathname.split("/")[3];
+    const projectId = location.pathname.split("/")[3];
+    const modelId = location.pathname.split("/")[5];
     showGraph({ projectId: projectId, modelId: modelId });
   }, []);
 
@@ -46,8 +45,8 @@ const Graph = () => {
           {getGraph.isSuccess && getGraph.data.error === null ? (
             <div className={styles.graph}>
               <LineGraph
-                bestFit={getGraph.data.actualData}
-                actualData={getGraph.data.bestFitData}
+                bestFit={getGraph.data.bestFitData}
+                actualData={getGraph.data.actualData}
                 errorData={[]}
                 error={false}
                 scatter={scatter}
