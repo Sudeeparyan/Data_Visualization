@@ -1,20 +1,28 @@
 //React imports
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { debounce } from "lodash";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 //Imports from Reusables
 import Table from "../../Reusables/Table/table";
 //Import from Styles
 import styles from "./project.module.css";
 //Redux Imports
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { rootActions } from "../../../Redux/Root/rootActions";
 import { rootQuery } from "../../../Redux/Root/rootQuery";
 import { projectSelector } from "../../../Redux/Root/rootSelector";
 import Loaders from "./loaders";
 import ButtonComponent from "../../Reusables/Button/Button";
-
-const Tableview = ({ getData }) => {
+/**
+ * Tableview component displays a table with project data and controls for generating a graph.
+ *
+ * @component
+ */
+const Tableview = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
   const columns = useSelector(projectSelector.tableColumns);
   const tableData = useSelector(projectSelector.tableData);
   const projectId = useSelector(projectSelector.projectId);
@@ -23,19 +31,28 @@ const Tableview = ({ getData }) => {
 
   const [getExcel, getTableData] =
     rootQuery.excelPage.useLazyGetExcelQuery() || {};
+  const [getProjects, getData] =
+    rootQuery.excelPage.useLazyGetExcelQuery() || {};
   const [sendProject, getProject] =
     rootQuery.excelPage.useGenerateGraphMutation() || {};
 
   const sheetRef = useRef();
 
+  useEffect(() => {
+    // Fetch initial data when component mounts
+    const path = location.pathname.split("/")[2];
+    getProjects({ projectId: path, pageNo: 1 });
+    dispatch(rootActions.excelActions.storeExcelid({ projectId: path }));
+  }, []);
+
   const handleScroll = (event) => {
+    // Load more data when scrolling to the bottom of the table
     const sheetInstance = sheetRef.current;
     if (
       event.scrollY === sheetInstance.facet.vScrollBar.scrollTargetMaxOffset ||
       0
     ) {
       if (pageNo !== null) {
-        console.log("test");
         getExcel({ projectId: id, pageNo: pageNo });
       }
     }
@@ -44,8 +61,9 @@ const Tableview = ({ getData }) => {
   const debouncedHandleScroll = debounce(handleScroll, 300);
 
   const genarateGraph = async () => {
-    const res = await sendProject({ projectID: id });
-    navigate(`/Project/${projectId}/${res.data.modelID}`);
+    // Generate a graph based on the selected project
+    const res = await sendProject({ projectId: id });
+    navigate(`/Project/${projectId}/${res.data.modelId}`);
   };
 
   return (

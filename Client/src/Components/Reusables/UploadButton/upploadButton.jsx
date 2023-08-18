@@ -31,7 +31,7 @@ const UploadButton = ({
       >
         <Button
           className={styles.uploadButton}
-          icon={icon ? icon : null}
+          icon={icon}
           style={{
             height: "70px",
             backgroundColor: "white",

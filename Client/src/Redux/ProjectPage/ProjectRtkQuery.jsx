@@ -69,7 +69,6 @@ export const sendExcelCsv = createApi({
               })
             );
         } catch (err) {
-          console.log(err);
           dispatch(
             rootActions.notificationActions.storeNotification({
               type: "error",
@@ -114,11 +113,9 @@ export const sendExcelCsv = createApi({
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(data);
           if (data.error === null) {
             dispatch(rootActions.excelActions.storeGraph(data));
           } else {
-            console.log("ERROR");
             dispatch(
               rootActions.notificationActions.storeNotification({
                 type: "error",
@@ -127,7 +124,6 @@ export const sendExcelCsv = createApi({
             );
           }
         } catch (err) {
-          console.log(err);
           dispatch(
             rootActions.notificationActions.storeNotification({
               type: "error",

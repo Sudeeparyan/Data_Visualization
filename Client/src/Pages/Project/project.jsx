@@ -7,33 +7,14 @@
  */
 
 //React Imports
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React from "react";
 //Redux Imports
-import { useSelector, useDispatch } from "react-redux";
-import { useLazyGetExcelQuery } from "../../Redux/ProjectPage/ProjectRtkQuery";
-import { rootActions } from "../../Redux/Root/rootActions";
 import Tableview from "../../Components/Containers/Project/Tableview";
 
 const Project = () => {
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const [getExcel, getData] = useLazyGetExcelQuery() || {};
-
-  /**
-   * useEffect Hook
-   * This hook is used to fetch Excel data based on the current path when the component mounts.
-   */
-
-  useEffect(() => {
-    const path = location.pathname.split("/")[2];
-    getExcel({ projectId: path, pageNo: 1 });
-    dispatch(rootActions.excelActions.storeExcelid({ projectId: path }));
-  }, []);
-
   return (
     <div>
-      <Tableview getData={getData} />
+      <Tableview />
     </div>
   );
 };

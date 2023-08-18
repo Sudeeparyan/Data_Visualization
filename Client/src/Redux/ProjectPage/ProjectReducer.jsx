@@ -39,7 +39,7 @@ const ExcelSlice = createSlice({
       state.ErrorData = action.payload.errorData;
     },
     storeModelid: (state, action) => {
-      state.Model_Id = action.payload.modelID;
+      state.Model_Id = action.payload.modelId;
     },
   },
 });
