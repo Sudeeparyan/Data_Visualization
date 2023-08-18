@@ -40,7 +40,7 @@ def initialize_db():
     # creating the db within flask context
     with app.app_context():
         db.create_all()
-        new_user = Users()
+        new_user = Users(user_name='abc', email='abc@gmail.com', password='1234')
         db.session.add(new_user)
         db.session.commit()
 
