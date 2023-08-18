@@ -11,7 +11,7 @@ from flask import Blueprint, request, jsonify
 
 # application modules
 from models import db, InputFiles, Users, Projects, TrainedModels, Results
-from ml.prediction_from_model import generate_predictions
+from machine_learning.prediction_from_model import generate_predictions
 from utilities import handle_errors, save_project_files
 
 # creating the blueprint for excel_page
@@ -108,11 +108,11 @@ def send_file_data(project_id: int):
 
     if (page)*chunk_size not in existing_index:
         # No more data to send
-        next_page = None  
+        next_page = None
     else:
         # Include the next page number
         next_page = page + 1
-        
+
     return jsonify({
         "error": None,
         "tableContent": chunk_records,

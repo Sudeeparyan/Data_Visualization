@@ -60,7 +60,7 @@ def generate_predictions(model_path: str, file_path: str, project_id: int) -> st
     # file path for the result csv to be stored
     file_path = os.path.abspath(os.path.join(os.getcwd()))
     file_path = os.path.join(file_path, "storage",
-                             "media_files", "project_csv", str(project_id))
+                             "media_files", "project_files", str(project_id))
 
     time_stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     result.dropna(inplace=True)
