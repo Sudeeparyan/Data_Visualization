@@ -23,44 +23,42 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 cors = CORS(app)
 
 # configuring the static folder path for flask app
-static_folder_path = os.path.abspath(os.path.join(os.getcwd(), '..', 'dist', 'assets'))
+static_folder_path = os.path.abspath(
+    os.path.join(os.getcwd(), '..', 'dist', 'assets'))
 app.static_folder = static_folder_path
 
 
 def initialize_db():
     """Setting up sqllite3 connectivity"""
     os.makedirs('storage\\database\\', exist_ok=True)
-  
+
     # setting the file path for sqllite3
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
         os.path.join(os.getcwd(), 'storage\\database\\db.sqllite3')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
-   
+
     # creating the db within flask context
     with app.app_context():
         db.create_all()
-        new_user = Users(user_name='abc', email='abc@gmail.com', password='1234')
+        new_user = Users(
+            user_name='abc', email='abc@gmail.com', password='1234')
         db.session.add(new_user)
         db.session.commit()
 
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
-@handle_errors
+@handle_errors("An error occured while reading html files")
 def index(path):
     """rendering the index page of the application"""
-    try:
-        with open("../dist/index.html", "r", encoding="utf-8") as file_pointer:
-            return file_pointer.read()
-        
-    except Exception as err:
-        return jsonify({"error":"file can't be opened","exact_message": str(err)})
 
+    with open("../dist/index.html", "r", encoding="utf-8") as file_pointer:
+        return file_pointer.read()
 
 
 @app.route("/assets/<path:name>")
-@handle_errors
+@handle_errors("An error occured while rendering static files")
 def render_static_file(name):
     """Rendering  static files for the webpage"""
 
@@ -73,7 +71,8 @@ def render_static_file(name):
 def handle_unknown_routes(error):
     """Function for handling unknown routes"""
 
-    response = jsonify({'error': 'The requested URL was not found on this server.'})
+    response = jsonify(
+        {'error': 'The requested URL was not found on this server.'})
     return response
 
 
@@ -82,4 +81,3 @@ if __name__ == '__main__':
     initialize_db()
     # Running the server at port 8000
     app.run(port=8000, debug=True)
- 
