@@ -23,7 +23,7 @@ const Tableview = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-
+  const [errorkey, setErrorKey] = useState(false);
   const columns = useSelector(projectSelector.tableColumns);
   const tableData = useSelector(projectSelector.tableData);
   const projectId = useSelector(projectSelector.projectId);
@@ -44,6 +44,14 @@ const Tableview = () => {
     getProjects({ projectId: path, pageNo: 1 });
     dispatch(rootActions.excelActions.storeExcelid({ projectId: path }));
   }, []);
+
+  useEffect(() => {
+    if (getTableData.data) {
+      if (getTableData.data.error !== null) {
+        setErrorKey((prevErrorKey) => !prevErrorKey);
+      }
+    }
+  }, [getTableData.data]);
 
   const handleScroll = (event) => {
     // Load more data when scrolling to the bottom of the table
@@ -68,40 +76,48 @@ const Tableview = () => {
 
   return (
     <div>
-      <div className={styles.loading}>
-        {getData.isFetching && (
-          <Loaders
-            loadingText={"Preparing your Preview..."}
-            style={styles.loader}
-          />
-        )}
-      </div>
-      {getData.isSuccess && tableData.length > 0 ? (
-        <div className={styles.mainBox}>
-          <div className={styles.table}>
-            <Table
-              columns={columns}
-              tableData={tableData}
-              onscroll={debouncedHandleScroll}
-              sheetRef={sheetRef}
-            />
-          </div>
-          <div className={styles.sidebar}>
-            <div>
-              <ButtonComponent
-                content={"Generate Graph"}
-                onclick={genarateGraph}
-                loading={getProject.isLoading || getProject.isFetching}
+      {!errorkey ? (
+        <div>
+          <div className={styles.loading}>
+            {getData.isFetching && (
+              <Loaders
+                loadingText={"Preparing your Preview..."}
+                style={styles.loader}
               />
+            )}
+          </div>
+          {getData.isSuccess && tableData.length > 0 ? (
+            <div className={styles.mainBox}>
+              <div className={styles.table}>
+                <Table
+                  columns={columns}
+                  tableData={tableData}
+                  onscroll={debouncedHandleScroll}
+                  sheetRef={sheetRef}
+                />
+              </div>
+              <div className={styles.sidebar}>
+                <div>
+                  <ButtonComponent
+                    content={"Generate Graph"}
+                    onclick={genarateGraph}
+                    loading={getProject.isLoading || getProject.isFetching}
+                  />
+                </div>
+              </div>
             </div>
+          ) : null}
+          <div className={styles.fetching}>
+            {getTableData.status === "pending" ? (
+              <Loaders loadingText={"Loading..."} style={styles.fetch} />
+            ) : null}
           </div>
         </div>
-      ) : null}
-      <div className={styles.fetching}>
-        {getTableData.status === "pending" ? (
-          <Loaders loadingText={"Loading..."} style={styles.fetch} />
-        ) : null}
-      </div>
+      ) : (
+        <div className={styles.error}>
+          <h3>Something went wrong..Please Refresh the page!</h3>
+        </div>
+      )}
     </div>
   );
 };

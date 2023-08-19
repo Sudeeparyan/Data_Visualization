@@ -93,3 +93,11 @@ p{
        max-width: 88%;
    }
 }
+
+.error{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;  
+  color: red;
+}
