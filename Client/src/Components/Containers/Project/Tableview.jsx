@@ -79,12 +79,12 @@ const Tableview = () => {
       {!errorkey ? (
         <div>
           <div className={styles.loading}>
-            {getData.isFetching && (
+            {getData.isFetching && tableData.length === 0 ? (
               <Loaders
                 loadingText={"Preparing your Preview..."}
                 style={styles.loader}
               />
-            )}
+            ) : null}
           </div>
           {getData.isSuccess && tableData.length > 0 ? (
             <div className={styles.mainBox}>
