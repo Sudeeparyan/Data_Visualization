@@ -28,6 +28,9 @@ def upload_file():
     Returns:
        It returns a JSON response with the status of file uploaded
     """
+    project_file = request.files["file"]
+    if not ('.' in project_file.filename and project_file.filename.rsplit('.', 1)[1].lower() == 'csv'):
+        return jsonify({"error": "Invalid file format"})
 
     current_user = Users.query.order_by(Users.user_id.desc()).first()
 
@@ -37,7 +40,6 @@ def upload_file():
     db.session.add(new_project)
     db.session.commit()
 
-    project_file = request.files["file"]
     file_name = (
         str(new_project.project_id)
         + "_"
