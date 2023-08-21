@@ -14,6 +14,8 @@ import { rootQuery } from "../../../Redux/Root/rootQuery";
 import { projectSelector } from "../../../Redux/Root/rootSelector";
 import Loaders from "./loaders";
 import ButtonComponent from "../../Reusables/Button/Button";
+import FloatingButton from "../../Reusables/FloatingButton/floatButton";
+import Sidebar from "./sidebar";
 /**
  * Tableview component displays a table with project data and controls for generating a graph.
  *
@@ -24,6 +26,8 @@ const Tableview = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const [errorkey, setErrorKey] = useState(false);
+  const [open, setOpen] = useState(false);
+
   const columns = useSelector(projectSelector.tableColumns);
   const tableData = useSelector(projectSelector.tableData);
   const projectId = useSelector(projectSelector.projectId);
@@ -98,13 +102,14 @@ const Tableview = () => {
               </div>
               <div className={styles.sidebar}>
                 <div>
-                  <ButtonComponent
-                    content={"Generate Graph"}
-                    onclick={genarateGraph}
-                    loading={getProject.isLoading || getProject.isFetching}
-                  />
+                  <FloatingButton onclickHandler={setOpen} open={open} />
                 </div>
               </div>
+              <Sidebar
+                heading={"Select a Model for Testing"}
+                open={open}
+                setOpen={setOpen}
+              />
             </div>
           ) : null}
           <div className={styles.fetching}>

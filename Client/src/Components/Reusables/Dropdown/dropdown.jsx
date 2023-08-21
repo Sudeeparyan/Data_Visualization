@@ -11,8 +11,18 @@ const Dropdown = ({ defaultValue, options, width, onchange }) => (
     style={{
       width: width,
     }}
-    onChange={onchange}
-    options={options}
+    // onChange={onchange}
+    options={[
+      {
+        value: "jack",
+        label: "Jack (100)",
+      },
+      {
+        value: "lucy",
+        label: "Lucy (101)",
+      },
+    ]}
   />
 );
+
 export default Dropdown;

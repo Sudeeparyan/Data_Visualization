@@ -15,7 +15,7 @@ const Table = ({ columns, tableData, onscroll, sheetRef }) => {
   };
 
   const s2Options = {
-    width: window.innerWidth > 1600 ? 1600 : 1130,
+    width: window.innerWidth > 1600 ? 1600 : 1360,
     height: window.innerWidth > 1600 ? 800 : 600,
     interaction: {
       hoverHighlight: true,
