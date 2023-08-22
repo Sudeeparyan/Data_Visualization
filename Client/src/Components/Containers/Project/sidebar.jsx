@@ -14,15 +14,25 @@ const Sidebar = ({ open, setOpen, heading }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const projectId = useSelector(projectSelector.projectId);
+  const Results = useSelector(projectSelector.Results);
   const columns = useSelector(projectSelector.tableColumns);
   const models = useSelector(projectSelector.models);
+  const trainX = useSelector(projectSelector.selectedModelX);
+  const trainY = useSelector(projectSelector.selectedModelY);
+
+  const [errormsg, setErrormsg] = useState(false);
 
   const selectedModel = useSelector(projectSelector.selectedModel);
   const [getModels, modelsResponse] =
     rootQuery.excelPage.useLazyGetModelsQuery() || {};
 
-  const showModels = () => {
-    getModels();
+  const [getResults, getResulstResponse] =
+    rootQuery.excelPage.useGenerateGraphMutation() || {};
+
+  const showModels = async () => {
+    const res = await getModels();
+    // if (res.data.message) setErrormsg(true);
+    // else setErrormsg(true);
   };
 
   const storeSelectedModel = (model) => {
@@ -48,7 +58,34 @@ const Sidebar = ({ open, setOpen, heading }) => {
 
   const handleSubmitDropDown = async () => {
     // Generate a graph based on the selected project
-    navigate(`/Project/projectId=/${projectId}/modelId=/${selectedModel}`);
+
+    if (trainX === "" || trainY === "")
+      dispatch(
+        rootActions.notificationActions.storeNotification({
+          type: "info",
+          message: "Please fill all the Fields Properly",
+        })
+      );
+    else if (trainX !== trainY)
+      navigate(`/Project/projectId=/${projectId}/modelId=/${selectedModel}`);
+    else
+      dispatch(
+        rootActions.notificationActions.storeNotification({
+          type: "info",
+          message: "Column name must be Unique",
+        })
+      );
+  };
+
+  const getAvailableResults = async () => {
+    const res = await getResults({ projectId: projectId });
+    if (res.data.message) setErrormsg(true);
+    else setErrormsg(true);
+  };
+
+  const getResultGraph = (resultId) => {
+    dispatch(rootActions.excelActions.storeResultId(resultId));
+    navigate(`/Project/projectId=/${projectId}/modelId=/${resultId}`);
   };
   return (
     <div>
@@ -79,18 +116,14 @@ const Sidebar = ({ open, setOpen, heading }) => {
             />
           </div>
 
-          <div style={{ height: "85%", marginTop: "32px" }}>
+          <div style={{ height: "85%" }}>
             {modelsResponse.isSuccess && (
               <div className={styles.modelPop}>
                 {models.map((model) => {
                   return (
                     <>
                       <div
-                        style={{
-                          fontSize: "17px",
-                          padding: "5px",
-                          cursor: "pointer",
-                        }}
+                        className={styles.scrollBox}
                         onClick={() => storeSelectedModel(model)}
                       >
                         Model-{model}
@@ -117,9 +150,37 @@ const Sidebar = ({ open, setOpen, heading }) => {
           }}
         >
           <div style={{ height: "15%" }}>
-            <ButtonComponent content={"Show Results"} loading={false} />
+            <ButtonComponent
+              content={"Show Results"}
+              loading={getResulstResponse.isLoading}
+              onclick={getAvailableResults}
+            />
           </div>
-          <div style={{ height: "70%", width: "120px" }}></div>
+          <div style={{ height: "70%", width: "140px" }}>
+            {getResulstResponse.isSuccess === true && errormsg === false ? (
+              <div className={styles.modelPop}>
+                {Results.map((result) => {
+                  return (
+                    <>
+                      <div
+                        className={styles.scrollBox}
+                        onClick={() => getResultGraph(result)}
+                      >
+                        Result-{result}
+                      </div>
+                      <hr></hr>
+                    </>
+                  );
+                })}
+              </div>
+            ) : errormsg === true ? (
+              <div
+                style={{ textAlign: "center", fontSize: "17px", color: "red" }}
+              >
+                No Results Found !
+              </div>
+            ) : null}
+          </div>
         </div>
         <Drawer
           title={"Select the Respective Columns"}

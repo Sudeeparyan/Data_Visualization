@@ -21,6 +21,7 @@ const Graph = () => {
   const [scatter, setScatter] = useState(false);
   const [buttontext, setButtonText] = useState("scatter");
   const trainX = useSelector(projectSelector.selectedModelX);
+  const resultId = useSelector(projectSelector.resultId);
   const trainY = useSelector(projectSelector.selectedModelY);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const Graph = () => {
       modelId: modelId,
       xColumn: trainX,
       yColumn: trainY,
+      resultId: resultId,
     });
   }, []);
 

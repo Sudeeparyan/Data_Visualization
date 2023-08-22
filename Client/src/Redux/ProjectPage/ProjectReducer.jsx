@@ -20,6 +20,8 @@ const initialState = {
   selectedModel: 0,
   selected_X_Alias: "",
   selected_Y_Alias: "",
+  Results: [],
+  storeResultId: 0,
 };
 
 const ExcelSlice = createSlice({
@@ -42,9 +44,9 @@ const ExcelSlice = createSlice({
       state.ActualData = action.payload.actualData;
       state.ErrorData = action.payload.errorData;
     },
-    storeModelid: (state, action) => {
-      state.Model_Id = action.payload.modelId;
-    },
+    // storeModelid: (state, action) => {
+    //   state.Model_Id = action.payload.modelId;
+    // },
     storeModels: (state, action) => {
       state.Models = action.payload.models;
     },
@@ -56,6 +58,13 @@ const ExcelSlice = createSlice({
     },
     storeTrainY: (state, action) => {
       state.selected_Y_Alias = action.payload.y;
+    },
+    storeResults: (state, action) => {
+      state.Results = action.payload.results;
+    },
+    storeResultId: (state, action) => {
+      console.log(action);
+      state.storeResultId = action.payload;
     },
   },
 });
@@ -70,5 +79,7 @@ export const {
   storeTrainData,
   storeTrainX,
   storeTrainY,
+  storeResults,
+  storeResultId,
 } = ExcelSlice.actions;
 export default ExcelSlice.reducer;

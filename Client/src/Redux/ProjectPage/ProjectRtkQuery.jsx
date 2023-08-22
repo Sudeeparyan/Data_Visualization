@@ -87,9 +87,9 @@ export const sendExcelCsv = createApi({
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-
           if (data.error === null) {
-            dispatch(rootActions.excelActions.storeModelid(data));
+            if (!data.message)
+              dispatch(rootActions.excelActions.storeResults(data));
           } else
             dispatch(
               rootActions.notificationActions.storeNotification({

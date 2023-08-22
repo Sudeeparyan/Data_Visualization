@@ -55,3 +55,11 @@ export const selectedModelY = createSelector(
   [ProjectState],
   (project) => project.selected_Y_Alias
 );
+export const Results = createSelector(
+  [ProjectState],
+  (project) => project.Results
+);
+export const resultId = createSelector(
+  [ProjectState],
+  (project) => project.storeResultId
+);
