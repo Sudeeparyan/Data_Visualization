@@ -9,4 +9,5 @@ export const endpointsApi = {
   get_Excel_csv: "/api/v2/project/get-file-data/",
   get_graph_data: "/api/v2/project/test-results", //projectId,modelId
   create_model: "/api/v2/project/test-data", //projectId
+  get_Models: "/api/v2/project/get-models",
 };

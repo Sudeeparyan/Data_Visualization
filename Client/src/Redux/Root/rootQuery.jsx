@@ -11,6 +11,7 @@ import {
   useSendExcelCSVMutation,
   useGenerateGraphMutation,
   useGetGraphResultMutation,
+  useLazyGetModelsQuery,
 } from "../ProjectPage/ProjectRtkQuery";
 
 export const rootQuery = {
@@ -19,5 +20,6 @@ export const rootQuery = {
     useSendExcelCSVMutation,
     useGetGraphResultMutation,
     useGenerateGraphMutation,
+    useLazyGetModelsQuery,
   },
 };

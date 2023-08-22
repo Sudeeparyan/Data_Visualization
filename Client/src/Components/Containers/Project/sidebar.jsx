@@ -4,14 +4,31 @@ import ButtonComponent from "../../Reusables/Button/Button";
 import Dropdown from "../../Reusables/Dropdown/dropdown";
 import { projectSelector } from "../../../Redux/Root/rootSelector";
 import { useSelector } from "react-redux";
+import { rootQuery } from "../../../Redux/Root/rootQuery";
+
 const Sidebar = ({ open, setOpen, heading }) => {
   const [openchild, setOpenchild] = useState(false);
   const columns = useSelector(projectSelector.tableColumns);
+  const models = useSelector(projectSelector.models);
+  const [getModels, modelsResponse] =
+    rootQuery.excelPage.useLazyGetModelsQuery() || {};
+
+  const showModels = () => {
+    getModels();
+  };
+
+  const storeSelectedModel = (index) => {
+    setOpenchild(true);
+    console.log(index);
+  };
+
+  console.log(models);
+
   return (
     <div>
       <Drawer
         title={heading}
-        width={480}
+        width={380}
         closable={true}
         onClose={() => setOpen(!open)}
         open={open}
@@ -29,35 +46,31 @@ const Sidebar = ({ open, setOpen, heading }) => {
           }}
         >
           <div style={{ height: "15%" }}>
-            <ButtonComponent content={"Show Models"} loading={false} />
+            <ButtonComponent
+              content={"Show Models"}
+              loading={false}
+              onclick={showModels}
+            />
           </div>
-          <div
-            style={{
-              height: "70%",
-              width: "120px",
-              overflowY: "scroll",
-              backgroundColor: "#F2F6F5",
-            }}
-          >
-            <h2
-              style={{ cursor: "pointer" }}
-              onClick={() => setOpenchild(true)}
+
+          {modelsResponse.isSuccess && (
+            <div
+              style={{
+                height: "70%",
+                width: "120px",
+                overflowY: "scroll",
+                backgroundColor: "#F2F6F5",
+              }}
             >
-              Model-1
-            </h2>
-            <hr></hr>
-            <h2>Model-x</h2>
-            <hr></hr>
-            <h2>Model-x</h2>
-            <hr></hr>
-            <h2>Model-x</h2>
-            <h2>Model-x</h2>
-            <h2>Model-x</h2>
-            <h2>Model-x</h2>
-            <h2>Model-x</h2>
-            <h2>Model-x</h2>
-            <h2>Model-x</h2>
-          </div>
+              {models.map((model, index) => {
+                return (
+                  <div onclick={() => storeSelectedModel(index)}>
+                    Model-{model}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
         <div
           style={{

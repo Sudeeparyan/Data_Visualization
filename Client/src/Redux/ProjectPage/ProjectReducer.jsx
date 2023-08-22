@@ -16,6 +16,7 @@ const initialState = {
   ActualData: [],
   ErrorData: [],
   Model_Id: 0,
+  Models: [],
 };
 
 const ExcelSlice = createSlice({
@@ -41,6 +42,9 @@ const ExcelSlice = createSlice({
     storeModelid: (state, action) => {
       state.Model_Id = action.payload.modelId;
     },
+    storeModels: (state, action) => {
+      state.Models = action.payload.models;
+    },
   },
 });
 
@@ -50,5 +54,6 @@ export const {
   storePgno,
   storeGraph,
   storeModelid,
+  storeModels,
 } = ExcelSlice.actions;
 export default ExcelSlice.reducer;

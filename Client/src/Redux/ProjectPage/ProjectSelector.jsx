@@ -39,3 +39,7 @@ export const modelId = createSelector(
   [ProjectState],
   (project) => project.Model_Id
 );
+export const models = createSelector(
+  [ProjectState],
+  (project) => project.Models
+);
