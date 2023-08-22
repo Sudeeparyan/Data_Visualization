@@ -17,6 +17,6 @@ def create_app():
     app = Flask(__name__)
 
     # registering the blueprint in the app
-    app.register_blueprint(project_page)
+    app.register_blueprint(project_page, url_prefix='/api/v1')
     
     return app

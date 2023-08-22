@@ -1,7 +1,7 @@
 """Reuseable functions for this project"""
 # python modules
 from functools import wraps
-
+import os
 # flask modules
 from flask import jsonify
 
@@ -22,3 +22,12 @@ def handle_errors(func):
             return jsonify({"error": error_message})
 
     return wrapper
+
+
+def save_csv_files(file, path):
+    """saving files in their corresponding directory"""
+    try:
+        file.save(path)
+
+    except Exception as err:
+        return jsonify({"error": "file can't be saved", "exact_message": err})
