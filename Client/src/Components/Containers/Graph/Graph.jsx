@@ -5,6 +5,8 @@ import SpinLoader from "../../Reusables/SpinLoader/spinLoader";
 import LineGraph from "../../Reusables/Linechart/lineGraph";
 //Redux Imports
 import { rootQuery } from "../../../Redux/Root/rootQuery";
+import { useSelector } from "react-redux";
+import { projectSelector } from "../../../Redux/Root/rootSelector";
 //Styles
 import styles from "./graph.module.css";
 import ButtonComponent from "../../Reusables/Button/Button";
@@ -18,11 +20,18 @@ const Graph = () => {
     rootQuery.excelPage.useGetGraphResultMutation() || {};
   const [scatter, setScatter] = useState(false);
   const [buttontext, setButtonText] = useState("scatter");
+  const trainX = useSelector(projectSelector.selectedModelX);
+  const trainY = useSelector(projectSelector.selectedModelY);
 
   useEffect(() => {
     const projectId = location.pathname.split("/")[3];
     const modelId = location.pathname.split("/")[5];
-    showGraph({ projectId: projectId, modelId: modelId });
+    showGraph({
+      projectId: projectId,
+      modelId: modelId,
+      xColumn: trainX,
+      yColumn: trainY,
+    });
   }, []);
 
   const scatterView = () => {

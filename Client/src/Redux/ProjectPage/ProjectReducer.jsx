@@ -17,6 +17,9 @@ const initialState = {
   ErrorData: [],
   Model_Id: 0,
   Models: [],
+  selectedModel: 0,
+  selected_X_Alias: "",
+  selected_Y_Alias: "",
 };
 
 const ExcelSlice = createSlice({
@@ -45,6 +48,15 @@ const ExcelSlice = createSlice({
     storeModels: (state, action) => {
       state.Models = action.payload.models;
     },
+    storeTrainData: (state, action) => {
+      state.selectedModel = action.payload.model;
+    },
+    storeTrainX: (state, action) => {
+      state.selected_X_Alias = action.payload.x;
+    },
+    storeTrainY: (state, action) => {
+      state.selected_Y_Alias = action.payload.y;
+    },
   },
 });
 
@@ -55,5 +67,8 @@ export const {
   storeGraph,
   storeModelid,
   storeModels,
+  storeTrainData,
+  storeTrainX,
+  storeTrainY,
 } = ExcelSlice.actions;
 export default ExcelSlice.reducer;

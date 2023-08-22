@@ -1,7 +1,6 @@
 //React imports
 import React, { useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
-import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 //Imports from Reusables
 import Table from "../../Reusables/Table/table";
@@ -21,7 +20,6 @@ import Sidebar from "./sidebar";
  * @component
  */
 const Tableview = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
   const [errorkey, setErrorKey] = useState(false);
@@ -29,7 +27,6 @@ const Tableview = () => {
 
   const columns = useSelector(projectSelector.tableColumns);
   const tableData = useSelector(projectSelector.tableData);
-  const projectId = useSelector(projectSelector.projectId);
   const pageNo = useSelector(projectSelector.pageNo);
   const id = useSelector(projectSelector.projectId);
 
@@ -37,14 +34,15 @@ const Tableview = () => {
     rootQuery.excelPage.useLazyGetExcelQuery() || {};
   const [getProjects, getData] =
     rootQuery.excelPage.useLazyGetExcelQuery() || {};
-  const [sendProject, getProject] =
-    rootQuery.excelPage.useGenerateGraphMutation() || {};
   const sheetRef = useRef();
 
   useEffect(() => {
     // Fetch initial data when component mounts
     const path = location.pathname.split("/")[2];
     getProjects({ projectId: path, pageNo: 1 });
+    dispatch(rootActions.excelActions.storeTrainData({ model: 0 }));
+    dispatch(rootActions.excelActions.storeTrainX({ x: "" }));
+    dispatch(rootActions.excelActions.storeTrainY({ y: "" }));
     dispatch(rootActions.excelActions.storeExcelid({ projectId: path }));
   }, []);
 
@@ -70,12 +68,6 @@ const Tableview = () => {
   };
 
   const debouncedHandleScroll = debounce(handleScroll, 300);
-
-  const genarateGraph = async () => {
-    // Generate a graph based on the selected project
-    const res = await sendProject({ projectId: id });
-    navigate(`/Project/projectId=/${projectId}/modelId=/${res.data.modelId}`);
-  };
 
   return (
     <div>

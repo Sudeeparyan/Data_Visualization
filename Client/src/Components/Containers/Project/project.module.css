@@ -88,7 +88,38 @@ p{
     height: 44%;
     padding: 5px;
 }
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    color: red;
+}
+.modelPop{
+    height: 80%;
+    width: 150px;
+    overflow-y: scroll;
+    background-color: #F9FBFC;
+    text-align: center;
+}
+::-webkit-scrollbar {
+    width: 10px;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 @media only screen and (min-width: 1540px) {
    .table{
     width: 84%;
@@ -98,10 +129,3 @@ p{
    }
 }
 
-.error{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;  
-  color: red;
-}

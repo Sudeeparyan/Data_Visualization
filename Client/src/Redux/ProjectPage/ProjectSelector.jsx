@@ -43,3 +43,15 @@ export const models = createSelector(
   [ProjectState],
   (project) => project.Models
 );
+export const selectedModel = createSelector(
+  [ProjectState],
+  (project) => project.selectedModel
+);
+export const selectedModelX = createSelector(
+  [ProjectState],
+  (project) => project.selected_X_Alias
+);
+export const selectedModelY = createSelector(
+  [ProjectState],
+  (project) => project.selected_Y_Alias
+);

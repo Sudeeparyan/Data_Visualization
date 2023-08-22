@@ -1,15 +1,23 @@
 import React, { useState } from "react";
-import { Drawer } from "antd";
+import { Drawer, Divider } from "antd";
+import { useNavigate } from "react-router-dom";
 import ButtonComponent from "../../Reusables/Button/Button";
 import Dropdown from "../../Reusables/Dropdown/dropdown";
 import { projectSelector } from "../../../Redux/Root/rootSelector";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { rootQuery } from "../../../Redux/Root/rootQuery";
+import { rootActions } from "../../../Redux/Root/rootActions";
+import styles from "./project.module.css";
 
 const Sidebar = ({ open, setOpen, heading }) => {
   const [openchild, setOpenchild] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const projectId = useSelector(projectSelector.projectId);
   const columns = useSelector(projectSelector.tableColumns);
   const models = useSelector(projectSelector.models);
+
+  const selectedModel = useSelector(projectSelector.selectedModel);
   const [getModels, modelsResponse] =
     rootQuery.excelPage.useLazyGetModelsQuery() || {};
 
@@ -17,13 +25,31 @@ const Sidebar = ({ open, setOpen, heading }) => {
     getModels();
   };
 
-  const storeSelectedModel = (index) => {
+  const storeSelectedModel = (model) => {
+    dispatch(rootActions.excelActions.storeTrainData({ model: model }));
     setOpenchild(true);
-    console.log(index);
   };
 
-  console.log(models);
+  const columDropdown = [];
 
+  columns.forEach((column) => {
+    columDropdown.push({
+      value: column,
+      label: column,
+    });
+  });
+
+  const storeXColumn = (x) => {
+    dispatch(rootActions.excelActions.storeTrainX({ x: x.value }));
+  };
+  const storeYColumn = (y) => {
+    dispatch(rootActions.excelActions.storeTrainY({ y: y.value }));
+  };
+
+  const handleSubmitDropDown = async () => {
+    // Generate a graph based on the selected project
+    navigate(`/Project/projectId=/${projectId}/modelId=/${selectedModel}`);
+  };
   return (
     <div>
       <Drawer
@@ -33,7 +59,7 @@ const Sidebar = ({ open, setOpen, heading }) => {
         onClose={() => setOpen(!open)}
         open={open}
         style={{
-          borderRight: "9px solid blue",
+          borderLeft: "5px solid #3AB0FF",
         }}
       >
         <div
@@ -42,36 +68,44 @@ const Sidebar = ({ open, setOpen, heading }) => {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            height: "300px",
+            height: "280px",
           }}
         >
           <div style={{ height: "15%" }}>
             <ButtonComponent
               content={"Show Models"}
-              loading={false}
+              loading={modelsResponse.isFetching}
               onclick={showModels}
             />
           </div>
 
-          {modelsResponse.isSuccess && (
-            <div
-              style={{
-                height: "70%",
-                width: "120px",
-                overflowY: "scroll",
-                backgroundColor: "#F2F6F5",
-              }}
-            >
-              {models.map((model, index) => {
-                return (
-                  <div onclick={() => storeSelectedModel(index)}>
-                    Model-{model}
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          <div style={{ height: "85%", marginTop: "32px" }}>
+            {modelsResponse.isSuccess && (
+              <div className={styles.modelPop}>
+                {models.map((model) => {
+                  return (
+                    <>
+                      <div
+                        style={{
+                          fontSize: "17px",
+                          padding: "5px",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => storeSelectedModel(model)}
+                      >
+                        Model-{model}
+                      </div>
+                      <hr></hr>
+                    </>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
+        <Divider>
+          <b>View Results</b>
+        </Divider>
         <div
           style={{
             display: "flex",
@@ -79,25 +113,39 @@ const Sidebar = ({ open, setOpen, heading }) => {
             justifyContent: "center",
             alignItems: "center",
             height: "300px",
+            marginTop: "-20px",
           }}
         >
           <div style={{ height: "15%" }}>
             <ButtonComponent content={"Show Results"} loading={false} />
           </div>
-          <div style={{ height: "70%", width: "120px" }}>
-            <h2 style={{ cursor: "pointer" }}>Result-1</h2>
-          </div>
+          <div style={{ height: "70%", width: "120px" }}></div>
         </div>
         <Drawer
-          title={"Select the Reespective Columns"}
+          title={"Select the Respective Columns"}
           width={320}
           closable={true}
           onClose={() => setOpenchild(!openchild)}
           open={openchild}
           style={{
-            borderRight: "9px solid blue",
+            borderLeft: "5px solid #3AB0FF",
           }}
         >
+          <div
+            style={{
+              fontSize: "17px",
+              display: "flex",
+              textAlign: "center",
+              justifyContent: "center",
+            }}
+          >
+            Selected Model: &nbsp;&nbsp;
+            <div style={{ color: "#38E54D" }}>
+              <b>Model-{selectedModel}</b>
+            </div>
+          </div>
+          <br></br>
+          <br></br>
           <div
             style={{
               display: "flex",
@@ -110,7 +158,8 @@ const Sidebar = ({ open, setOpen, heading }) => {
               <Dropdown
                 defaultValue={"Select a Column for X"}
                 width={"170px"}
-                options={columns}
+                options={columDropdown}
+                handleChange={storeXColumn}
               />
               <br></br>
               <br></br>
@@ -118,11 +167,17 @@ const Sidebar = ({ open, setOpen, heading }) => {
               <Dropdown
                 defaultValue={"Select a Column for Y"}
                 width={"170px"}
+                options={columDropdown}
+                handleChange={storeYColumn}
               />
             </div>
             <br></br>
             <div>
-              <ButtonComponent content={"Test data"} loading={false} />
+              <ButtonComponent
+                content={"Test data"}
+                loading={false}
+                onclick={handleSubmitDropDown}
+              />
             </div>
           </div>
         </Drawer>
