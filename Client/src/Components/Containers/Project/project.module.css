@@ -1,7 +1,7 @@
 .mainBox{
     display: flex;
     justify-content: space-evenly;
-    border-right: 10px solid rgb(255, 28, 28);
+    border-right: 10px solid #0079FF;
     border-top-right-radius: 10px ;
     border-bottom-right-radius: 10px ;
 }
@@ -115,6 +115,7 @@ p{
 /* Handle */
 ::-webkit-scrollbar-thumb {
     background: #888;
+    border-radius: 10px;
 }
 
 /* Handle on hover */

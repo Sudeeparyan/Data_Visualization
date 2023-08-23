@@ -21,21 +21,24 @@ const Graph = () => {
   const [scatter, setScatter] = useState(false);
   const [buttontext, setButtonText] = useState("scatter");
   const trainX = useSelector(projectSelector.selectedModelX);
-  const resultId = useSelector(projectSelector.resultId);
+  const projectId = useSelector(projectSelector.projectId);
+  const modelId = useSelector(projectSelector.selectedModel);
+  let resultId = useSelector(projectSelector.resultId);
   const trainY = useSelector(projectSelector.selectedModelY);
 
   useEffect(() => {
-    const projectId = location.pathname.split("/")[3];
-    const modelId = location.pathname.split("/")[5];
-    showGraph({
+    showGraphData();
+  }, []);
+
+  const showGraphData = async () => {
+    const res = await showGraph({
       projectId: projectId,
       modelId: modelId,
       xColumn: trainX,
       yColumn: trainY,
       resultId: resultId,
     });
-  }, []);
-
+  };
   const scatterView = () => {
     setScatter(!scatter);
     setButtonText(buttontext === "Line" ? "Scatter" : "Line");

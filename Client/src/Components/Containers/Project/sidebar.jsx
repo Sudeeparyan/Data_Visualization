@@ -21,6 +21,8 @@ const Sidebar = ({ open, setOpen, heading }) => {
   const trainY = useSelector(projectSelector.selectedModelY);
 
   const [errormsg, setErrormsg] = useState(false);
+  const [errormodel, setErrormodel] = useState(false);
+  const [modelselected, setModelselected] = useState("");
 
   const selectedModel = useSelector(projectSelector.selectedModel);
   const [getModels, modelsResponse] =
@@ -31,13 +33,14 @@ const Sidebar = ({ open, setOpen, heading }) => {
 
   const showModels = async () => {
     const res = await getModels();
-    // if (res.data.message) setErrormsg(true);
-    // else setErrormsg(true);
+    if (res.data.message) setErrormodel(true);
+    else setErrormodel(false);
   };
 
-  const storeSelectedModel = (model) => {
+  const storeSelectedModel = (model, selected) => {
     dispatch(rootActions.excelActions.storeTrainData({ model: model }));
     setOpenchild(true);
+    setModelselected(selected);
   };
 
   const columDropdown = [];
@@ -67,7 +70,7 @@ const Sidebar = ({ open, setOpen, heading }) => {
         })
       );
     else if (trainX !== trainY)
-      navigate(`/Project/projectId=/${projectId}/modelId=/${selectedModel}`);
+      navigate(`/Project/projectId/${projectId}/results`);
     else
       dispatch(
         rootActions.notificationActions.storeNotification({
@@ -80,12 +83,12 @@ const Sidebar = ({ open, setOpen, heading }) => {
   const getAvailableResults = async () => {
     const res = await getResults({ projectId: projectId });
     if (res.data.message) setErrormsg(true);
-    else setErrormsg(true);
+    else setErrormsg(false);
   };
 
   const getResultGraph = (resultId) => {
     dispatch(rootActions.excelActions.storeResultId(resultId));
-    navigate(`/Project/projectId=/${projectId}/modelId=/${resultId}`);
+    navigate(`/Project/projectId/${projectId}/results`);
   };
   return (
     <div>
@@ -117,23 +120,32 @@ const Sidebar = ({ open, setOpen, heading }) => {
           </div>
 
           <div style={{ height: "85%" }}>
-            {modelsResponse.isSuccess && (
+            {modelsResponse.isSuccess === true && errormodel === false ? (
               <div className={styles.modelPop}>
-                {models.map((model) => {
-                  return (
-                    <>
-                      <div
-                        className={styles.scrollBox}
-                        onClick={() => storeSelectedModel(model)}
-                      >
-                        Model-{model}
-                      </div>
-                      <hr></hr>
-                    </>
-                  );
-                })}
+                {!errormodel &&
+                  models.map((model) => {
+                    return (
+                      <>
+                        <div
+                          className={styles.scrollBox}
+                          onClick={() =>
+                            storeSelectedModel(model.split("-")[0], model)
+                          }
+                        >
+                          {model}
+                        </div>
+                        <hr></hr>
+                      </>
+                    );
+                  })}
               </div>
-            )}
+            ) : errormodel === true ? (
+              <div
+                style={{ textAlign: "center", fontSize: "17px", color: "red" }}
+              >
+                No Results Found !
+              </div>
+            ) : null}
           </div>
         </div>
         <Divider>
@@ -202,7 +214,7 @@ const Sidebar = ({ open, setOpen, heading }) => {
           >
             Selected Model: &nbsp;&nbsp;
             <div style={{ color: "#38E54D" }}>
-              <b>Model-{selectedModel}</b>
+              <b>{modelselected}</b>
             </div>
           </div>
           <br></br>
@@ -233,7 +245,7 @@ const Sidebar = ({ open, setOpen, heading }) => {
               />
             </div>
             <br></br>
-            <div>
+            <div style={{ marginLeft: "20px" }}>
               <ButtonComponent
                 content={"Test data"}
                 loading={false}
