@@ -61,7 +61,7 @@ const Sidebar = ({ open, setOpen, heading }) => {
 
   const handleSubmitDropDown = async () => {
     // Generate a graph based on the selected project
-
+    dispatch(rootActions.excelActions.storeResultId(0));
     if (trainX === "" || trainY === "")
       dispatch(
         rootActions.notificationActions.storeNotification({
