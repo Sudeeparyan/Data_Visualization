@@ -97,7 +97,7 @@ p{
 }
 .modelPop{
     height: 80%;
-    width: 150px;
+    width: 100%;
     overflow-y: scroll;
     background-color: #F9FBFC;
     text-align: center;

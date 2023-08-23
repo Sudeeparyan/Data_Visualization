@@ -14,6 +14,8 @@ import { projectSelector } from "../../../Redux/Root/rootSelector";
 import Loaders from "./loaders";
 import FloatingButton from "../../Reusables/FloatingButton/floatButton";
 import Sidebar from "./sidebar";
+import PopupComponent from "./popup";
+
 /**
  * Tableview component displays a table with project data and controls for generating a graph.
  *
@@ -35,6 +37,8 @@ const Tableview = () => {
   const [getProjects, getData] =
     rootQuery.excelPage.useLazyGetExcelQuery() || {};
   const sheetRef = useRef();
+  const [getModels, modelsResponse] =
+    rootQuery.excelPage.useLazyGetModelsQuery() || {};
 
   useEffect(() => {
     // Fetch initial data when component mounts
@@ -69,6 +73,10 @@ const Tableview = () => {
 
   const debouncedHandleScroll = debounce(handleScroll, 300);
 
+  const getModelsData = async () => {
+    getModels();
+  };
+
   return (
     <div>
       {!errorkey ? (
@@ -92,15 +100,15 @@ const Tableview = () => {
                 />
               </div>
               <div className={styles.sidebar}>
-                <div>
-                  <FloatingButton onclickHandler={setOpen} open={open} />
+                <div onClick={getModelsData}>
+                  <FloatingButton
+                    onclickHandler={setOpen}
+                    open={open}
+                    modelsResponse={modelsResponse}
+                  />
                 </div>
               </div>
-              <Sidebar
-                heading={"Select a Model for Testing"}
-                open={open}
-                setOpen={setOpen}
-              />
+              <Sidebar open={open} setOpen={setOpen} />
             </div>
           ) : null}
           <div className={styles.fetching}>

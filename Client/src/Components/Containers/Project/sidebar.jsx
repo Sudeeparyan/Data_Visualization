@@ -8,8 +8,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { rootQuery } from "../../../Redux/Root/rootQuery";
 import { rootActions } from "../../../Redux/Root/rootActions";
 import styles from "./project.module.css";
+import PopupComponent from "./popup";
 
-const Sidebar = ({ open, setOpen, heading }) => {
+const Sidebar = ({ open, setOpen }) => {
   const [openchild, setOpenchild] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,21 +26,25 @@ const Sidebar = ({ open, setOpen, heading }) => {
   const [modelselected, setModelselected] = useState("");
 
   const selectedModel = useSelector(projectSelector.selectedModel);
-  const [getModels, modelsResponse] =
-    rootQuery.excelPage.useLazyGetModelsQuery() || {};
 
   const [getResults, getResulstResponse] =
     rootQuery.excelPage.useGenerateGraphMutation() || {};
 
-  const showModels = async () => {
-    const res = await getModels();
-    if (res.data.message) setErrormodel(true);
-    else setErrormodel(false);
-  };
+  //+++++++++++++++++++++++
+
+  const [model, setModel] = useState(true);
+  const [result, setResult] = useState(false);
+  const [openmodel, setOpenmodel] = useState(false);
+
+  // const showModels = async () => {
+  //   const res = await getModels();
+  //   if (res.data.message) setErrormodel(true);
+  //   else setErrormodel(false);
+  // };
 
   const storeSelectedModel = (model, selected) => {
     dispatch(rootActions.excelActions.storeTrainData({ model: model }));
-    setOpenchild(true);
+    setOpenmodel(true);
     setModelselected(selected);
   };
 
@@ -90,10 +95,17 @@ const Sidebar = ({ open, setOpen, heading }) => {
     dispatch(rootActions.excelActions.storeResultId(resultId));
     navigate(`/Project/projectId/${projectId}/results`);
   };
+
   return (
     <div>
+      <div>
+        <PopupComponent
+          openmodel={openmodel}
+          setOpenmodel={setOpenmodel}
+          selectedModel={modelselected}
+        />
+      </div>
       <Drawer
-        title={heading}
         width={380}
         closable={true}
         onClose={() => setOpen(!open)}
@@ -105,71 +117,82 @@ const Sidebar = ({ open, setOpen, heading }) => {
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "280px",
+            height: "40px",
+            justifyContent: "space-evenly",
+            fontSize: "17px",
+            color: "#FFFFFF",
+            borderBottom: "2px solid grey",
+            padding: "10px",
           }}
         >
-          <div style={{ height: "15%" }}>
-            <ButtonComponent
-              content={"Show Models"}
-              loading={modelsResponse.isFetching}
-              onclick={showModels}
-            />
+          <div
+            style={{
+              width: "45%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+              backgroundColor: "rgba(0, 174, 255, 0.753)",
+            }}
+            onClick={() => {
+              setModel(true);
+              setResult(false);
+            }}
+          >
+            Models
           </div>
-
-          <div style={{ height: "85%" }}>
-            {modelsResponse.isSuccess === true && errormodel === false ? (
-              <div className={styles.modelPop}>
-                {!errormodel &&
-                  models.map((model) => {
-                    return (
-                      <>
-                        <div
-                          className={styles.scrollBox}
-                          onClick={() =>
-                            storeSelectedModel(model.split("-")[0], model)
-                          }
-                        >
-                          {model}
-                        </div>
-                        <hr></hr>
-                      </>
-                    );
-                  })}
-              </div>
-            ) : errormodel === true ? (
-              <div
-                style={{ textAlign: "center", fontSize: "17px", color: "red" }}
-              >
-                No Results Found !
-              </div>
-            ) : null}
+          <div
+            style={{
+              width: "45%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              cursor: "pointer",
+              backgroundColor: "rgba(0, 174, 255, 0.753)",
+            }}
+            onClick={() => {
+              setModel(false);
+              setResult(true);
+            }}
+          >
+            Results
           </div>
         </div>
-        <Divider>
-          <b>View Results</b>
-        </Divider>
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            height: "300px",
-            marginTop: "-20px",
+            height: "90%",
           }}
         >
-          <div style={{ height: "15%" }}>
-            <ButtonComponent
-              content={"Show Results"}
-              loading={getResulstResponse.isLoading}
-              onclick={getAvailableResults}
-            />
-          </div>
-          <div style={{ height: "70%", width: "140px" }}>
-            {getResulstResponse.isSuccess === true && errormsg === false ? (
+          {model && !result ? (
+            <div style={{ height: "100%", marginTop: "20px", width: "100%" }}>
+              <h3>Available Models</h3>
+
+              <div className={styles.modelPop}>
+                {models.map((object, index) => {
+                  const key = Object.keys(object)[0];
+                  const modelId = object[key].modelId; // Assuming each object has only one key-value pair
+                  return (
+                    <>
+                      <div
+                        className={styles.scrollBox}
+                        key={index}
+                        onClick={() => storeSelectedModel(modelId, key)}
+                      >
+                        {key}
+                      </div>
+                    </>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div style={{ height: "100%", marginTop: "20px", width: "100%" }}>
+              <h3>Available Results</h3>
+
               <div className={styles.modelPop}>
                 {Results.map((result) => {
                   return (
@@ -185,15 +208,10 @@ const Sidebar = ({ open, setOpen, heading }) => {
                   );
                 })}
               </div>
-            ) : errormsg === true ? (
-              <div
-                style={{ textAlign: "center", fontSize: "17px", color: "red" }}
-              >
-                No Results Found !
-              </div>
-            ) : null}
-          </div>
+            </div>
+          )}
         </div>
+
         <Drawer
           title={"Select the Respective Columns"}
           width={320}
@@ -204,21 +222,6 @@ const Sidebar = ({ open, setOpen, heading }) => {
             borderLeft: "5px solid #3AB0FF",
           }}
         >
-          <div
-            style={{
-              fontSize: "17px",
-              display: "flex",
-              textAlign: "center",
-              justifyContent: "center",
-            }}
-          >
-            Selected Model: &nbsp;&nbsp;
-            <div style={{ color: "#38E54D" }}>
-              <b>{modelselected}</b>
-            </div>
-          </div>
-          <br></br>
-          <br></br>
           <div
             style={{
               display: "flex",
