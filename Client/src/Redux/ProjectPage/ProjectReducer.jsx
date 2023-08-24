@@ -63,7 +63,6 @@ const ExcelSlice = createSlice({
       state.Results = action.payload.results;
     },
     storeResultId: (state, action) => {
-      console.log(action);
       state.storeResultId = action.payload;
     },
   },

@@ -14,6 +14,9 @@ const Popup = () => {
         style={{
           top: 50,
         }}
+        bodyStyle={{
+          height: 500,
+        }}
       ></Modal>
     </>
   );

@@ -22,32 +22,48 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
   const models = useSelector(projectSelector.models);
   const trainX = useSelector(projectSelector.selectedModelX);
   const trainY = useSelector(projectSelector.selectedModelY);
-
+  const [errormodel, setErrormodel] = useState(false);
   // console.log(models);
-  let transformedData = models.map((obj) => {
-    const key = Object.keys(obj)[0]; // Get the key, e.g., 'analog', 'switch', etc.
-    const modelId = obj[key].modelId; // Get the modelId
-    return { name: key, id: modelId };
-  });
+  let transformedData =
+    !errormodel &&
+    models.map((obj) => {
+      const key = Object.keys(obj)[0]; // Get the key, e.g., 'analog', 'switch', etc.
+      const modelId = obj[key].modelId; // Get the modelId
+      return { name: key, id: modelId };
+    });
 
   const [search, setSearch] = useState("");
   const [modeldata, setModelData] = useState(transformedData);
 
   const onSearch = (value) => setSearch(value.target.value);
 
+  // useEffect(() => {
+  //   setModelData(transformedData);
+  // }, []);
+
   useEffect(() => {
     const searchWord = search.trim().toLocaleLowerCase();
+    const escapedSearchWord = searchWord.replace(
+      /[.*+\-?^${}()|[\]\\]/g,
+      "\\$&"
+    );
     if (searchWord.length > 0) {
-      transformedData = transformedData.filter(function (l) {
-        return l.name.toLowerCase().match(searchWord);
+      const a = transformedData.filter(function (data) {
+        const regex = new RegExp(escapedSearchWord, "g"); // Create a regular expression
+        return data.name.toLowerCase().match(regex);
       });
-    }
-    setModelData(transformedData);
-  }, [search, transformedData]);
+      setModelData(a);
+    } else setModelData(transformedData);
+  }, [search, models]);
 
   const [errormsg, setErrormsg] = useState(false);
-  const [errormodel, setErrormodel] = useState(false);
+
   const [modelselected, setModelselected] = useState("");
+  // console.log(errormodel);
+  // useEffect(() => {
+  //   if (modelsResponse.data && modelsResponse.data.message) setErrormodel(true);
+  //   else setErrormodel(false);
+  // }, [modelsResponse.data]);
 
   const selectedModel = useSelector(projectSelector.selectedModel);
 
@@ -167,6 +183,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
             onClick={() => {
               setModel(true);
               setResult(false);
+              setModelData(transformedData);
             }}
           >
             Models
@@ -218,37 +235,6 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
               </div>
 
               {modelsResponse.data && !modelsResponse.data.message ? (
-                // <div className={styles.modelPop}>
-                //   {!modelsResponse.isFetching ? (
-                //     models.map((object, index) => {
-                //       const key = Object.keys(object)[0];
-                //       const modelId = object[key].modelId; // Assuming each object has only one key-value pair
-                //       return (
-                //         <>
-                //           <div
-                //             className={styles.scrollBox}
-                //             key={index}
-                //             onClick={() => storeSelectedModel(modelId, key)}
-                //           >
-                //             {key}
-                //           </div>
-                //           <hr></hr>
-                //         </>
-                //       );
-                //     })
-                //   ) : (
-                //     <div
-                //       style={{
-                //         display: "flex",
-                //         alignItems: "center",
-                //         justifyContent: "center",
-                //         height: "20%",
-                //       }}
-                //     >
-                //       <Loader />
-                //     </div>
-                //   )}
-                // </div>
                 <div className={styles.modelPop}>
                   {modeldata.length === 0 && (
                     <div>
@@ -287,6 +273,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                   )}
                 </div>
               ) : null}
+              {/* {errormodel ? <p>No models</p> : null} */}
             </div>
           ) : (
             <div style={{ height: "100%", marginTop: "20px", width: "100%" }}>

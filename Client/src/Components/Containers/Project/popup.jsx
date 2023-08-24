@@ -5,6 +5,7 @@ import { projectSelector } from "../../../Redux/Root/rootSelector";
 import { rootActions } from "../../../Redux/Root/rootActions";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { ArrowsAltOutlined } from "@ant-design/icons";
 
 const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
   const models = useSelector(projectSelector.models);
@@ -62,6 +63,12 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
       );
   };
 
+  // const [extend, setExtend] = useState(false);
+
+  // const extendPopup = () => {
+  //   setExtend(!extend);
+  // };
+
   return (
     <Modal
       title={`Choose the Respective Alias `}
@@ -69,6 +76,10 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
       open={openmodel}
       onOk={() => setOpenmodel(false)}
       onCancel={() => setOpenmodel(false)}
+      closable={false}
+      bodyStyle={{
+        height: 150,
+      }}
       footer={[
         <Button type="primary" onClick={handleSubmitDropDown}>
           Generate Result
@@ -81,6 +92,9 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
       <div style={{ display: "flex", fontSize: "15px" }}>
         Selected Model :&nbsp;<p>{selectedModel}</p>
       </div>
+      {/* <div>
+        <ArrowsAltOutlined onClick={extendPopup} />
+      </div> */}
       <br></br>
       <div
         style={{
