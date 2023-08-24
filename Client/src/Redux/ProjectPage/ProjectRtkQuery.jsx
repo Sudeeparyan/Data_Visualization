@@ -87,9 +87,9 @@ export const sendExcelCsv = createApi({
       async onQueryStarted(res, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-
           if (data.error === null) {
-            dispatch(rootActions.excelActions.storeModelid(data));
+            if (!data.message)
+              dispatch(rootActions.excelActions.storeResults(data));
           } else
             dispatch(
               rootActions.notificationActions.storeNotification({
@@ -107,9 +107,7 @@ export const sendExcelCsv = createApi({
         }
       },
     }),
-    // getGraphResult: builder.query({
-    //   query: ({ projectId, modelId }) =>
-    //     endpointsApi.get_graph_data + `${projectId}/${modelId}`,
+
     getGraphResult: builder.mutation({
       query: (resultKey) => ({
         url: endpointsApi.get_graph_data,
@@ -139,6 +137,31 @@ export const sendExcelCsv = createApi({
         }
       },
     }),
+
+    getModels: builder.query({
+      query: () => endpointsApi.get_Models,
+      async onQueryStarted(res, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          if (data.error === null) {
+            dispatch(rootActions.excelActions.storeModels(data));
+          } else
+            dispatch(
+              rootActions.notificationActions.storeNotification({
+                type: "error",
+                message: data.error,
+              })
+            );
+        } catch (err) {
+          dispatch(
+            rootActions.notificationActions.storeNotification({
+              type: "error",
+              message: err.error.error,
+            })
+          );
+        }
+      },
+    }),
   }),
 });
 
@@ -147,4 +170,5 @@ export const {
   useLazyGetExcelQuery,
   useGenerateGraphMutation,
   useGetGraphResultMutation,
+  useLazyGetModelsQuery,
 } = sendExcelCsv;

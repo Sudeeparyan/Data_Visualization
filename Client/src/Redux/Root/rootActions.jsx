@@ -11,6 +11,12 @@ import {
   storePgno,
   storeGraph,
   storeModelid,
+  storeModels,
+  storeTrainData,
+  storeTrainX,
+  storeResults,
+  storeTrainY,
+  storeResultId,
 } from "../ProjectPage/ProjectReducer";
 import { storeNotification } from "../Notification/notificationReducer";
 
@@ -21,6 +27,12 @@ export const rootActions = {
     storePgno,
     storeGraph,
     storeModelid,
+    storeTrainData,
+    storeModels,
+    storeTrainX,
+    storeResults,
+    storeTrainY,
+    storeResultId,
   },
   notificationActions: {
     storeNotification,

@@ -46,9 +46,8 @@ const LineGraph = ({ bestFit, actualData, errorData, error, scatter }) => {
             enablePoints={true}
             enableGridX={true}
             pointSize={7}
-            pointBorderWidth={2}
-            pointBorderColor={"white"}
             lineWidth={scatter ? 0 : 1}
+            pointBorderWidth={1}
             enableGridY={true}
             enableCrosshair={true}
             crosshairType="top-right"
@@ -97,8 +96,6 @@ const LineGraph = ({ bestFit, actualData, errorData, error, scatter }) => {
             enableGridX={true}
             enableGridY={true}
             pointSize={7}
-            pointBorderWidth={2}
-            pointBorderColor={"white"}
             lineWidth={scatter ? 0 : 1}
             enableSlices="x"
             enableCrosshair={true}
