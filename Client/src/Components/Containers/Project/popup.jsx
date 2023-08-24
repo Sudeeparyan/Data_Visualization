@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 
 const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
   const models = useSelector(projectSelector.models);
-  console.log(models);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const selectedModelObject = models.find((obj) => obj[selectedModel]);
@@ -65,7 +64,7 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
 
   return (
     <Modal
-      title={`Choose the Respective Alias for ${selectedModel}`}
+      title={`Choose the Respective Alias `}
       centered
       open={openmodel}
       onOk={() => setOpenmodel(false)}
@@ -79,25 +78,51 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
         </Button>,
       ]}
     >
-      <br></br>
-      <div>
-        {xalias} :{" "}
-        <Dropdown
-          defaultValue={"Select a Column for X"}
-          width={"170px"}
-          options={columDropdown}
-          handleChange={storeXColumn}
-        />
-        <br></br>
-        <br></br>
-        {yalias} :{" "}
-        <Dropdown
-          defaultValue={"Select a Column for Y"}
-          width={"170px"}
-          options={columDropdown}
-          handleChange={storeYColumn}
-        />
+      <div style={{ display: "flex", fontSize: "15px" }}>
+        Selected Model :&nbsp;<p>{selectedModel}</p>
       </div>
+      <br></br>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "80px",
+          justifyContent: "space-between",
+        }}
+      >
+        <div
+          style={{
+            width: "60%",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          {xalias} :{" "}
+          <Dropdown
+            defaultValue={"Select a Column for X"}
+            width={"170px"}
+            options={columDropdown}
+            handleChange={storeXColumn}
+          />
+        </div>
+        <div
+          style={{
+            width: "60%",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          {" "}
+          {yalias} :{" "}
+          <Dropdown
+            defaultValue={"Select a Column for Y"}
+            width={"170px"}
+            options={columDropdown}
+            handleChange={storeYColumn}
+          />
+        </div>
+      </div>
+      <br></br>
     </Modal>
   );
 };

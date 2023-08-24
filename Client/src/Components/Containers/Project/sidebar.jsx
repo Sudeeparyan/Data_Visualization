@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Drawer, Divider } from "antd";
+import React, { useEffect, useState } from "react";
+import { Drawer, Input, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 import ButtonComponent from "../../Reusables/Button/Button";
 import Dropdown from "../../Reusables/Dropdown/dropdown";
@@ -9,8 +9,10 @@ import { rootQuery } from "../../../Redux/Root/rootQuery";
 import { rootActions } from "../../../Redux/Root/rootActions";
 import styles from "./project.module.css";
 import PopupComponent from "./popup";
+import Loader from "../../Reusables/Spinner/loader";
+import { SearchOutlined } from "@ant-design/icons";
 
-const Sidebar = ({ open, setOpen }) => {
+const Sidebar = ({ open, setOpen, modelsResponse }) => {
   const [openchild, setOpenchild] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -20,6 +22,28 @@ const Sidebar = ({ open, setOpen }) => {
   const models = useSelector(projectSelector.models);
   const trainX = useSelector(projectSelector.selectedModelX);
   const trainY = useSelector(projectSelector.selectedModelY);
+
+  // console.log(models);
+  let transformedData = models.map((obj) => {
+    const key = Object.keys(obj)[0]; // Get the key, e.g., 'analog', 'switch', etc.
+    const modelId = obj[key].modelId; // Get the modelId
+    return { name: key, id: modelId };
+  });
+
+  const [search, setSearch] = useState("");
+  const [modeldata, setModelData] = useState(transformedData);
+
+  const onSearch = (value) => setSearch(value.target.value);
+
+  useEffect(() => {
+    const searchWord = search.trim().toLocaleLowerCase();
+    if (searchWord.length > 0) {
+      transformedData = transformedData.filter(function (l) {
+        return l.name.toLowerCase().match(searchWord);
+      });
+    }
+    setModelData(transformedData);
+  }, [search, transformedData]);
 
   const [errormsg, setErrormsg] = useState(false);
   const [errormodel, setErrormodel] = useState(false);
@@ -36,12 +60,6 @@ const Sidebar = ({ open, setOpen }) => {
   const [result, setResult] = useState(false);
   const [openmodel, setOpenmodel] = useState(false);
 
-  // const showModels = async () => {
-  //   const res = await getModels();
-  //   if (res.data.message) setErrormodel(true);
-  //   else setErrormodel(false);
-  // };
-
   const storeSelectedModel = (model, selected) => {
     dispatch(rootActions.excelActions.storeTrainData({ model: model }));
     setOpenmodel(true);
@@ -56,6 +74,12 @@ const Sidebar = ({ open, setOpen }) => {
       label: column,
     });
   });
+
+  const bgColorModel = model ? "rgba(0, 174, 255, 0.753)" : "#F4F7F7";
+  const bgColorResult = result ? "rgba(0, 174, 255, 0.753)" : "#F4F7F7";
+
+  const colorModel = model ? "#FFF" : "black";
+  const colorResult = result ? "#FFF" : "black";
 
   const storeXColumn = (x) => {
     dispatch(rootActions.excelActions.storeTrainX({ x: x.value }));
@@ -106,6 +130,11 @@ const Sidebar = ({ open, setOpen }) => {
         />
       </div>
       <Drawer
+        title={
+          model
+            ? "Click on the Model for Testing"
+            : "Click on any Results to view it"
+        }
         width={380}
         closable={true}
         onClose={() => setOpen(!open)}
@@ -120,8 +149,8 @@ const Sidebar = ({ open, setOpen }) => {
             height: "40px",
             justifyContent: "space-evenly",
             fontSize: "17px",
-            color: "#FFFFFF",
-            borderBottom: "2px solid grey",
+            color: colorModel,
+            borderBottom: "2px solid rgb(229 229 229)",
             padding: "10px",
           }}
         >
@@ -132,7 +161,8 @@ const Sidebar = ({ open, setOpen }) => {
               justifyContent: "center",
               alignItems: "center",
               cursor: "pointer",
-              backgroundColor: "rgba(0, 174, 255, 0.753)",
+              backgroundColor: bgColorModel,
+              boxShadow: " rgba(0, 0, 0, 0.24) 0px 3px 8px",
             }}
             onClick={() => {
               setModel(true);
@@ -148,11 +178,14 @@ const Sidebar = ({ open, setOpen }) => {
               justifyContent: "center",
               alignItems: "center",
               cursor: "pointer",
-              backgroundColor: "rgba(0, 174, 255, 0.753)",
+              color: colorResult,
+              backgroundColor: bgColorResult,
+              boxShadow: " rgba(0, 0, 0, 0.24) 0px 3px 8px",
             }}
             onClick={() => {
               setModel(false);
               setResult(true);
+              getAvailableResults();
             }}
           >
             Results
@@ -169,45 +202,138 @@ const Sidebar = ({ open, setOpen }) => {
         >
           {model && !result ? (
             <div style={{ height: "100%", marginTop: "20px", width: "100%" }}>
-              <h3>Available Models</h3>
-
-              <div className={styles.modelPop}>
-                {models.map((object, index) => {
-                  const key = Object.keys(object)[0];
-                  const modelId = object[key].modelId; // Assuming each object has only one key-value pair
-                  return (
-                    <>
-                      <div
-                        className={styles.scrollBox}
-                        key={index}
-                        onClick={() => storeSelectedModel(modelId, key)}
-                      >
-                        {key}
-                      </div>
-                    </>
-                  );
-                })}
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Input
+                  placeholder="Search a model.."
+                  onChange={(e) => onSearch(e)}
+                  suffix={
+                    <Tooltip title="Search Models">
+                      <SearchOutlined />
+                    </Tooltip>
+                  }
+                  style={{
+                    width: 180,
+                  }}
+                />
               </div>
+
+              {modelsResponse.data && !modelsResponse.data.message ? (
+                // <div className={styles.modelPop}>
+                //   {!modelsResponse.isFetching ? (
+                //     models.map((object, index) => {
+                //       const key = Object.keys(object)[0];
+                //       const modelId = object[key].modelId; // Assuming each object has only one key-value pair
+                //       return (
+                //         <>
+                //           <div
+                //             className={styles.scrollBox}
+                //             key={index}
+                //             onClick={() => storeSelectedModel(modelId, key)}
+                //           >
+                //             {key}
+                //           </div>
+                //           <hr></hr>
+                //         </>
+                //       );
+                //     })
+                //   ) : (
+                //     <div
+                //       style={{
+                //         display: "flex",
+                //         alignItems: "center",
+                //         justifyContent: "center",
+                //         height: "20%",
+                //       }}
+                //     >
+                //       <Loader />
+                //     </div>
+                //   )}
+                // </div>
+                <div className={styles.modelPop}>
+                  {modeldata.length === 0 && (
+                    <div>
+                      <b>No Matches Found</b>
+                    </div>
+                  )}
+                  {!modelsResponse.isFetching ? (
+                    modeldata.map((object, index) => {
+                      // Assuming each object has only one key-value pair
+                      return (
+                        <>
+                          <div
+                            className={styles.scrollBox}
+                            key={index}
+                            onClick={() =>
+                              storeSelectedModel(object.id, object.name)
+                            }
+                          >
+                            {object.name}
+                          </div>
+                          <hr></hr>
+                        </>
+                      );
+                    })
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: "20%",
+                      }}
+                    >
+                      <Loader />
+                    </div>
+                  )}
+                </div>
+              ) : null}
             </div>
           ) : (
             <div style={{ height: "100%", marginTop: "20px", width: "100%" }}>
               <h3>Available Results</h3>
 
-              <div className={styles.modelPop}>
-                {Results.map((result) => {
-                  return (
-                    <>
-                      <div
-                        className={styles.scrollBox}
-                        onClick={() => getResultGraph(result)}
-                      >
-                        Result-{result}
-                      </div>
-                      <hr></hr>
-                    </>
-                  );
-                })}
-              </div>
+              {!errormsg ? (
+                <div className={styles.modelPop}>
+                  {!getResulstResponse.isLoading ? (
+                    Results.map((result, index) => {
+                      return (
+                        <>
+                          <div
+                            className={styles.scrollBox}
+                            onClick={() => getResultGraph(result)}
+                          >
+                            Result-{index + 1}
+                          </div>
+                          <hr></hr>
+                        </>
+                      );
+                    })
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: "20%",
+                      }}
+                    >
+                      <Loader />
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div
+                  style={{
+                    fontSize: "18px",
+                    display: "flex",
+                    justifyContent: "center",
+                    color: "red",
+                    margin: "10px",
+                  }}
+                >
+                  No Results Found !
+                </div>
+              )}
             </div>
           )}
         </div>

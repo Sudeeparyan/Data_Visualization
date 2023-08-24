@@ -8,8 +8,12 @@ const Popup = () => {
         title="Vertically centered modal dialog"
         centered
         open={modal2Open}
+        closable={false}
         onOk={() => setModal2Open(false)}
         onCancel={() => setModal2Open(false)}
+        style={{
+          top: 50,
+        }}
       ></Modal>
     </>
   );

@@ -101,14 +101,14 @@ const Tableview = () => {
               </div>
               <div className={styles.sidebar}>
                 <div onClick={getModelsData}>
-                  <FloatingButton
-                    onclickHandler={setOpen}
-                    open={open}
-                    modelsResponse={modelsResponse}
-                  />
+                  <FloatingButton onclickHandler={setOpen} open={open} />
                 </div>
               </div>
-              <Sidebar open={open} setOpen={setOpen} />
+              <Sidebar
+                open={open}
+                setOpen={setOpen}
+                modelsResponse={modelsResponse}
+              />
             </div>
           ) : null}
           <div className={styles.fetching}>
