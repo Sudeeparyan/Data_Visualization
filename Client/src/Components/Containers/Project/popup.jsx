@@ -1,31 +1,40 @@
+//React Imports
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+//AntD Imports
 import { Modal, Button } from "antd";
+//Imports from Resusables
 import Dropdown from "../../Reusables/Dropdown/dropdown";
+//Import from Styles
+import styles from "./project.module.css";
+//Redux Imports
 import { projectSelector } from "../../../Redux/Root/rootSelector";
 import { rootActions } from "../../../Redux/Root/rootActions";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { ArrowsAltOutlined } from "@ant-design/icons";
+
+/**
+ * PopupComponent displays a modal for selecting X and Y axis columns.
+ *
+ * @component
+ * @param {boolean} openmodel - Indicates if the popup modal is open.
+ * @param {function} setOpenmodel - Function to toggle the popup modal open/close.
+ * @param {string} selectedModel - The selected model.
+ */
 
 const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
-  const models = useSelector(projectSelector.models);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const selectedModelObject = models.find((obj) => obj[selectedModel]);
+
   const [xalias, setXAlias] = useState("");
   const [yalias, setYAlias] = useState("");
+
+  const models = useSelector(projectSelector.models);
   const trainX = useSelector(projectSelector.selectedModelX);
   const trainY = useSelector(projectSelector.selectedModelY);
   const projectId = useSelector(projectSelector.projectId);
   const columns = useSelector(projectSelector.tableColumns);
-  const columDropdown = [];
 
-  columns.forEach((column) => {
-    columDropdown.push({
-      value: column,
-      label: column,
-    });
-  });
+  const selectedModelObject = models.find((obj) => obj[selectedModel]);
 
   useEffect(() => {
     if (selectedModelObject) {
@@ -42,8 +51,7 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
     dispatch(rootActions.excelActions.storeTrainY({ y: y.value }));
   };
 
-  const handleSubmitDropDown = async () => {
-    // Generate a graph based on the selected project
+  const handleSubmitDropDown = () => {
     dispatch(rootActions.excelActions.storeResultId(0));
     if (trainX === "" || trainY === "")
       dispatch(
@@ -58,59 +66,45 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
       dispatch(
         rootActions.notificationActions.storeNotification({
           type: "info",
-          message: "Column name must be Unique",
+          message: "Column names must be Unique",
         })
       );
   };
 
-  // const [extend, setExtend] = useState(false);
-
-  // const extendPopup = () => {
-  //   setExtend(!extend);
-  // };
+  //Refactoring the data from the store to render inside the dropdown
+  const columDropdown = [];
+  columns.forEach((column) => {
+    columDropdown.push({
+      value: column,
+      label: column,
+    });
+  });
 
   return (
     <Modal
       title={`Choose the Respective Alias `}
       centered
       open={openmodel}
-      onOk={() => setOpenmodel(false)}
       onCancel={() => setOpenmodel(false)}
       closable={false}
       bodyStyle={{
         height: 150,
       }}
       footer={[
-        <Button type="primary" onClick={handleSubmitDropDown}>
-          Generate Result
-        </Button>,
         <Button danger onClick={() => setOpenmodel(false)}>
           Cancel
         </Button>,
+        <Button type="primary" onClick={handleSubmitDropDown}>
+          Generate Result
+        </Button>,
       ]}
     >
-      <div style={{ display: "flex", fontSize: "15px" }}>
+      <div className={styles.popupSeleted}>
         Selected Model :&nbsp;<p>{selectedModel}</p>
       </div>
-      {/* <div>
-        <ArrowsAltOutlined onClick={extendPopup} />
-      </div> */}
       <br></br>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          height: "80px",
-          justifyContent: "space-between",
-        }}
-      >
-        <div
-          style={{
-            width: "60%",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
+      <div className={styles.dropdownParent}>
+        <div className={styles.dropDown}>
           {xalias} :{" "}
           <Dropdown
             defaultValue={"Select a Column for X"}
@@ -119,13 +113,7 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
             handleChange={storeXColumn}
           />
         </div>
-        <div
-          style={{
-            width: "60%",
-            display: "flex",
-            justifyContent: "space-between",
-          }}
-        >
+        <div className={styles.dropDown}>
           {" "}
           {yalias} :{" "}
           <Dropdown

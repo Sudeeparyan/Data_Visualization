@@ -136,6 +136,67 @@ p{
     background-color: rgba(0, 174, 255, 0.753);;
     color: #fff;
 }
+.popupSeleted{
+    display: flex;
+    font-size: 15px;
+}
+.dropdownParent{
+    display: flex;
+    flex-direction: column;
+    height: 80px;
+    justify-content: space-between;
+}
+.dropDown{
+    display: flex;
+    width: 60%;
+    justify-content: space-between;
+}
+.tabHeading{
+    display: flex;
+    height: 40px;
+    justify-content: space-evenly;
+    font-size: 17px;
+    border-bottom: 2px solid rgb(229 229 229);
+    padding: 10px;
+}
+.tab{
+    width: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.tabContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90%;
+}
+.modelsContainer{
+    height: 100%;
+    margin-top: 20px;
+    width: 100%;
+}
+.searchModel{
+    display: flex;
+    justify-content: center;
+}
+.tabLoaders{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20%;
+}
+.noResults{
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    color: red;
+    margin: 10px;
+}
+
 @media only screen and (min-width: 1540px) {
    .table{
     width: 84%;
