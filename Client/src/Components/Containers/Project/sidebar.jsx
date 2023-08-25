@@ -86,7 +86,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
   };
 
   const getResultGraph = (resultId) => {
-    dispatch(rootActions.excelActions.storeResultId(resultId));
+    dispatch(rootActions.excelActions.storeResultId({ resultId: resultId }));
     navigate(`/Project/projectId/${projectId}/resultId/${resultId}`);
   };
 
@@ -216,7 +216,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                             className={styles.scrollBox}
                             onClick={() => getResultGraph(result)}
                           >
-                            Result-{index + 1}
+                            {result}
                           </div>
                           <hr></hr>
                         </>

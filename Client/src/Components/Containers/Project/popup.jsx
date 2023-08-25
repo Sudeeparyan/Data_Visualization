@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 //AntD Imports
-import { Modal, Button } from "antd";
+import { Modal, Button, Input } from "antd";
+import { AreaChartOutlined } from "@ant-design/icons";
 //Imports from Resusables
 import Dropdown from "../../Reusables/Dropdown/dropdown";
 //Import from Styles
@@ -28,6 +29,7 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
 
   const [xalias, setXAlias] = useState("");
   const [yalias, setYAlias] = useState("");
+  const [resultname, setResultname] = useState("");
 
   const models = useSelector(projectSelector.models);
   const trainX = useSelector(projectSelector.selectedModelX);
@@ -71,6 +73,7 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
         modelId: modelId,
         xColumn: trainX,
         yColumn: trainY,
+        resultName: resultname,
       });
       if (res.data.resultId)
         navigate(
@@ -102,7 +105,7 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
       onCancel={() => setOpenmodel(false)}
       closable={false}
       bodyStyle={{
-        height: 150,
+        height: 200,
       }}
       footer={[
         <Button danger onClick={() => setOpenmodel(false)}>
@@ -131,6 +134,7 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
             handleChange={storeXColumn}
           />
         </div>
+        <br></br>
         <div className={styles.dropDown}>
           {" "}
           {yalias} :{" "}
@@ -139,6 +143,22 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
             width={"170px"}
             options={columDropdown}
             handleChange={storeYColumn}
+          />
+        </div>
+        <br></br>
+        <div className={styles.dropDown}>
+          {" "}
+          Result Name :{" "}
+          <Input
+            style={{
+              height: "30px",
+              width: "170px",
+            }}
+            status="none"
+            allowClear={true}
+            onChange={(e) => setResultname(e.target.value)}
+            placeholder="Result Name"
+            prefix={<AreaChartOutlined />}
           />
         </div>
       </div>
