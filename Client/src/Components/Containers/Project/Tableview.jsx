@@ -14,7 +14,6 @@ import { projectSelector } from "../../../Redux/Root/rootSelector";
 import Loaders from "./loaders";
 import FloatingButton from "../../Reusables/FloatingButton/floatButton";
 import Sidebar from "./sidebar";
-import PopupComponent from "./popup";
 
 /**
  * Tableview component displays a table with project data and controls for generating a graph.

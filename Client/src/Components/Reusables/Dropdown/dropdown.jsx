@@ -8,6 +8,7 @@ const Dropdown = ({ defaultValue, options, width, handleChange }) => (
       value: defaultValue,
       label: defaultValue,
     }}
+    showSearch
     style={{
       width: width,
     }}
