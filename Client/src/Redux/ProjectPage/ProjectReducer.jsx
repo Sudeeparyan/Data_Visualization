@@ -44,9 +44,6 @@ const ExcelSlice = createSlice({
       state.ActualData = action.payload.actualData;
       state.ErrorData = action.payload.errorData;
     },
-    // storeModelid: (state, action) => {
-    //   state.Model_Id = action.payload.modelId;
-    // },
     storeModels: (state, action) => {
       state.Models = action.payload.models;
     },
@@ -63,7 +60,7 @@ const ExcelSlice = createSlice({
       state.Results = action.payload.results;
     },
     storeResultId: (state, action) => {
-      state.storeResultId = action.payload;
+      state.storeResultId = action.payload.resultId;
     },
   },
 });

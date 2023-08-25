@@ -12,6 +12,7 @@ import {
   useGenerateGraphMutation,
   useGetGraphResultMutation,
   useLazyGetModelsQuery,
+  useLazyGetResultDataQuery,
 } from "../ProjectPage/ProjectRtkQuery";
 
 export const rootQuery = {
@@ -21,5 +22,6 @@ export const rootQuery = {
     useGetGraphResultMutation,
     useGenerateGraphMutation,
     useLazyGetModelsQuery,
+    useLazyGetResultDataQuery,
   },
 };

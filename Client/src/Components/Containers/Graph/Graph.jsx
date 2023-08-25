@@ -17,28 +17,21 @@ import ButtonComponent from "../../Reusables/Button/Button";
  */
 const Graph = () => {
   const [showGraph, getGraph] =
-    rootQuery.excelPage.useGetGraphResultMutation() || {};
+    rootQuery.excelPage.useLazyGetResultDataQuery() || {};
   const [scatter, setScatter] = useState(false);
   const [buttontext, setButtonText] = useState("scatter");
-  const trainX = useSelector(projectSelector.selectedModelX);
-  const projectId = useSelector(projectSelector.projectId);
-  const modelId = useSelector(projectSelector.selectedModel);
-  let resultId = useSelector(projectSelector.resultId);
-  const trainY = useSelector(projectSelector.selectedModelY);
+  // const trainX = useSelector(projectSelector.selectedModelX);
+  // const projectId = useSelector(projectSelector.projectId);
+  // const modelId = useSelector(projectSelector.selectedModel);
+  // let resultId = useSelector(projectSelector.resultId);
+  // const trainY = useSelector(projectSelector.selectedModelY);
 
   useEffect(() => {
-    showGraphData();
+    const projectId = location.pathname.split("/")[3];
+    const resultId = location.pathname.split("/")[5];
+    showGraph({ resultId: resultId, projectId: projectId });
   }, []);
 
-  const showGraphData = async () => {
-    const res = await showGraph({
-      projectId: projectId,
-      modelId: modelId,
-      xColumn: trainX,
-      yColumn: trainY,
-      resultId: resultId,
-    });
-  };
   const scatterView = () => {
     setScatter(!scatter);
     setButtonText(buttontext === "Line" ? "Scatter" : "Line");
@@ -56,7 +49,9 @@ const Graph = () => {
           />
         </div>
         <div className={styles.box}>
-          {getGraph.isSuccess && getGraph.data.error === null ? (
+          {getGraph.isSuccess &&
+          getGraph.data.error === null &&
+          !getGraph.isFetching ? (
             <div className={styles.graph}>
               <LineGraph
                 bestFit={getGraph.data.bestFitData}
@@ -67,11 +62,11 @@ const Graph = () => {
               />
             </div>
           ) : null}
-          {getGraph.isLoading && (
+          {getGraph.isLoading || getGraph.isFetching ? (
             <div>
               <SpinLoader />
             </div>
-          )}
+          ) : null}
         </div>
       </div>
       <div className={styles.graphBox}>
@@ -80,7 +75,9 @@ const Graph = () => {
         </div>
         <br></br>
         <div className={styles.box}>
-          {getGraph.isSuccess && getGraph.data.error === null ? (
+          {getGraph.isSuccess &&
+          getGraph.data.error === null &&
+          !getGraph.isFetching ? (
             <div className={styles.graph}>
               <LineGraph
                 bestFit={[]}
@@ -91,11 +88,11 @@ const Graph = () => {
               />
             </div>
           ) : null}
-          {getGraph.isLoading && (
+          {getGraph.isLoading || getGraph.isFetching ? (
             <div>
               <SpinLoader />
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

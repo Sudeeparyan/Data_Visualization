@@ -55,7 +55,6 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
 
   const [getResults, getResulstResponse] =
     rootQuery.excelPage.useGenerateGraphMutation() || {};
-
   useEffect(() => {
     //Search Logics
     const searchWord = search.trim().toLocaleLowerCase();
@@ -88,7 +87,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
 
   const getResultGraph = (resultId) => {
     dispatch(rootActions.excelActions.storeResultId(resultId));
-    navigate(`/Project/projectId/${projectId}/results`);
+    navigate(`/Project/projectId/${projectId}/resultId/${resultId}`);
   };
 
   return (
@@ -109,7 +108,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
         width={380}
         closable={true}
         onClose={() => {
-          setOpen(!open), setModel(true), setResult(false);
+          setOpen(!open), setModel(true), setResult(false), setSearch("");
         }}
         open={open}
         style={{
@@ -129,6 +128,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
             }}
             onClick={() => {
               setModel(true);
+              setSearch("");
               setResult(false);
               setModelData(transformedData);
             }}
@@ -156,6 +156,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
               <div className={styles.searchModel}>
                 <Input
                   placeholder="Search a model.."
+                  value={search}
                   onChange={(e) => onSearch(e)}
                   suffix={
                     <Tooltip title="Search Models">

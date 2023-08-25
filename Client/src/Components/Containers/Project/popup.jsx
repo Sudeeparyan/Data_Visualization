@@ -11,6 +11,7 @@ import styles from "./project.module.css";
 import { projectSelector } from "../../../Redux/Root/rootSelector";
 import { rootActions } from "../../../Redux/Root/rootActions";
 import { useSelector, useDispatch } from "react-redux";
+import { rootQuery } from "../../../Redux/Root/rootQuery";
 
 /**
  * PopupComponent displays a modal for selecting X and Y axis columns.
@@ -30,9 +31,13 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
 
   const models = useSelector(projectSelector.models);
   const trainX = useSelector(projectSelector.selectedModelX);
+  const modelId = useSelector(projectSelector.selectedModel);
   const trainY = useSelector(projectSelector.selectedModelY);
   const projectId = useSelector(projectSelector.projectId);
   const columns = useSelector(projectSelector.tableColumns);
+
+  const [sendFormula, formulaResponse] =
+    rootQuery.excelPage.useGetGraphResultMutation() || {};
 
   const selectedModelObject = models.find((obj) => obj[selectedModel]);
 
@@ -51,8 +56,8 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
     dispatch(rootActions.excelActions.storeTrainY({ y: y.value }));
   };
 
-  const handleSubmitDropDown = () => {
-    dispatch(rootActions.excelActions.storeResultId(0));
+  const handleSubmitDropDown = async () => {
+    // dispatch(rootActions.excelActions.storeResultId(0));
     if (trainX === "" || trainY === "")
       dispatch(
         rootActions.notificationActions.storeNotification({
@@ -60,9 +65,18 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
           message: "Please fill all the Fields Properly",
         })
       );
-    else if (trainX !== trainY)
-      navigate(`/Project/projectId/${projectId}/results`);
-    else
+    else if (trainX !== trainY) {
+      const res = await sendFormula({
+        projectId: projectId,
+        modelId: modelId,
+        xColumn: trainX,
+        yColumn: trainY,
+      });
+      if (res.data.resultId)
+        navigate(
+          `/Project/projectId/${projectId}/resultId/${res.data.resultId}`
+        );
+    } else
       dispatch(
         rootActions.notificationActions.storeNotification({
           type: "info",
@@ -94,7 +108,11 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
         <Button danger onClick={() => setOpenmodel(false)}>
           Cancel
         </Button>,
-        <Button type="primary" onClick={handleSubmitDropDown}>
+        <Button
+          type="primary"
+          loading={formulaResponse.isLoading}
+          onClick={handleSubmitDropDown}
+        >
           Generate Result
         </Button>,
       ]}

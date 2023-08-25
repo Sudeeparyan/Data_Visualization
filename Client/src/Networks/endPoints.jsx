@@ -10,5 +10,6 @@ export const endpointsApi = {
   get_graph_data: "/api/v2/project/test-results", //projectId,modelId
   create_model: "/api/v2/project/fetch-available-results", //projectId
   get_Models: "/api/v2/project/get-models",
-  get_ResultsData: "/api/v2/project/show-results/", //resultId
+  get_ResultsData: "/api/v2/project/get-results/", //resultId
+  getResultId: "/api/v2/project/test-data",
 };
