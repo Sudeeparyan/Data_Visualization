@@ -59,15 +59,15 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
   };
 
   const handleSubmitDropDown = async () => {
-    // dispatch(rootActions.excelActions.storeResultId(0));
-    if (trainX === "" || trainY === "")
+    const result_name = resultname.trim();
+    if (trainX === "" || trainY === "" || resultname === "")
       dispatch(
         rootActions.notificationActions.storeNotification({
           type: "info",
           message: "Please fill all the Fields Properly",
         })
       );
-    else if (trainX !== trainY) {
+    else if (trainX !== trainY && result_name.length > 0) {
       const res = await sendFormula({
         projectId: projectId,
         modelId: modelId,
@@ -79,6 +79,13 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
         navigate(
           `/Project/projectId/${projectId}/resultId/${res.data.resultId}`
         );
+    } else if (result_name.length === 0) {
+      dispatch(
+        rootActions.notificationActions.storeNotification({
+          type: "warning",
+          message: "Result name should not be Empty",
+        })
+      );
     } else
       dispatch(
         rootActions.notificationActions.storeNotification({
