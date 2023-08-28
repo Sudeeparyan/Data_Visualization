@@ -29,17 +29,15 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
-  const [resultsearch, setResultsearch] = useState("");
-  const [errormsg, setErrormsg] = useState(false);
   const [model, setModel] = useState(true);
   const [result, setResult] = useState(false);
+  const [globeerror, setGlobeerror] = useState(false);
   const [openmodel, setOpenmodel] = useState(false);
   const [modelselected, setModelselected] = useState("");
 
   const projectId = useSelector(projectSelector.projectId);
   const Results = useSelector(projectSelector.Results);
   const models = useSelector(projectSelector.models);
-
   //Refactoring the Data from the store
   const transformedData = models.map((obj) => {
     const key = Object.keys(obj)[0];
@@ -47,8 +45,6 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
     return { name: key, id: modelId };
   });
   const [modeldata, setModelData] = useState(model ? transformedData : Results);
-  // const [resultdata, setResultData] = useState(Results);
-
   //Tabs background color switch logics
   const bgColorModel = model ? "rgba(0, 174, 255, 0.753)" : "#F4F7F7";
   const bgColorResult = result ? "rgba(0, 174, 255, 0.753)" : "#F4F7F7";
@@ -67,14 +63,14 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
       "\\$&"
     );
     if (searchWord.length > 0) {
-      const a = model
-        ? transformedData
-        : Results.filter(function (data) {
-            const regex = new RegExp(escapedSearchWord, "g"); // Create a regular expression
-            return data.name.toLowerCase().match(regex);
-          });
-      setModelData(a);
-    } else setModelData(transformedData);
+      const filterData = modeldata.filter(function (data) {
+        const regex = new RegExp(escapedSearchWord, "g"); // Create a regular expression
+        return model
+          ? data.name.toLowerCase().match(regex)
+          : data.resultName.toLowerCase().match(regex);
+      });
+      setModelData(filterData);
+    } else setModelData(model ? transformedData : Results);
   }, [search, models]);
 
   const storeSelectedModel = (model, selected) => {
@@ -87,16 +83,17 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
     const res = await getResults({ projectId: projectId });
     if (res.data) setModelData(res.data.results);
     if (res.data.message) {
-      setErrormsg(true);
       setModelData([]);
-    } else setErrormsg(false);
+    } else if (res.data.error) {
+      setGlobeerror(!globeerror);
+      setModelData([]);
+    }
   };
 
   const getResultGraph = (resultId) => {
     dispatch(rootActions.excelActions.storeResultId({ resultId: resultId }));
     navigate(`/Project/projectId/${projectId}/resultId/${resultId}`);
   };
-  console.log(modeldata);
   return (
     <div>
       <div>
@@ -151,9 +148,8 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
             onClick={() => {
               setModel(false);
               setResult(true);
+              setSearch("");
               setModelData(Results);
-              setResultsearch("");
-              // setResultData(Results);
               getAvailableResults();
             }}
           >
@@ -183,13 +179,15 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
             </div>
 
             <div className={styles.modelPop}>
-              {modeldata.length === 0 && (
-                <div>
-                  <b>No Items Found!</b>
-                </div>
-              )}
+              {globeerror ||
+                (modeldata.length === 0 && !getResulstResponse.isLoading && (
+                  <div>
+                    <b>No Items Found!</b>
+                  </div>
+                ))}
               {(!model && !getResulstResponse.isLoading) ||
               (model && !modelsResponse.isLoading) ? (
+                modeldata.length > 0 &&
                 modeldata.map((object, index) => (
                   <>
                     <div
