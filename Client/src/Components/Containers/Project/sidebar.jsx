@@ -179,6 +179,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                   placeholder="Search a model.."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  allowClear={true}
                   suffix={
                     <Tooltip title="Search Models">
                       <SearchOutlined />
@@ -230,6 +231,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                   placeholder="Search a result.."
                   value={resultsearch}
                   onChange={(e) => setResultsearch(e.target.value)}
+                  allowClear={true}
                   suffix={
                     <Tooltip title="Search Models">
                       <SearchOutlined />
