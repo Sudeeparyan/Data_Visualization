@@ -46,8 +46,8 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
     const modelId = obj[key].modelId;
     return { name: key, id: modelId };
   });
-  const [modeldata, setModelData] = useState(transformedData);
-  const [resultdata, setResultData] = useState(Results);
+  const [modeldata, setModelData] = useState(model ? transformedData : Results);
+  // const [resultdata, setResultData] = useState(Results);
 
   //Tabs background color switch logics
   const bgColorModel = model ? "rgba(0, 174, 255, 0.753)" : "#F4F7F7";
@@ -67,30 +67,15 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
       "\\$&"
     );
     if (searchWord.length > 0) {
-      const a = transformedData.filter(function (data) {
-        const regex = new RegExp(escapedSearchWord, "g"); // Create a regular expression
-        return data.name.toLowerCase().match(regex);
-      });
+      const a = model
+        ? transformedData
+        : Results.filter(function (data) {
+            const regex = new RegExp(escapedSearchWord, "g"); // Create a regular expression
+            return data.name.toLowerCase().match(regex);
+          });
       setModelData(a);
     } else setModelData(transformedData);
   }, [search, models]);
-
-  //Search logic for Results
-  useEffect(() => {
-    //Search Logics
-    const searchWord = resultsearch.trim().toLocaleLowerCase();
-    const escapedSearchWord = searchWord.replace(
-      /[.*+\-?^${}()|[\]\\]/g,
-      "\\$&"
-    );
-    if (searchWord.length > 0) {
-      const a = Results.filter(function (data) {
-        const regex = new RegExp(escapedSearchWord, "g"); // Create a regular expression
-        return data.resultName.toLowerCase().match(regex);
-      });
-      setResultData(a);
-    } else setResultData(Results);
-  }, [resultsearch, Results]);
 
   const storeSelectedModel = (model, selected) => {
     dispatch(rootActions.excelActions.storeTrainData({ model: model }));
@@ -100,15 +85,18 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
 
   const getAvailableResults = async () => {
     const res = await getResults({ projectId: projectId });
-    if (res.data.message) setErrormsg(true);
-    else setErrormsg(false);
+    if (res.data) setModelData(res.data.results);
+    if (res.data.message) {
+      setErrormsg(true);
+      setModelData([]);
+    } else setErrormsg(false);
   };
 
   const getResultGraph = (resultId) => {
     dispatch(rootActions.excelActions.storeResultId({ resultId: resultId }));
     navigate(`/Project/projectId/${projectId}/resultId/${resultId}`);
   };
-
+  console.log(modeldata);
   return (
     <div>
       <div>
@@ -163,8 +151,9 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
             onClick={() => {
               setModel(false);
               setResult(true);
+              setModelData(Results);
               setResultsearch("");
-              setResultData(Results);
+              // setResultData(Results);
               getAvailableResults();
             }}
           >
@@ -172,114 +161,58 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
           </div>
         </div>
         <div className={styles.tabContainer}>
-          {model && !result ? (
-            <div className={styles.modelsContainer}>
-              <div className={styles.searchModel}>
-                <Input
-                  placeholder="Search a model.."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  allowClear={true}
-                  suffix={
-                    <Tooltip title="Search Models" color="cyan">
-                      <SearchOutlined />
-                    </Tooltip>
-                  }
-                  style={{
-                    width: 180,
-                  }}
-                />
-              </div>
-
-              {modelsResponse.data && !modelsResponse.data.message ? (
-                <div className={styles.modelPop}>
-                  {modeldata.length === 0 && (
-                    <div>
-                      <b>No Models Found!</b>
-                    </div>
-                  )}
-                  {!modelsResponse.isFetching ? (
-                    modeldata.map((object, index) => {
-                      // Assuming each object has only one key-value pair
-                      return (
-                        <>
-                          <div
-                            className={styles.scrollBox}
-                            key={index}
-                            onClick={() =>
-                              storeSelectedModel(object.id, object.name)
-                            }
-                          >
-                            {object.name}
-                          </div>
-                          <hr></hr>
-                        </>
-                      );
-                    })
-                  ) : (
-                    <div className={styles.tabLoaders}>
-                      <Loader />
-                    </div>
-                  )}
-                </div>
-              ) : null}
+          <div className={styles.modelsContainer}>
+            <div className={styles.searchModel}>
+              <Input
+                placeholder={model ? "Search a model.." : "Search a Result"}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                allowClear={true}
+                suffix={
+                  <Tooltip
+                    title={model ? "Search Models" : "Search Results"}
+                    color="cyan"
+                  >
+                    <SearchOutlined />
+                  </Tooltip>
+                }
+                style={{
+                  width: 180,
+                }}
+              />
             </div>
-          ) : (
-            <div className={styles.modelsContainer}>
-              <div className={styles.searchModel}>
-                <Input
-                  placeholder="Search a result.."
-                  value={resultsearch}
-                  onChange={(e) => setResultsearch(e.target.value)}
-                  allowClear={true}
-                  suffix={
-                    <Tooltip title="Search Results" color="cyan">
-                      <SearchOutlined />
-                    </Tooltip>
-                  }
-                  style={{
-                    width: 180,
-                  }}
-                />
-              </div>
 
-              {!errormsg ? (
-                <div className={styles.modelPop}>
-                  {resultdata.length === 0 && (
-                    <div>
-                      <b>No Results Found!</b>
-                    </div>
-                  )}
-                  {!getResulstResponse.isLoading ? (
-                    resultdata.map((result, index) => {
-                      return (
-                        <>
-                          <div
-                            className={styles.scrollBox1}
-                            onClick={() => getResultGraph(result.resultId)}
-                          >
-                            <div>
-                              <b>{result.resultName}</b>
-                            </div>
-                            <div className={styles.timeStamp}>
-                              {result.createdTime}
-                            </div>
-                          </div>
-                          <hr></hr>
-                        </>
-                      );
-                    })
-                  ) : (
-                    <div className={styles.tabLoaders}>
-                      <Loader />
-                    </div>
-                  )}
+            <div className={styles.modelPop}>
+              {modeldata.length === 0 && (
+                <div>
+                  <b>No Items Found!</b>
                 </div>
+              )}
+              {(!model && !getResulstResponse.isLoading) ||
+              (model && !modelsResponse.isLoading) ? (
+                modeldata.map((object, index) => (
+                  <>
+                    <div
+                      className={styles.scrollBox}
+                      key={index}
+                      onClick={
+                        model
+                          ? () => storeSelectedModel(object.id, object.name)
+                          : () => getResultGraph(object.resultId)
+                      }
+                    >
+                      {model ? object.name : object.resultName}
+                    </div>
+                    <hr></hr>
+                  </>
+                ))
               ) : (
-                <div className={styles.noResults}>No Results Found !</div>
+                <div className={styles.tabLoaders}>
+                  <Loader />
+                </div>
               )}
             </div>
-          )}
+          </div>
         </div>
       </Drawer>
     </div>
