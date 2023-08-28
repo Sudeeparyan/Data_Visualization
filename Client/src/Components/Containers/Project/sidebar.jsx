@@ -29,6 +29,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
+  const [resultsearch, setResultsearch] = useState("");
   const [errormsg, setErrormsg] = useState(false);
   const [model, setModel] = useState(true);
   const [result, setResult] = useState(false);
@@ -46,6 +47,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
     return { name: key, id: modelId };
   });
   const [modeldata, setModelData] = useState(transformedData);
+  const [resultdata, setResultData] = useState(Results);
 
   //Tabs background color switch logics
   const bgColorModel = model ? "rgba(0, 174, 255, 0.753)" : "#F4F7F7";
@@ -55,6 +57,8 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
 
   const [getResults, getResulstResponse] =
     rootQuery.excelPage.useGenerateGraphMutation() || {};
+
+  //Search logic for Models
   useEffect(() => {
     //Search Logics
     const searchWord = search.trim().toLocaleLowerCase();
@@ -71,7 +75,22 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
     } else setModelData(transformedData);
   }, [search, models]);
 
-  const onSearch = (value) => setSearch(value.target.value);
+  //Search logic for Results
+  useEffect(() => {
+    //Search Logics
+    const searchWord = resultsearch.trim().toLocaleLowerCase();
+    const escapedSearchWord = searchWord.replace(
+      /[.*+\-?^${}()|[\]\\]/g,
+      "\\$&"
+    );
+    if (searchWord.length > 0) {
+      const a = Results.filter(function (data) {
+        const regex = new RegExp(escapedSearchWord, "g"); // Create a regular expression
+        return data.resultName.toLowerCase().match(regex);
+      });
+      setResultData(a);
+    } else setResultData(Results);
+  }, [resultsearch, Results]);
 
   const storeSelectedModel = (model, selected) => {
     dispatch(rootActions.excelActions.storeTrainData({ model: model }));
@@ -144,6 +163,8 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
             onClick={() => {
               setModel(false);
               setResult(true);
+              setResultsearch("");
+              setResultData(Results);
               getAvailableResults();
             }}
           >
@@ -157,7 +178,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                 <Input
                   placeholder="Search a model.."
                   value={search}
-                  onChange={(e) => onSearch(e)}
+                  onChange={(e) => setSearch(e.target.value)}
                   suffix={
                     <Tooltip title="Search Models">
                       <SearchOutlined />
@@ -173,7 +194,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                 <div className={styles.modelPop}>
                   {modeldata.length === 0 && (
                     <div>
-                      <b>No Matches Found</b>
+                      <b>No Models Found!</b>
                     </div>
                   )}
                   {!modelsResponse.isFetching ? (
@@ -204,19 +225,43 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
             </div>
           ) : (
             <div className={styles.modelsContainer}>
-              <h3>Available Results</h3>
+              <div className={styles.searchModel}>
+                <Input
+                  placeholder="Search a result.."
+                  value={resultsearch}
+                  onChange={(e) => setResultsearch(e.target.value)}
+                  suffix={
+                    <Tooltip title="Search Models">
+                      <SearchOutlined />
+                    </Tooltip>
+                  }
+                  style={{
+                    width: 180,
+                  }}
+                />
+              </div>
 
               {!errormsg ? (
                 <div className={styles.modelPop}>
+                  {resultdata.length === 0 && (
+                    <div>
+                      <b>No Results Found!</b>
+                    </div>
+                  )}
                   {!getResulstResponse.isLoading ? (
-                    Results.map((result, index) => {
+                    resultdata.map((result, index) => {
                       return (
                         <>
                           <div
-                            className={styles.scrollBox}
-                            onClick={() => getResultGraph(result)}
+                            className={styles.scrollBox1}
+                            onClick={() => getResultGraph(result.resultId)}
                           >
-                            {result}
+                            <div>
+                              <b>{result.resultName}</b>
+                            </div>
+                            <div className={styles.timeStamp}>
+                              {result.createdTime}
+                            </div>
                           </div>
                           <hr></hr>
                         </>

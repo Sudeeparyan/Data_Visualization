@@ -12,7 +12,15 @@ import { Line } from "@nivo/line";
  * @param {boolean} error - Indicates whether the graph is an error graph.
  */
 
-const LineGraph = ({ bestFit, actualData, errorData, error, scatter }) => {
+const LineGraph = ({
+  bestFit,
+  actualData,
+  errorData,
+  error,
+  scatter,
+  x,
+  y,
+}) => {
   const data = [
     {
       id: "Actual",
@@ -36,7 +44,7 @@ const LineGraph = ({ bestFit, actualData, errorData, error, scatter }) => {
         <div>
           <Line
             data={data}
-            margin={{ top: 20, right: 30, bottom: 40, left: 100 }}
+            margin={{ top: 20, right: 30, bottom: 55, left: 200 }}
             xScale={{ type: "linear", min: "auto", max: "auto" }}
             yScale={{ type: "linear", min: "auto", max: "auto" }}
             curve="natural"
@@ -53,13 +61,23 @@ const LineGraph = ({ bestFit, actualData, errorData, error, scatter }) => {
             crosshairType="top-right"
             enableSlices="x"
             colors={["#5B70F3", "#F0A500"]}
+            axisBottom={{
+              legend: x,
+              legendOffset: 46,
+              legendPosition: "middle",
+            }}
+            axisLeft={{
+              legend: y,
+              legendOffset: -90,
+              legendPosition: "middle",
+            }}
             legends={[
               {
                 anchor: "top-left",
                 direction: "column",
                 justify: false,
-                translateX: -100,
-                translateY: 0,
+                translateX: -200,
+                translateY: -10,
                 itemsSpacing: 0,
                 itemDirection: "left-to-right",
                 itemWidth: 100,
@@ -85,7 +103,7 @@ const LineGraph = ({ bestFit, actualData, errorData, error, scatter }) => {
         <div>
           <Line
             data={Edata}
-            margin={{ top: 20, right: 30, bottom: 40, left: 100 }}
+            margin={{ top: 20, right: 30, bottom: 40, left: 200 }}
             xScale={{ type: "linear", min: "auto", max: "auto" }}
             yScale={{ type: "linear", min: "auto", max: "auto" }}
             curve="natural"
@@ -105,8 +123,8 @@ const LineGraph = ({ bestFit, actualData, errorData, error, scatter }) => {
                 anchor: "top-left",
                 direction: "column",
                 justify: false,
-                translateX: -100,
-                translateY: 0,
+                translateX: -200,
+                translateY: -10,
                 itemsSpacing: 0,
                 itemDirection: "left-to-right",
                 itemWidth: 100,

@@ -63,3 +63,11 @@ export const resultId = createSelector(
   [ProjectState],
   (project) => project.storeResultId
 );
+export const xLabel = createSelector(
+  [ProjectState],
+  (project) => project.xLabel
+);
+export const yLabel = createSelector(
+  [ProjectState],
+  (project) => project.yLabel
+);

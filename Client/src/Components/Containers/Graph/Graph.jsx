@@ -20,11 +20,9 @@ const Graph = () => {
     rootQuery.excelPage.useLazyGetResultDataQuery() || {};
   const [scatter, setScatter] = useState(false);
   const [buttontext, setButtonText] = useState("scatter");
-  // const trainX = useSelector(projectSelector.selectedModelX);
-  // const projectId = useSelector(projectSelector.projectId);
-  // const modelId = useSelector(projectSelector.selectedModel);
-  // let resultId = useSelector(projectSelector.resultId);
-  // const trainY = useSelector(projectSelector.selectedModelY);
+
+  const xLabel = useSelector(projectSelector.xLabel);
+  const yLabel = useSelector(projectSelector.yLabel);
 
   useEffect(() => {
     const projectId = location.pathname.split("/")[3];
@@ -58,6 +56,8 @@ const Graph = () => {
                 actualData={getGraph.data.actualData}
                 errorData={[]}
                 error={false}
+                x={xLabel}
+                y={yLabel}
                 scatter={scatter}
               />
             </div>

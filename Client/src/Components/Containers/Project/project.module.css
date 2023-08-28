@@ -126,14 +126,31 @@ p{
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
-
+.timeStamp {
+    font-size: 14px;
+}
 .scrollBox{
     font-size: 17px;
     padding: 10px;
+    color: #6b6b6b;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+}
+.scrollBox1 {
+    font-size: 17px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
     cursor: pointer;
 }
 .scrollBox:hover{
-    background-color: rgba(0, 174, 255, 0.753);;
+    background-color: rgba(0, 174, 255, 0.753);
+    color: #fff;
+}
+.scrollBox1:hover{
+    background-color: rgba(0, 174, 255, 0.753);
     color: #fff;
 }
 .popupSeleted{
@@ -148,7 +165,7 @@ p{
 }
 .dropDown{
     display: flex;
-    width: 60%;
+    width: 70%;
     justify-content: space-between;
 }
 .tabHeading{
@@ -195,6 +212,12 @@ p{
     justify-content: center;
     color: red;
     margin: 10px;
+}
+
+.resultName{
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
 }
 
 @media only screen and (min-width: 1540px) {

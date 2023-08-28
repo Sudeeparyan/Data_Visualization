@@ -22,6 +22,8 @@ const initialState = {
   selected_Y_Alias: "",
   Results: [],
   storeResultId: 0,
+  xLabel: "",
+  yLabel: "",
 };
 
 const ExcelSlice = createSlice({
@@ -43,6 +45,8 @@ const ExcelSlice = createSlice({
       state.BestFit = action.payload.bestFitData;
       state.ActualData = action.payload.actualData;
       state.ErrorData = action.payload.errorData;
+      state.xLabel = action.payload.xLabel;
+      state.yLabel = action.payload.yLabel;
     },
     storeModels: (state, action) => {
       state.Models = action.payload.models;
