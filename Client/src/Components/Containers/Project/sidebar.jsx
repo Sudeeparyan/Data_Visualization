@@ -181,7 +181,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                   onChange={(e) => setSearch(e.target.value)}
                   allowClear={true}
                   suffix={
-                    <Tooltip title="Search Models">
+                    <Tooltip title="Search Models" color="cyan">
                       <SearchOutlined />
                     </Tooltip>
                   }
@@ -233,7 +233,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                   onChange={(e) => setResultsearch(e.target.value)}
                   allowClear={true}
                   suffix={
-                    <Tooltip title="Search Models">
+                    <Tooltip title="Search Results" color="cyan">
                       <SearchOutlined />
                     </Tooltip>
                   }
