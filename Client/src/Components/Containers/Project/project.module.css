@@ -130,26 +130,16 @@ p{
     font-size: 14px;
 }
 .scrollBox{
-    font-size: 17px;
+    font-size: 16px;
     padding: 10px;
     color: #6b6b6b;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     font-weight: bold;
     cursor: pointer;
 }
-.scrollBox1 {
-    font-size: 17px;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    cursor: pointer;
-}
+
 .scrollBox:hover{
-    background-color: rgba(0, 174, 255, 0.753);
-    color: #fff;
-}
-.scrollBox1:hover{
     background-color: rgba(0, 174, 255, 0.753);
     color: #fff;
 }

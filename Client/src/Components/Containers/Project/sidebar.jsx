@@ -39,7 +39,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
   const Results = useSelector(projectSelector.Results);
   const models = useSelector(projectSelector.models);
   //Refactoring the Data from the store
-  const transformedData = models.map((obj) => {
+  let transformedData = models.map((obj) => {
     const key = Object.keys(obj)[0];
     const modelId = obj[key].modelId;
     return { name: key, id: modelId };
@@ -57,14 +57,15 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
   //Search logic for Models
   useEffect(() => {
     //Search Logics
+    if (!model) transformedData = Results;
     const searchWord = search.trim().toLocaleLowerCase();
     const escapedSearchWord = searchWord.replace(
       /[.*+\-?^${}()|[\]\\]/g,
       "\\$&"
     );
     if (searchWord.length > 0) {
-      const filterData = modeldata.filter(function (data) {
-        const regex = new RegExp(escapedSearchWord, "g"); // Create a regular expression
+      const filterData = transformedData.filter(function (data) {
+        const regex = new RegExp(escapedSearchWord, "gi");
         return model
           ? data.name.toLowerCase().match(regex)
           : data.resultName.toLowerCase().match(regex);
@@ -186,8 +187,9 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                   </div>
                 ))}
               {(!model && !getResulstResponse.isLoading) ||
-              (model && !modelsResponse.isLoading) ? (
-                modeldata.length > 0 &&
+              (model &&
+                !modelsResponse.isLoading &&
+                !modelsResponse.isFetching) ? (
                 modeldata.map((object, index) => (
                   <>
                     <div
@@ -199,7 +201,10 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                           : () => getResultGraph(object.resultId)
                       }
                     >
-                      {model ? object.name : object.resultName}
+                      <div> {model ? object.name : object.resultName}</div>
+                      <div className={styles.timeStamp}>
+                        {result ? object.createdTime : null}
+                      </div>
                     </div>
                     <hr></hr>
                   </>

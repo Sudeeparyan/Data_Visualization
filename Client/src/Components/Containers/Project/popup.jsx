@@ -27,16 +27,17 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [xalias, setXAlias] = useState("");
-  const [yalias, setYAlias] = useState("");
-  const [resultname, setResultname] = useState("");
-
   const models = useSelector(projectSelector.models);
   const trainX = useSelector(projectSelector.selectedModelX);
   const modelId = useSelector(projectSelector.selectedModel);
   const trainY = useSelector(projectSelector.selectedModelY);
   const projectId = useSelector(projectSelector.projectId);
   const columns = useSelector(projectSelector.tableColumns);
+
+  const [xalias, setXAlias] = useState("");
+  const [yalias, setYAlias] = useState("");
+  const [column, setColumn] = useState(columns);
+  const [resultname, setResultname] = useState("");
 
   const [sendFormula, formulaResponse] =
     rootQuery.excelPage.useGetGraphResultMutation() || {};
@@ -51,10 +52,27 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
     }
   }, [selectedModel, selectedModelObject]);
 
+  //Refactoring the data from the store to render inside the dropdown
+  let columDropdown = [];
+  // columDropdown.push({
+  //   value: "None",
+  //   label: "None",
+  // });
+  column.forEach((column) => {
+    columDropdown.push({
+      value: column,
+      label: column,
+    });
+  });
+
   const storeXColumn = (x) => {
+    setxDefaults(x.value);
+    setColumn(columns.filter((e) => e !== x.value && e !== trainY));
     dispatch(rootActions.excelActions.storeTrainX({ x: x.value }));
   };
   const storeYColumn = (y) => {
+    setyDefaults(y.value);
+    setColumn(columns.filter((e) => e !== y.value && e !== trainX));
     dispatch(rootActions.excelActions.storeTrainY({ y: y.value }));
   };
 
@@ -94,20 +112,21 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
         })
       );
   };
-
-  //Refactoring the data from the store to render inside the dropdown
-  const columDropdown = [];
-  columns.forEach((column) => {
-    columDropdown.push({
-      value: column,
-      label: column,
-    });
-  });
+  const [xdefaults, setxDefaults] = useState("Select Alias X");
+  const [ydefaults, setyDefaults] = useState("Select Alias Y");
+  const setValue = () => {
+    setxDefaults("Select Alias X");
+    setyDefaults("Select Alias Y");
+    setColumn(columns);
+    dispatch(rootActions.excelActions.storeTrainX({ x: "" }));
+    dispatch(rootActions.excelActions.storeTrainY({ y: "" }));
+  };
 
   return (
     <Modal
       title={`Choose the Respective Alias `}
       centered
+      afterClose={() => setValue()}
       open={openmodel}
       onCancel={() => setOpenmodel(false)}
       closable={false}
@@ -115,7 +134,15 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
         height: 200,
       }}
       footer={[
-        <Button danger onClick={() => setOpenmodel(false)}>
+        <Button info onClick={() => setValue()}>
+          Clear Selection
+        </Button>,
+        <Button
+          danger
+          onClick={() => {
+            setOpenmodel(false);
+          }}
+        >
           Cancel
         </Button>,
         <Button
@@ -135,10 +162,11 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
         <div className={styles.dropDown}>
           {xalias} :{" "}
           <Dropdown
-            defaultValue={"Select a Column for X"}
+            defaultValue={"None"}
             width={"170px"}
             options={columDropdown}
             handleChange={storeXColumn}
+            value={xdefaults}
           />
         </div>
         <br></br>
@@ -146,10 +174,11 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
           {" "}
           {yalias} :{" "}
           <Dropdown
-            defaultValue={"Select a Column for Y"}
+            defaultValue={"None"}
             width={"170px"}
             options={columDropdown}
             handleChange={storeYColumn}
+            value={ydefaults}
           />
         </div>
         <br></br>
