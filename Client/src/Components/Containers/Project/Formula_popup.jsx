@@ -34,6 +34,8 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
   const projectId = useSelector(projectSelector.projectId);
   const columns = useSelector(projectSelector.tableColumns);
 
+  console.log(columns);
+
   const [xalias, setXAlias] = useState("");
   const [yalias, setYAlias] = useState("");
   const [column, setColumn] = useState(columns);
@@ -111,7 +113,9 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
         <Modal
           title={`Choose the Respective Alias `}
           centered
-          afterClose={() => setValue()}
+          afterClose={() => {
+            setValue(), setResultname("");
+          }}
           open={openmodel}
           onCancel={() => setOpenmodel(false)}
           closable={false}
@@ -126,6 +130,7 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
               danger
               onClick={() => {
                 setOpenmodel(false);
+                setResultname("");
               }}
             >
               Cancel
@@ -175,6 +180,7 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
                   height: "30px",
                   width: "170px",
                 }}
+                value={resultname}
                 status="none"
                 allowClear={true}
                 onChange={(e) => setResultname(e.target.value)}

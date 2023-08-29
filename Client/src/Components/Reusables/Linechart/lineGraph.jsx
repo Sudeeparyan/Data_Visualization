@@ -68,7 +68,7 @@ const LineGraph = ({
             }}
             axisLeft={{
               legend: y,
-              legendOffset: -90,
+              legendOffset: -170,
               legendPosition: "middle",
             }}
             legends={[

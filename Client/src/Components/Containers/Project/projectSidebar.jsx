@@ -38,7 +38,6 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
   const projectId = useSelector(projectSelector.projectId);
   const Results = useSelector(projectSelector.Results);
   const models = useSelector(projectSelector.models);
-  console.log(models);
   //Refactoring the Data from the store
   let transformedData = [];
   transformedData =
@@ -75,8 +74,9 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
           ? data.name.toLowerCase().match(regex)
           : data.resultName.toLowerCase().match(regex);
       });
+      console.log(filterData);
       setModelData(filterData);
-    } else setModelData(model ? transformedData : Results);
+    } else setModelData(model ? transformedData : []);
   }, [search, models]);
 
   const storeSelectedModel = (model, selected) => {
@@ -98,7 +98,6 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
     dispatch(rootActions.excelActions.storeResultId({ resultId: resultId }));
     navigate(`/Project/projectId/${projectId}/resultId/${resultId}`);
   };
-  console.log(modeldata);
   return (
     <div>
       <div>
