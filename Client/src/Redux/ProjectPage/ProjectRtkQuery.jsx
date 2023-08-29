@@ -54,13 +54,6 @@ export const sendExcelCsv = createApi({
           if (data.error === null) {
             dispatch(rootActions.excelActions.storeExcelCsv(data));
             dispatch(rootActions.excelActions.storePgno(data.nextPage));
-            if (data.nextPage === 2 || data.nextPage === null)
-              dispatch(
-                rootActions.notificationActions.storeNotification({
-                  type: "success",
-                  message: "File Loaded Successfully",
-                })
-              );
           } else
             dispatch(
               rootActions.notificationActions.storeNotification({

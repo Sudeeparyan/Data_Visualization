@@ -1,7 +1,7 @@
 //React Imports
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PopupComponent from "./popup";
+import PopupComponent from "./Formula_popup";
 //Imports from AntD
 import { Drawer, Input, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
@@ -38,12 +38,18 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
   const projectId = useSelector(projectSelector.projectId);
   const Results = useSelector(projectSelector.Results);
   const models = useSelector(projectSelector.models);
+  console.log(models);
   //Refactoring the Data from the store
-  let transformedData = models.map((obj) => {
-    const key = Object.keys(obj)[0];
-    const modelId = obj[key].modelId;
-    return { name: key, id: modelId };
-  });
+  let transformedData = [];
+  transformedData =
+    models.length > 0
+      ? models.map((obj) => {
+          const key = Object.keys(obj)[0];
+          const modelId = obj[key].modelId;
+          const createdTime = obj[key].createdTime;
+          return { name: key, id: modelId, createdTime: createdTime };
+        })
+      : [];
   const [modeldata, setModelData] = useState(model ? transformedData : Results);
   //Tabs background color switch logics
   const bgColorModel = model ? "rgba(0, 174, 255, 0.753)" : "#F4F7F7";
@@ -56,7 +62,6 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
 
   //Search logic for Models
   useEffect(() => {
-    //Search Logics
     if (!model) transformedData = Results;
     const searchWord = search.trim().toLocaleLowerCase();
     const escapedSearchWord = searchWord.replace(
@@ -79,22 +84,21 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
     setOpenmodel(true);
     setModelselected(selected);
   };
-
   const getAvailableResults = async () => {
     const res = await getResults({ projectId: projectId });
-    if (res.data) setModelData(res.data.results);
-    if (res.data.message) {
+    if (res.data.results) setModelData(res.data.results);
+    if (res.data.details) {
       setModelData([]);
     } else if (res.data.error) {
       setGlobeerror(!globeerror);
       setModelData([]);
     }
   };
-
   const getResultGraph = (resultId) => {
     dispatch(rootActions.excelActions.storeResultId({ resultId: resultId }));
     navigate(`/Project/projectId/${projectId}/resultId/${resultId}`);
   };
+  console.log(modeldata);
   return (
     <div>
       <div>
@@ -150,7 +154,6 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
               setModel(false);
               setResult(true);
               setSearch("");
-              setModelData(Results);
               getAvailableResults();
             }}
           >
@@ -178,18 +181,20 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                 }}
               />
             </div>
-
+            {globeerror && <p>Error Please Reopen the Sidebar!</p>}
             <div className={styles.modelPop}>
-              {globeerror ||
-                (modeldata.length === 0 && !getResulstResponse.isLoading && (
+              {modeldata.length === 0 &&
+                !getResulstResponse.isLoading &&
+                !globeerror && (
                   <div>
                     <b>No Items Found!</b>
                   </div>
-                ))}
+                )}
               {(!model && !getResulstResponse.isLoading) ||
               (model &&
                 !modelsResponse.isLoading &&
                 !modelsResponse.isFetching) ? (
+                modeldata !== undefined &&
                 modeldata.map((object, index) => (
                   <>
                     <div
@@ -203,7 +208,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
                     >
                       <div> {model ? object.name : object.resultName}</div>
                       <div className={styles.timeStamp}>
-                        {result ? object.createdTime : null}
+                        {object.createdTime}
                       </div>
                     </div>
                     <hr></hr>

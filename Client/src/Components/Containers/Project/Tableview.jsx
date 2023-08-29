@@ -13,7 +13,7 @@ import { rootQuery } from "../../../Redux/Root/rootQuery";
 import { projectSelector } from "../../../Redux/Root/rootSelector";
 import Loaders from "./loaders";
 import FloatingButton from "../../Reusables/FloatingButton/floatButton";
-import Sidebar from "./sidebar";
+import Sidebar from "./projectSidebar";
 
 /**
  * Tableview component displays a table with project data and controls for generating a graph.

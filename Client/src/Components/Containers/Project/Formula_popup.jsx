@@ -38,6 +38,7 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
   const [yalias, setYAlias] = useState("");
   const [column, setColumn] = useState(columns);
   const [resultname, setResultname] = useState("");
+  const [errormsg, setErrmsg] = useState(false);
 
   const [sendFormula, formulaResponse] =
     rootQuery.excelPage.useGetGraphResultMutation() || {};
@@ -46,18 +47,14 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
 
   useEffect(() => {
     if (selectedModelObject) {
-      const { x_coordinate, y_coordinate } = selectedModelObject[selectedModel];
-      setXAlias(x_coordinate);
-      setYAlias(y_coordinate);
+      const { xCoordinate, yCoordinate } = selectedModelObject[selectedModel];
+      setXAlias(xCoordinate);
+      setYAlias(yCoordinate);
     }
   }, [selectedModel, selectedModelObject]);
 
   //Refactoring the data from the store to render inside the dropdown
   let columDropdown = [];
-  // columDropdown.push({
-  //   value: "None",
-  //   label: "None",
-  // });
   column.forEach((column) => {
     columDropdown.push({
       value: column,
@@ -77,15 +74,7 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
   };
 
   const handleSubmitDropDown = async () => {
-    const result_name = resultname.trim();
-    if (trainX === "" || trainY === "" || resultname === "")
-      dispatch(
-        rootActions.notificationActions.storeNotification({
-          type: "info",
-          message: "Please fill all the Fields Properly",
-        })
-      );
-    else if (trainX !== trainY && result_name.length > 0) {
+    if (trainX !== "" && trainY !== "") {
       const res = await sendFormula({
         projectId: projectId,
         modelId: modelId,
@@ -97,18 +86,12 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
         navigate(
           `/Project/projectId/${projectId}/resultId/${res.data.resultId}`
         );
-    } else if (result_name.length === 0) {
-      dispatch(
-        rootActions.notificationActions.storeNotification({
-          type: "warning",
-          message: "Result name should not be Empty",
-        })
-      );
+      if (res.data.error) setErrmsg(true);
     } else
       dispatch(
         rootActions.notificationActions.storeNotification({
-          type: "info",
-          message: "Column names must be Unique",
+          type: "warning",
+          message: "Please fill all the Fields Properly",
         })
       );
   };
@@ -123,83 +106,99 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
   };
 
   return (
-    <Modal
-      title={`Choose the Respective Alias `}
-      centered
-      afterClose={() => setValue()}
-      open={openmodel}
-      onCancel={() => setOpenmodel(false)}
-      closable={false}
-      bodyStyle={{
-        height: 200,
-      }}
-      footer={[
-        <Button info onClick={() => setValue()}>
-          Clear Selection
-        </Button>,
-        <Button
-          danger
-          onClick={() => {
-            setOpenmodel(false);
+    <>
+      {!errormsg ? (
+        <Modal
+          title={`Choose the Respective Alias `}
+          centered
+          afterClose={() => setValue()}
+          open={openmodel}
+          onCancel={() => setOpenmodel(false)}
+          closable={false}
+          bodyStyle={{
+            height: 200,
+          }}
+          footer={[
+            <Button info onClick={() => setValue()}>
+              Clear Selection
+            </Button>,
+            <Button
+              danger
+              onClick={() => {
+                setOpenmodel(false);
+              }}
+            >
+              Cancel
+            </Button>,
+            <Button
+              type="primary"
+              loading={formulaResponse.isLoading}
+              onClick={handleSubmitDropDown}
+            >
+              Generate Result
+            </Button>,
+          ]}
+        >
+          <div className={styles.popupSeleted}>
+            Selected Model :&nbsp;<p>{selectedModel}</p>
+          </div>
+          <br></br>
+          <div className={styles.dropdownParent}>
+            <div className={styles.dropDown}>
+              {xalias} :{" "}
+              <Dropdown
+                defaultValue={"None"}
+                width={"170px"}
+                options={columDropdown}
+                handleChange={storeXColumn}
+                value={xdefaults}
+              />
+            </div>
+            <br></br>
+            <div className={styles.dropDown}>
+              {" "}
+              {yalias} :{" "}
+              <Dropdown
+                defaultValue={"None"}
+                width={"170px"}
+                options={columDropdown}
+                handleChange={storeYColumn}
+                value={ydefaults}
+              />
+            </div>
+            <br></br>
+            <div className={styles.dropDown}>
+              {" "}
+              Result Name :{" "}
+              <Input
+                style={{
+                  height: "30px",
+                  width: "170px",
+                }}
+                status="none"
+                allowClear={true}
+                onChange={(e) => setResultname(e.target.value)}
+                placeholder="Result Name"
+                prefix={<AreaChartOutlined />}
+              />
+            </div>
+          </div>
+          <br></br>
+        </Modal>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            fontSize: "18px",
+            color: "red",
           }}
         >
-          Cancel
-        </Button>,
-        <Button
-          type="primary"
-          loading={formulaResponse.isLoading}
-          onClick={handleSubmitDropDown}
-        >
-          Generate Result
-        </Button>,
-      ]}
-    >
-      <div className={styles.popupSeleted}>
-        Selected Model :&nbsp;<p>{selectedModel}</p>
-      </div>
-      <br></br>
-      <div className={styles.dropdownParent}>
-        <div className={styles.dropDown}>
-          {xalias} :{" "}
-          <Dropdown
-            defaultValue={"None"}
-            width={"170px"}
-            options={columDropdown}
-            handleChange={storeXColumn}
-            value={xdefaults}
-          />
-        </div>
-        <br></br>
-        <div className={styles.dropDown}>
           {" "}
-          {yalias} :{" "}
-          <Dropdown
-            defaultValue={"None"}
-            width={"170px"}
-            options={columDropdown}
-            handleChange={storeYColumn}
-            value={ydefaults}
-          />
+          An Error Occured Please Reopen the Sidebar!
         </div>
-        <br></br>
-        <div className={styles.dropDown}>
-          {" "}
-          Result Name :{" "}
-          <Input
-            style={{
-              height: "30px",
-              width: "170px",
-            }}
-            status="none"
-            allowClear={true}
-            onChange={(e) => setResultname(e.target.value)}
-            placeholder="Result Name"
-            prefix={<AreaChartOutlined />}
-          />
-        </div>
-      </div>
-      <br></br>
-    </Modal>
+      )}
+    </>
   );
 };
 
