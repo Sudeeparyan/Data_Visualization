@@ -74,10 +74,14 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
           ? data.name.toLowerCase().match(regex)
           : data.resultName.toLowerCase().match(regex);
       });
-      console.log(filterData);
       setModelData(filterData);
-    } else setModelData(model ? transformedData : []);
+    } else
+      setModelData(
+        model ? transformedData : Results !== undefined ? Results : []
+      );
   }, [search, models]);
+
+  console.log(model);
 
   const storeSelectedModel = (model, selected) => {
     dispatch(rootActions.excelActions.storeTrainData({ model: model }));
