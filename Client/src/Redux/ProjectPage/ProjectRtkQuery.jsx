@@ -123,7 +123,7 @@ export const sendExcelCsv = createApi({
           } else {
             dispatch(
               rootActions.notificationActions.storeNotification({
-                type: "info",
+                type: "error",
                 message: data.error,
               })
             );

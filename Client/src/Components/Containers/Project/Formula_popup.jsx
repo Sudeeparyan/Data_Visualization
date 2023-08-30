@@ -116,101 +116,87 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
 
   return (
     <>
-      {!errormsg ? (
-        <Modal
-          title={`Choose the Respective Alias `}
-          centered
-          afterClose={() => {
-            setValue(), setResultname("");
-          }}
-          open={openmodel}
-          onCancel={() => setOpenmodel(false)}
-          closable={false}
-          bodyStyle={{
-            height: 200,
-          }}
-          footer={[
-            <Button info onClick={() => setValue()}>
-              Clear Selection
-            </Button>,
-            <Button
-              danger
-              onClick={() => {
-                setOpenmodel(false);
-                setResultname("");
-              }}
-            >
-              Cancel
-            </Button>,
-            <Button
-              type="primary"
-              loading={formulaResponse.isLoading}
-              onClick={handleSubmitDropDown}
-            >
-              Generate Result
-            </Button>,
-          ]}
-        >
-          <div className={styles.popupSeleted}>
-            Selected Model :&nbsp;<p>{selectedModel}</p>
-          </div>
-          <br></br>
-          <div className={styles.dropdownParent}>
-            <div className={styles.dropDown}>
-              {xalias} :{" "}
-              <Dropdown
-                defaultValue={"None"}
-                width={"170px"}
-                options={columDropdown}
-                handleChange={storeXColumn}
-                value={xdefaults}
-              />
-            </div>
-            <br></br>
-            <div className={styles.dropDown}>
-              {" "}
-              {yalias} :{" "}
-              <Dropdown
-                defaultValue={"None"}
-                width={"170px"}
-                options={columDropdown}
-                handleChange={storeYColumn}
-                value={ydefaults}
-              />
-            </div>
-            <br></br>
-            <div className={styles.dropDown}>
-              {" "}
-              Result Name :{" "}
-              <Input
-                style={{
-                  height: "30px",
-                  width: "170px",
-                }}
-                value={resultname}
-                status="none"
-                allowClear={true}
-                onChange={(e) => setResultname(e.target.value)}
-                placeholder="Result Name"
-                prefix={<AreaChartOutlined />}
-              />
-            </div>
-          </div>
-          <br></br>
-        </Modal>
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            fontSize: "18px",
-            color: "red",
-          }}
-        >
-          {" "}
-          An Error Occured Please Reopen the Sidebar!
+      <Modal
+        title={`Choose the Respective Alias `}
+        centered
+        afterClose={() => {
+          setValue(), setResultname("");
+        }}
+        open={openmodel}
+        onCancel={() => setOpenmodel(false)}
+        closable={false}
+        bodyStyle={{
+          height: 200,
+        }}
+        footer={[
+          <Button info onClick={() => setValue()}>
+            Clear Selection
+          </Button>,
+          <Button
+            danger
+            onClick={() => {
+              setOpenmodel(false);
+              setResultname("");
+            }}
+          >
+            Cancel
+          </Button>,
+          <Button
+            type="primary"
+            loading={formulaResponse.isLoading}
+            onClick={handleSubmitDropDown}
+          >
+            Generate Result
+          </Button>,
+        ]}
+      >
+        <div className={styles.popupSeleted}>
+          Selected Model :&nbsp;<p>{selectedModel}</p>
         </div>
-      )}
+        <br></br>
+        <div className={styles.dropdownParent}>
+          <div className={styles.dropDown}>
+            {xalias} :{" "}
+            <Dropdown
+              defaultValue={"None"}
+              width={"170px"}
+              options={columDropdown}
+              handleChange={storeXColumn}
+              value={xdefaults}
+            />
+          </div>
+          <br></br>
+          <div className={styles.dropDown}>
+            {" "}
+            {yalias} :{" "}
+            <Dropdown
+              defaultValue={"None"}
+              width={"170px"}
+              options={columDropdown}
+              handleChange={storeYColumn}
+              value={ydefaults}
+            />
+          </div>
+          <br></br>
+          <div className={styles.dropDown}>
+            {" "}
+            Result Name :{" "}
+            <Input
+              style={{
+                height: "30px",
+                width: "170px",
+              }}
+              value={resultname}
+              status="none"
+              allowClear={true}
+              onChange={(e) => setResultname(e.target.value)}
+              placeholder="Result Name"
+              prefix={<AreaChartOutlined />}
+            />
+          </div>
+        </div>
+        <br></br>
+      </Modal>
     </>
   );
 };
