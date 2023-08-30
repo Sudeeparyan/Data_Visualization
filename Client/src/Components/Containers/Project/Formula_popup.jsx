@@ -38,7 +38,6 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
   const [yalias, setYAlias] = useState("");
   const [column, setColumn] = useState(columns);
   const [resultname, setResultname] = useState("");
-  const [errormsg, setErrmsg] = useState(false);
 
   const [sendFormula, formulaResponse] =
     rootQuery.excelPage.useGetGraphResultMutation() || {};
@@ -87,7 +86,6 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
           navigate(
             `/Project/projectId/${projectId}/resultId/${res.data.resultId}`
           );
-        if (res.data.error) setErrmsg(true);
       } else {
         dispatch(
           rootActions.notificationActions.storeNotification({
