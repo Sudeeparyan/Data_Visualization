@@ -62,26 +62,27 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
   //Search logic for Models
   useEffect(() => {
     if (!model) transformedData = Results;
+    if (transformedData === undefined) transformedData = [];
     const searchWord = search.trim().toLocaleLowerCase();
     const escapedSearchWord = searchWord.replace(
       /[.*+\-?^${}()|[\]\\]/g,
       "\\$&"
     );
     if (searchWord.length > 0) {
-      const filterData = transformedData.filter(function (data) {
-        const regex = new RegExp(escapedSearchWord, "gi");
-        return model
-          ? data.name.toLowerCase().match(regex)
-          : data.resultName.toLowerCase().match(regex);
-      });
+      const filterData =
+        transformedData &&
+        transformedData.filter(function (data) {
+          const regex = new RegExp(escapedSearchWord, "gi");
+          return model
+            ? data.name.toLowerCase().match(regex)
+            : data.resultName.toLowerCase().match(regex);
+        });
       setModelData(filterData);
     } else
       setModelData(
         model ? transformedData : Results !== undefined ? Results : []
       );
   }, [search, models]);
-
-  console.log(model);
 
   const storeSelectedModel = (model, selected) => {
     dispatch(rootActions.excelActions.storeTrainData({ model: model }));
@@ -102,6 +103,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
     dispatch(rootActions.excelActions.storeResultId({ resultId: resultId }));
     navigate(`/Project/projectId/${projectId}/resultId/${resultId}`);
   };
+
   return (
     <div>
       <div>

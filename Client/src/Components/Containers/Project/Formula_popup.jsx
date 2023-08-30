@@ -34,8 +34,6 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
   const projectId = useSelector(projectSelector.projectId);
   const columns = useSelector(projectSelector.tableColumns);
 
-  console.log(columns);
-
   const [xalias, setXAlias] = useState("");
   const [yalias, setYAlias] = useState("");
   const [column, setColumn] = useState(columns);
@@ -77,18 +75,27 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
 
   const handleSubmitDropDown = async () => {
     if (trainX !== "" && trainY !== "") {
-      const res = await sendFormula({
-        projectId: projectId,
-        modelId: modelId,
-        xColumn: trainX,
-        yColumn: trainY,
-        resultName: resultname,
-      });
-      if (res.data.resultId)
-        navigate(
-          `/Project/projectId/${projectId}/resultId/${res.data.resultId}`
+      if (resultname.length <= 20) {
+        const res = await sendFormula({
+          projectId: projectId,
+          modelId: modelId,
+          xColumn: trainX,
+          yColumn: trainY,
+          resultName: resultname,
+        });
+        if (res.data.resultId)
+          navigate(
+            `/Project/projectId/${projectId}/resultId/${res.data.resultId}`
+          );
+        if (res.data.error) setErrmsg(true);
+      } else {
+        dispatch(
+          rootActions.notificationActions.storeNotification({
+            type: "warning",
+            message: "Result Name length must be below 20 characters",
+          })
         );
-      if (res.data.error) setErrmsg(true);
+      }
     } else
       dispatch(
         rootActions.notificationActions.storeNotification({

@@ -1,5 +1,5 @@
 //React Imports
-import React from "react";
+import React, { useEffect, useState } from "react";
 //Imports from Nivo Library
 import { Line } from "@nivo/line";
 /**
@@ -37,7 +37,6 @@ const LineGraph = ({
       data: errorData,
     },
   ];
-
   return (
     <div>
       {!error ? (
@@ -103,7 +102,7 @@ const LineGraph = ({
         <div>
           <Line
             data={Edata}
-            margin={{ top: 20, right: 30, bottom: 40, left: 200 }}
+            margin={{ top: 20, right: 30, bottom: 57, left: 200 }}
             xScale={{ type: "linear", min: "auto", max: "auto" }}
             yScale={{ type: "linear", min: "auto", max: "auto" }}
             curve="natural"
@@ -118,6 +117,16 @@ const LineGraph = ({
             enableSlices="x"
             enableCrosshair={true}
             colors={["#F35C6E"]}
+            axisBottom={{
+              legend: y,
+              legendOffset: 50,
+              legendPosition: "middle",
+            }}
+            axisLeft={{
+              legend: "Error",
+              legendOffset: -170,
+              legendPosition: "middle",
+            }}
             legends={[
               {
                 anchor: "top-left",

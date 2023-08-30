@@ -14,6 +14,14 @@ export const sendExcelCsv = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
   }),
+  prepareHeaders: (headers, { getState }) => {
+    const token = getState().auth.token;
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+    headers.set("Custom-Header", "Header-Value");
+    return headers;
+  },
   // Define the API endpoints for sending and receiving Excel CSV data
   endpoints: (builder) => ({
     sendExcelCSV: builder.mutation({

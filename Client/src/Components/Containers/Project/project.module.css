@@ -107,8 +107,8 @@ p{
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
-    display: none;
+    width: 4px;
+    /* display: none; */
 }
 
 /* Track */
@@ -118,7 +118,7 @@ p{
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #adadad;
     border-radius: 10px;
 }
 

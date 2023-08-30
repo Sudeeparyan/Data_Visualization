@@ -84,6 +84,8 @@ const Graph = () => {
                 actualData={[]}
                 errorData={getGraph.data.errorData}
                 error={true}
+                x={xLabel}
+                y={yLabel}
                 scatter={scatter}
               />
             </div>
