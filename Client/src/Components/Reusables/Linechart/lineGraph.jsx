@@ -1,7 +1,7 @@
-//React Imports
-import React, { useEffect, useState } from "react";
+import React from "react";
 //Imports from Nivo Library
-import { Line } from "@nivo/line";
+import Plot from "react-plotly.js";
+
 /**
  * LineGraph component displays a line chart using Nivo Library.
  *
@@ -17,144 +17,88 @@ const LineGraph = ({
   actualData,
   errorData,
   error,
-  scatter,
   x,
   y,
+  errorCutoff,
 }) => {
-  const data = [
-    {
-      id: "Actual",
-      data: actualData,
-    },
-    {
-      id: "Bestfit",
-      data: bestFit,
-    },
-  ];
-  const Edata = [
-    {
-      id: "Error",
-      data: errorData,
-    },
-  ];
+  const xValuesActual = actualData.map((item) => item.x);
+  const yValuesActual = actualData.map((item) => item.y);
+  const xValuesBestfit = bestFit.map((item) => item.x);
+  const yValuesbestfit = bestFit.map((item) => item.y);
+  const xValuesError = errorData.map((item) => item.x);
+  const yValuesError = errorData.map((item) => item.y);
+
   return (
     <div>
       {!error ? (
         <div>
-          <Line
-            data={data}
-            margin={{ top: 20, right: 30, bottom: 55, left: 200 }}
-            xScale={{ type: "linear", min: "auto", max: "auto" }}
-            yScale={{ type: "linear", min: "auto", max: "auto" }}
-            curve="natural"
-            width={1200}
-            height={500}
-            yFormat=" >-.2f"
-            enablePoints={true}
-            enableGridX={true}
-            pointSize={7}
-            lineWidth={scatter ? 0 : 1}
-            pointBorderWidth={1}
-            enableGridY={true}
-            enableCrosshair={true}
-            crosshairType="top-right"
-            enableSlices="x"
-            colors={["#5B70F3", "#F0A500"]}
-            axisBottom={{
-              legend: x,
-              legendOffset: 46,
-              legendPosition: "middle",
-            }}
-            axisLeft={{
-              legend: y,
-              legendOffset: -170,
-              legendPosition: "middle",
-            }}
-            legends={[
+          <Plot
+            data={[
               {
-                anchor: "top-left",
-                direction: "column",
-                justify: false,
-                translateX: -200,
-                translateY: -10,
-                itemsSpacing: 0,
-                itemDirection: "left-to-right",
-                itemWidth: 100,
-                itemHeight: 20,
-                itemOpacity: 0.75,
-                symbolSize: 12,
-                symbolShape: "circle",
-                symbolBorderColor: "rgba(0, 0, 0, .5)",
-                effects: [
-                  {
-                    on: "hover",
-                    style: {
-                      itemBackground: "rgba(0, 0, 0, .03)",
-                      itemOpacity: 1,
-                    },
-                  },
-                ],
+                x: xValuesActual,
+                y: yValuesActual,
+                type: "scatter",
+                mode: "lines+markers",
+                marker: { color: "blue" },
+                name: "Actual",
+              },
+              {
+                x: xValuesBestfit,
+                y: yValuesbestfit,
+                type: "scatter",
+                mode: "lines+markers",
+                marker: { color: "orange" },
+                name: "BestFit",
               },
             ]}
+            layout={{
+              width: 1220,
+              height: 540,
+              title: "Actual Plot",
+              xaxis: {
+                title: x,
+              },
+              yaxis: {
+                title: y,
+              },
+            }}
           />
         </div>
       ) : (
-        <div>
-          <Line
-            data={Edata}
-            margin={{ top: 20, right: 30, bottom: 57, left: 200 }}
-            xScale={{ type: "linear", min: "auto", max: "auto" }}
-            yScale={{ type: "linear", min: "auto", max: "auto" }}
-            curve="natural"
-            width={1200}
-            height={500}
-            yFormat=" >-.2f"
-            enablePoints={true}
-            enableGridX={true}
-            enableGridY={true}
-            pointSize={7}
-            lineWidth={scatter ? 0 : 1}
-            enableSlices="x"
-            enableCrosshair={true}
-            colors={["#F35C6E"]}
-            axisBottom={{
-              legend: y,
-              legendOffset: 50,
-              legendPosition: "middle",
-            }}
-            axisLeft={{
-              legend: "Error",
-              legendOffset: -170,
-              legendPosition: "middle",
-            }}
-            legends={[
-              {
-                anchor: "top-left",
-                direction: "column",
-                justify: false,
-                translateX: -200,
-                translateY: -10,
-                itemsSpacing: 0,
-                itemDirection: "left-to-right",
-                itemWidth: 100,
-                itemHeight: 20,
-                itemOpacity: 0.75,
-                symbolSize: 12,
-                symbolShape: "circle",
-                symbolBorderColor: "rgba(0, 0, 0, .5)",
-                effects: [
-                  {
-                    on: "hover",
-                    style: {
-                      itemBackground: "rgba(0, 0, 0, .03)",
-                      itemOpacity: 1,
-                    },
-                  },
-                ],
+        <Plot
+          data={[
+            {
+              x: xValuesError,
+              y: yValuesError,
+              type: "scatter",
+              mode: "lines+markers",
+              marker: { color: "red" },
+              name: "Error",
+            },
+            {
+              x: errorCutoff[0].x,
+              y: errorCutoff[1].y, // Set the y-values to the desired cutoff line value
+              mode: "lines",
+              fill: "tozeroy",
+              type: "scatter",
+              name: "Tolerance",
+              line: {
+                color: "#8FECC8", // Customize the color of the cutoff line
               },
-            ]}
-          />
-        </div>
+            },
+          ]}
+          layout={{
+            width: 1220,
+            height: 540,
+            title: "Error Plot",
+            xaxis: {
+              title: y,
+            },
+            yaxis: {
+              title: "Error",
+            },
+          }}
+        />
       )}
     </div>
   );

@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { projectSelector } from "../../../Redux/Root/rootSelector";
 //Styles
 import styles from "./graph.module.css";
-import ButtonComponent from "../../Reusables/Button/Button";
+// import ButtonComponent from "../../Reusables/Button/Button";
 /**
  * Graph component displays two types of graphs: actual graph and error graph.
  *
@@ -18,8 +18,8 @@ import ButtonComponent from "../../Reusables/Button/Button";
 const Graph = () => {
   const [showGraph, getGraph] =
     rootQuery.excelPage.useLazyGetResultDataQuery() || {};
-  const [scatter, setScatter] = useState(false);
-  const [buttontext, setButtonText] = useState("scatter");
+  // const [scatter, setScatter] = useState(false);
+  // const [buttontext, setButtonText] = useState("scatter");
 
   const xLabel = useSelector(projectSelector.xLabel);
   const yLabel = useSelector(projectSelector.yLabel);
@@ -30,35 +30,37 @@ const Graph = () => {
     showGraph({ resultId: resultId, projectId: projectId });
   }, []);
 
-  const scatterView = () => {
-    setScatter(!scatter);
-    setButtonText(buttontext === "Line" ? "Scatter" : "Line");
-  };
+  // const scatterView = () => {
+  //   setScatter(!scatter);
+  //   setButtonText(buttontext === "Line" ? "Scatter" : "Line");
+  // };
 
   return (
     <div>
       <div className={styles.graphBox}>
         <div className={styles.graphContainer}>
           <div className={styles.heading}>Actual Graph</div>
-          <ButtonComponent
+          {/* <ButtonComponent
             content={`view in ${buttontext} plot`}
             onclick={scatterView}
             loading={false}
-          />
+          /> */}
         </div>
         <div className={styles.box}>
           {getGraph.isSuccess &&
           getGraph.data.error === null &&
           !getGraph.isFetching ? (
             <div className={styles.graph}>
+              <br></br>
               <LineGraph
                 bestFit={getGraph.data.bestFitData}
                 actualData={getGraph.data.actualData}
                 errorData={[]}
+                errorCutoff={[]}
                 error={false}
                 x={xLabel}
                 y={yLabel}
-                scatter={scatter}
+                // scatter={scatter}
               />
             </div>
           ) : null}
@@ -83,10 +85,11 @@ const Graph = () => {
                 bestFit={[]}
                 actualData={[]}
                 errorData={getGraph.data.errorData}
+                errorCutoff={getGraph.data.errorCutoff}
                 error={true}
                 x={xLabel}
                 y={yLabel}
-                scatter={scatter}
+                // scatter={scatter}
               />
             </div>
           ) : null}
