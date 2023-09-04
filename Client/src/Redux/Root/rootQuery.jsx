@@ -12,8 +12,8 @@ import {
   useGenerateGraphMutation,
   useGetGraphResultMutation,
   useLazyGetModelsQuery,
-  useLazyGetResultDataQuery,
 } from "../ProjectPage/ProjectRtkQuery";
+import { useLazyGetResultDataQuery } from "../GraphPage/graphRtkQuery";
 
 export const rootQuery = {
   excelPage: {
@@ -22,6 +22,8 @@ export const rootQuery = {
     useGetGraphResultMutation,
     useGenerateGraphMutation,
     useLazyGetModelsQuery,
+  },
+  graphPage: {
     useLazyGetResultDataQuery,
   },
 };

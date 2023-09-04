@@ -7,7 +7,7 @@
 
 import { createSelector } from "reselect";
 
-const ProjectState = (state) => state.Excel_Csv;
+const ProjectState = (state) => state.Table_Csv;
 
 export const projectId = createSelector(
   [ProjectState],
@@ -15,11 +15,11 @@ export const projectId = createSelector(
 );
 export const tableColumns = createSelector(
   [ProjectState],
-  (project) => project.ExcelColumns
+  (project) => project.TableColumns
 );
 export const tableData = createSelector(
   [ProjectState],
-  (project) => project.ExcelCsv
+  (project) => project.TableCsv
 );
 export const pageNo = createSelector([ProjectState], (project) => project.pgNo);
 

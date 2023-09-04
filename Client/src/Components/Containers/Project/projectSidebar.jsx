@@ -85,7 +85,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
   }, [search, models]);
 
   const storeSelectedModel = (model, selected) => {
-    dispatch(rootActions.excelActions.storeTrainData({ model: model }));
+    dispatch(rootActions.projectActions.storeTrainData({ model: model }));
     setOpenmodel(true);
     setModelselected(selected);
   };
@@ -100,7 +100,7 @@ const Sidebar = ({ open, setOpen, modelsResponse }) => {
     }
   };
   const getResultGraph = (resultId) => {
-    dispatch(rootActions.excelActions.storeResultId({ resultId: resultId }));
+    dispatch(rootActions.projectActions.storeResultId({ resultId: resultId }));
     navigate(`/Project/projectId/${projectId}/resultId/${resultId}`);
   };
 

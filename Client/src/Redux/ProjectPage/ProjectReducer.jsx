@@ -8,14 +8,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  ExcelCsv: [],
-  ExcelColumns: [],
+  TableCsv: [],
+  TableColumns: [],
   ProjectId: 0,
   pgNo: 1,
   BestFit: [],
   ActualData: [],
   ErrorData: [],
-  Model_Id: 0,
   Models: [],
   selectedModel: 0,
   selected_X_Alias: "",
@@ -26,21 +25,21 @@ const initialState = {
   yLabel: "",
 };
 
-const ExcelSlice = createSlice({
-  name: "excel",
+const ProjectSlice = createSlice({
+  name: "project",
   initialState,
   reducers: {
-    storeExcelCsv: (state, action) => {
-      if (action.payload.delete) state.ExcelCsv = [];
+    storeProjectCsv: (state, action) => {
+      if (action.payload.delete) state.TableCsv = [];
       else {
-        state.ExcelCsv = [...state.ExcelCsv, ...action.payload.tableContent];
-        state.ExcelColumns = action.payload.columns;
+        state.TableCsv = [...state.TableCsv, ...action.payload.tableContent];
+        state.TableColumns = action.payload.columns;
       }
     },
     storePgno: (state, action) => {
       state.pgNo = action.payload;
     },
-    storeExcelid: (state, action) => {
+    storeProjectid: (state, action) => {
       state.ProjectId = action.payload.projectId;
     },
     storeGraph: (state, action) => {
@@ -63,6 +62,7 @@ const ExcelSlice = createSlice({
       state.selected_Y_Alias = action.payload.y;
     },
     storeResults: (state, action) => {
+      console.log(action);
       state.Results = action.payload.results;
     },
     storeResultId: (state, action) => {
@@ -72,16 +72,15 @@ const ExcelSlice = createSlice({
 });
 
 export const {
-  storeExcelCsv,
-  storeExcelid,
+  storeProjectCsv,
+  storeProjectid,
   storePgno,
   storeGraph,
-  storeModelid,
   storeModels,
   storeTrainData,
   storeTrainX,
   storeTrainY,
   storeResults,
   storeResultId,
-} = ExcelSlice.actions;
-export default ExcelSlice.reducer;
+} = ProjectSlice.actions;
+export default ProjectSlice.reducer;

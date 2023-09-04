@@ -64,12 +64,12 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
   const storeXColumn = (x) => {
     setxDefaults(x.value);
     setColumn(columns.filter((e) => e !== x.value && e !== trainY));
-    dispatch(rootActions.excelActions.storeTrainX({ x: x.value }));
+    dispatch(rootActions.projectActions.storeTrainX({ x: x.value }));
   };
   const storeYColumn = (y) => {
     setyDefaults(y.value);
     setColumn(columns.filter((e) => e !== y.value && e !== trainX));
-    dispatch(rootActions.excelActions.storeTrainY({ y: y.value }));
+    dispatch(rootActions.projectActions.storeTrainY({ y: y.value }));
   };
 
   const handleSubmitDropDown = async () => {
@@ -108,8 +108,8 @@ const PopupComponent = ({ openmodel, setOpenmodel, selectedModel }) => {
     setxDefaults("Select Alias X");
     setyDefaults("Select Alias Y");
     setColumn(columns);
-    dispatch(rootActions.excelActions.storeTrainX({ x: "" }));
-    dispatch(rootActions.excelActions.storeTrainY({ y: "" }));
+    dispatch(rootActions.projectActions.storeTrainX({ x: "" }));
+    dispatch(rootActions.projectActions.storeTrainY({ y: "" }));
   };
 
   return (

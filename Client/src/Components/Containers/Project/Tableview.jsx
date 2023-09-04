@@ -43,11 +43,11 @@ const Tableview = () => {
     // Fetch initial data when component mounts
     const path = location.pathname.split("/")[2];
     getProjects({ projectId: path, pageNo: 1 });
-    dispatch(rootActions.excelActions.storeTrainData({ model: 0 }));
-    dispatch(rootActions.excelActions.storeTrainX({ x: "" }));
-    dispatch(rootActions.excelActions.storeExcelCsv({ delete: true }));
-    dispatch(rootActions.excelActions.storeTrainY({ y: "" }));
-    dispatch(rootActions.excelActions.storeExcelid({ projectId: path }));
+    dispatch(rootActions.projectActions.storeTrainData({ model: 0 }));
+    dispatch(rootActions.projectActions.storeTrainX({ x: "" }));
+    dispatch(rootActions.projectActions.storeProjectCsv({ delete: true }));
+    dispatch(rootActions.projectActions.storeTrainY({ y: "" }));
+    dispatch(rootActions.projectActions.storeProjectid({ projectId: path }));
   }, []);
 
   useEffect(() => {

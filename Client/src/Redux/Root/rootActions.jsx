@@ -6,11 +6,10 @@
  */
 
 import {
-  storeExcelCsv,
-  storeExcelid,
+  storeProjectCsv,
+  storeProjectid,
   storePgno,
   storeGraph,
-  storeModelid,
   storeModels,
   storeTrainData,
   storeTrainX,
@@ -19,14 +18,14 @@ import {
   storeResultId,
 } from "../ProjectPage/ProjectReducer";
 import { storeNotification } from "../Notification/notificationReducer";
+import { storeResultGraph } from "../GraphPage/graphReducer";
 
 export const rootActions = {
-  excelActions: {
-    storeExcelCsv,
-    storeExcelid,
+  projectActions: {
+    storeProjectCsv,
+    storeProjectid,
     storePgno,
     storeGraph,
-    storeModelid,
     storeTrainData,
     storeModels,
     storeTrainX,
@@ -36,5 +35,8 @@ export const rootActions = {
   },
   notificationActions: {
     storeNotification,
+  },
+  graphActions: {
+    storeResultGraph,
   },
 };

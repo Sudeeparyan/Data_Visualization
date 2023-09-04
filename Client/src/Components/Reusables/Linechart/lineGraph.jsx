@@ -13,21 +13,18 @@ import Plot from "react-plotly.js";
  */
 
 const LineGraph = ({
-  bestFit,
-  actualData,
-  errorData,
+  bestFitDataX,
+  bestFitDataY,
+  actualDataX,
+  actualDataY,
+  errorDataX,
+  errorDataY,
   error,
   x,
   y,
-  errorCutoff,
+  toleranceX,
+  toleranceY,
 }) => {
-  const xValuesActual = actualData.map((item) => item.x);
-  const yValuesActual = actualData.map((item) => item.y);
-  const xValuesBestfit = bestFit.map((item) => item.x);
-  const yValuesbestfit = bestFit.map((item) => item.y);
-  const xValuesError = errorData.map((item) => item.x);
-  const yValuesError = errorData.map((item) => item.y);
-
   return (
     <div>
       {!error ? (
@@ -35,16 +32,16 @@ const LineGraph = ({
           <Plot
             data={[
               {
-                x: xValuesActual,
-                y: yValuesActual,
+                x: actualDataX,
+                y: actualDataY,
                 type: "scatter",
                 mode: "lines+markers",
                 marker: { color: "blue" },
                 name: "Actual",
               },
               {
-                x: xValuesBestfit,
-                y: yValuesbestfit,
+                x: bestFitDataX,
+                y: bestFitDataY,
                 type: "scatter",
                 mode: "lines+markers",
                 marker: { color: "orange" },
@@ -68,16 +65,16 @@ const LineGraph = ({
         <Plot
           data={[
             {
-              x: xValuesError,
-              y: yValuesError,
+              x: errorDataX,
+              y: errorDataY,
               type: "scatter",
               mode: "lines+markers",
               marker: { color: "red" },
               name: "Error",
             },
             {
-              x: errorCutoff[0].x,
-              y: errorCutoff[1].y, // Set the y-values to the desired cutoff line value
+              x: toleranceX,
+              y: toleranceY, // Set the y-values to the desired cutoff line value
               mode: "lines",
               fill: "tozeroy",
               type: "scatter",
