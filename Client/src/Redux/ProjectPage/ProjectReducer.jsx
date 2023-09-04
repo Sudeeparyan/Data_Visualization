@@ -12,9 +12,6 @@ const initialState = {
   TableColumns: [],
   ProjectId: 0,
   pgNo: 1,
-  BestFit: [],
-  ActualData: [],
-  ErrorData: [],
   Models: [],
   selectedModel: 0,
   selected_X_Alias: "",
@@ -42,13 +39,6 @@ const ProjectSlice = createSlice({
     storeProjectid: (state, action) => {
       state.ProjectId = action.payload.projectId;
     },
-    storeGraph: (state, action) => {
-      state.BestFit = action.payload.bestFitData;
-      state.ActualData = action.payload.actualData;
-      state.ErrorData = action.payload.errorData;
-      state.xLabel = action.payload.xLabel;
-      state.yLabel = action.payload.yLabel;
-    },
     storeModels: (state, action) => {
       state.Models = action.payload.models;
     },
@@ -62,7 +52,6 @@ const ProjectSlice = createSlice({
       state.selected_Y_Alias = action.payload.y;
     },
     storeResults: (state, action) => {
-      console.log(action);
       state.Results = action.payload.results;
     },
     storeResultId: (state, action) => {

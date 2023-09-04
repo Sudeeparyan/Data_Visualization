@@ -23,22 +23,6 @@ export const tableData = createSelector(
 );
 export const pageNo = createSelector([ProjectState], (project) => project.pgNo);
 
-export const bestFit = createSelector(
-  [ProjectState],
-  (project) => project.BestFit
-);
-export const actualData = createSelector(
-  [ProjectState],
-  (project) => project.ActualData
-);
-export const errorData = createSelector(
-  [ProjectState],
-  (project) => project.ErrorData
-);
-export const modelId = createSelector(
-  [ProjectState],
-  (project) => project.Model_Id
-);
 export const models = createSelector(
   [ProjectState],
   (project) => project.Models
@@ -62,12 +46,4 @@ export const Results = createSelector(
 export const resultId = createSelector(
   [ProjectState],
   (project) => project.storeResultId
-);
-export const xLabel = createSelector(
-  [ProjectState],
-  (project) => project.xLabel
-);
-export const yLabel = createSelector(
-  [ProjectState],
-  (project) => project.yLabel
 );

@@ -60,10 +60,7 @@ const Dashboard = () => {
         columns: [],
         delete: true,
       }),
-      dispatch(rootActions.projectActions.storePgno(1)),
-      dispatch(
-        rootActions.projectActions.storeGraph({ graphData: [], columns: [] })
-      )
+      dispatch(rootActions.projectActions.storePgno(1))
     );
   }, []);
 
