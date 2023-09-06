@@ -37,7 +37,7 @@ const LineGraph = ({
                 type: "scatter",
                 mode: "lines+markers",
                 marker: { color: "blue" },
-                name: "Actual",
+                name: "Test data",
               },
               {
                 x: bestFitDataX,
@@ -45,13 +45,13 @@ const LineGraph = ({
                 type: "scatter",
                 mode: "lines+markers",
                 marker: { color: "orange" },
-                name: "BestFit",
+                name: "Reference Data",
               },
             ]}
             layout={{
               width: 1220,
               height: 540,
-              title: "Actual Plot",
+              title: "Test Result",
               xaxis: {
                 title: x,
               },
@@ -87,7 +87,7 @@ const LineGraph = ({
           layout={{
             width: 1220,
             height: 540,
-            title: "Error Plot",
+            title: "Error Result",
             xaxis: {
               title: y,
             },

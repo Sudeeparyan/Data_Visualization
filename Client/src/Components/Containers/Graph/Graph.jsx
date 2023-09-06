@@ -40,7 +40,7 @@ const Graph = () => {
     <div>
       <div className={styles.graphBox}>
         <div className={styles.graphContainer}>
-          <div className={styles.heading}>Actual Graph</div>
+          <div className={styles.heading}>Test Results</div>
         </div>
         <div className={styles.box}>
           {getGraph.isSuccess &&
@@ -71,7 +71,7 @@ const Graph = () => {
       </div>
       <div className={styles.graphBox}>
         <div className={styles.graphContainer}>
-          <div className={styles.heading}>Error Graph</div>
+          <div className={styles.heading}>Error Results</div>
         </div>
         <br></br>
         <div className={styles.box}>
