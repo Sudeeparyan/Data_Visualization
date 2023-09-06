@@ -11,7 +11,9 @@ import {
   useSendExcelCSVMutation,
   useGenerateGraphMutation,
   useGetGraphResultMutation,
+  useLazyGetModelsQuery,
 } from "../ProjectPage/ProjectRtkQuery";
+import { useLazyGetResultDataQuery } from "../GraphPage/graphRtkQuery";
 
 export const rootQuery = {
   excelPage: {
@@ -19,5 +21,9 @@ export const rootQuery = {
     useSendExcelCSVMutation,
     useGetGraphResultMutation,
     useGenerateGraphMutation,
+    useLazyGetModelsQuery,
+  },
+  graphPage: {
+    useLazyGetResultDataQuery,
   },
 };

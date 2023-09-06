@@ -24,7 +24,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route
-              path="/Project/projectId=/:id/modelId=/:modelid"
+              path="/Project/projectId/:id/resultId/:resultId"
               element={<GraphPage />}
             />
             <Route path="/Project/:id" element={<Project />} />
