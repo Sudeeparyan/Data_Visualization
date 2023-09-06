@@ -19,7 +19,7 @@ const Navbar = () => {
         </div>
         <div>
           <h3>
-            <i>Dv</i>
+            <i>DV</i>
           </h3>
         </div>
       </div>
